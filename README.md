@@ -10,6 +10,8 @@ LinkedIn (<a href="https://www.linkedin.com/">linkedin.com</a>)
 
 Unsplash (<a href="https://www.unsplash.com/">unsplash.com</a>)
 
+e-Infochips (<a href="https://www.einfochips.com/">einfochips.com</a>)
+
 ### Icons
 Font Awesome (<a href="https://fontawesome.com/">fontawesome.com</a>)
 
