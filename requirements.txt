@@ -1,3 +1,0 @@
-markdown
-mdtex2html
-beautifulsoup4
