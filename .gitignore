@@ -1,1 +1,4 @@
 CNAME
+*.py
+*.md
+_*.html
