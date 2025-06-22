@@ -3317,3 +3317,7 @@ input, select, textarea {
 			}
 
 	}
+
+a:hover #logo {
+    color: #a58bb4;
+}
