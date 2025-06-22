@@ -17,7 +17,7 @@ posts = []
 for path, dirs, files in os.walk('markdown'):
     for file in files:
         if file.endswith('.md'):
-            markdown_content = open(os.path.join(path, file)).read()
+            markdown_content = open(os.path.join(path, file)).read().replace('../posts/media', 'media')
             md2html_content = md2html(markdown_content)
             md_soup = BeautifulSoup(md2html_content, 'html.parser')
 

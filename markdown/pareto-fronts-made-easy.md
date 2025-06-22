@@ -25,7 +25,7 @@ Now let's take a look at the sample input:
 - The first part has three points: $(1, 1), (2, 2), (3, 3)$. All three points lie on the Pareto front, so we output $0$.
 - The second part has four points: $(1, 4), (2, 3), (3, 1), (4, 2)$. Both points $(1, 4)$ and $(2, 3)$ do not lie on the Pareto front because $(3, 1)$ and $(4, 2)$ have both higher single rank and lower download rank than $(1, 4)$ and $(2, 3)$, respectively. Therefore, we output both $(1, 4)$ and $(2, 3)$, meaning the actual output is $2$ (because there are 2 points) and then $3$ and $4$ (the download ranks in sorted order).
 
-<img src="media/pareto1.png" alt="pareto1" object-fit="contain" width="80%"/>
+<img src="../posts/media/pareto1.png" alt="pareto1" object-fit="contain" width="80%"/>
 
 Having visualized the sample input, let's solve the problem:
 
@@ -58,9 +58,9 @@ So how exactly can we extend from the 2D scenario to this?
         - If $y_k > y_i$, we remove $x_k$ from $P$. This is because we know that $x_k > x_i$ and $y_k > y_i$, but $z_k < z_i$. So both points might still belong to the Pareto front, but since we only check the previous $x$-coordinate during the insertion of a new point, we want to avoid false positives and maintain the elements of $P$ in ascending order $x$ to be in descending order of $y$. The image below will show you a scenario where this deletion actually matters.
         - Otherwise ($y_k < y_i$), we stop the process and move on to the next point to be inserted, if any.
 
-<img src="media/pareto2.png" alt="pareto2" object-fit="contain" width="90%"/>
-<img src="media/pareto3.png" alt="pareto3" object-fit="contain" width="90%"/>
-<img src="media/pareto4.png" alt="pareto4" object-fit="contain" width="90%"/>
+<img src="../posts/media/pareto2.png" alt="pareto2" object-fit="contain" width="90%"/>
+<img src="../posts/media/pareto3.png" alt="pareto3" object-fit="contain" width="90%"/>
+<img src="../posts/media/pareto4.png" alt="pareto4" object-fit="contain" width="90%"/>
 
 Overall, the algorithm still takes $O(N \log N)$ time because of these reasons:
 

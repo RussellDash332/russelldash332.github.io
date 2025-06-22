@@ -29,7 +29,7 @@ Now, how do we determine which indices of $F$ that store $A[i]$ for a particular
 
 For example, suppose $N = 8$. This means $A[4]$ is stored in $F[5], F[6], F[8]$. This is because $6 = 5+LSB(5)$ and $8 = 6+LSB(6)$. For the rest of indices, do take a look at the following visualization below (indices of $F$ are in pink text).
 
-<img src="media/fenwick1.png" alt="fenwick1" object-fit="contain" width="50%"/>
+<img src="../posts/media/fenwick1.png" alt="fenwick1" object-fit="contain" width="50%"/>
 
 Therefore, when adding $A[i]$ by some integer $x$, we simply do the same to all the indices of $F$ that stores $A[i]$.
 
@@ -41,7 +41,7 @@ To wrap up, we can now generalize to any value of $l$ by subtracting the sum of 
 
 Some of you might wonder what happens if the example $N$ isn't a power of 2, and Fenwick tree will still work in this case (image below shows the case when $N = 11$).
 
-<img src="media/fenwick3.png" alt="fenwick3" object-fit="contain" width="50%"/>
+<img src="../posts/media/fenwick3.png" alt="fenwick3" object-fit="contain" width="50%"/>
 
 ## Supporting RU
 ### RUPQ
@@ -49,13 +49,13 @@ To support range updates optimally, we have to change the structure of $F$ to so
 
 We revisit the example when $N = 8$. Suppose I want to add $A[1..4]$ by $3$ and $A[2..6]$ by $5$. Our actual array $A$ should look something like this:
 
-<img src="media/fenwick2.png" alt="fenwick2" object-fit="contain" width="50%"/>
+<img src="../posts/media/fenwick2.png" alt="fenwick2" object-fit="contain" width="50%"/>
 
 Let's have another array $B$ of size $N+1$. To resemble adding $A[1..4]$ by $3$, we simply add $B[1]$ by $3$ and $B[5]$ by $-3$. Similarly, we also add $B[2]$ by $5$ and $B[7]$ by $-5$. So, for every operation that adds $A[l..r]$ by $x$, we add $B[l]$ by $x$ and $B[r+1]$ by $-x$.
 
 To answer the point query operations, we simply take the prefix sum of $B$. For example to query the value $A[2]$, we're basically querying the sum of $B[0..2]$. Therefore, for every operation that queries $A[i]$, we simply query for the sum of $B[0..i]$.
 
-<img src="media/fenwick5.png" alt="fenwick5" object-fit="contain" width="50%"/>
+<img src="../posts/media/fenwick5.png" alt="fenwick5" object-fit="contain" width="50%"/>
 
 Based on the examples above, we can use a PURQ Fenwick tree on $B$ to support RUPQ on $A$. If we want to add $A[l..r]$ by $x$, we basically perform two point updates on $B$ as explained previously, while doing a point query on $A$ is basically performing a (prefix) range query on $B$.
 
@@ -66,7 +66,7 @@ Given the original array $A$ and the transformed array $B$ as what we see on the
 
 Recall that for every operation that adds $A[l..r]$ by $x$, we add $B[l]$ by $x$ and $B[r+1]$ by $-x$. Now, we also add $C[l]$ by $x \cdot (l-1)$ and $C[r+1]$ by $-x \cdot r$. The rigorous explanation on why one might come up with such structure can be found in [this article by CP Algorithms](https://cp-algorithms.com/data_structures/fenwick.html#3-range-update-and-range-query).
 
-<img src="media/fenwick4.png" alt="fenwick4" object-fit="contain" width="100%"/>
+<img src="../posts/media/fenwick4.png" alt="fenwick4" object-fit="contain" width="100%"/>
 
 Finally, to obtain the prefix range sum of $A$, we perform the following calculation.
 
