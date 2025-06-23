@@ -35,7 +35,7 @@ for path, dirs, files in os.walk('markdown'):
             for h in md_soup.findAll('h2'): h.name = 'h3'
             for h in md_soup.findAll('h1'): h.name = 'h2'
 
-            html_fn = os.path.join('posts', file.strip('.md')+'.html')
+            html_fn = os.path.join('posts', file[1:].strip('.md')+'.html')
             posts.append((date, first_h1.text, first_p.text, html_fn.split('/')[-1], '\n'.join(p.text for p in md_soup.findAll('p')[1:])))
 
             template_soup = BeautifulSoup(template_content, 'html.parser')
