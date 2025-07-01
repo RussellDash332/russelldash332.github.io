@@ -40,7 +40,7 @@
 </div>
 <div class="container"><div class="post-container"><h2>Why Python recursion sucks for competitive programming</h2>
 <div class="date"><p>1 July 2025</p></div>
-<p>Having done several competitive programming (CP) problems in pure Python, it is safe to say that recursion is worse in most instances, especially for problems with tight memory or time limit.</p>
+<p>Having done several competitive programming (CP) problems in pure Python, it is safe to say that recursion is worse for most instances, especially for problems with tight memory or time limit.</p>
 <p>While it’s simpler to implement and shorter to code, here are some reasons I can think of spontaneously on why Python recursion costs more than it benefits (as opposed to iteration, obviously).</p>
 <h3>1. Recursion limit</h3>
 <p>By default, Python’s recursion limit is 1000, which can be obtained from <code>import sys; print(sys.getrecursionlimit())</code>. For most CP questions, this value will not be enough, causing <code>RecursionError</code> on your program run as known as the Run-Time Error (RTE) verdict.</p>
