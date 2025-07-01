@@ -39,7 +39,7 @@
 <img alt="" src="../media/banner.jpg"/>
 </div>
 <div class="container"><div class="post-container"><h2>Kattis of the Week</h2>
-<div class="date"><p>4 September 2024</p></div><p>Since I am no longer teaching CS2040 (Data Structures and Algorithms) as an undergraduate teaching assistant in NUS, I thought it would be nice to dump some additional Kattis problems here (initially for my students) that I usually call as KOTW (stands for the article title). Future CS2040 students might find this article useful.</p><p>Little warning that these problems are <strong>almost</strong> sorted by difficulty.</p><h4>T2: Sorting</h4>
+<div class="date"><p>4 September 2024</p></div><p>Since I am no longer teaching CS2040 (Data Structures and Algorithms) as an undergraduate teaching assistant in NUS, I thought it would be nice to dump some additional Kattis problems here (initially for my students) that I usually call as KOTW (stands for the article title). Future CS2040 students might find this article useful.</p><p>Little warning that these problems are <strong>almost</strong> sorted by difficulty. Hints can be found by clicking on the arrows on each question.</p><h4>T2: Sorting</h4>
 <details>
 <summary><a href="https://open.kattis.com/problems/missinggnomes">Missing Gnomes</a></summary>
     Literally the last question of this tutorial (first permutation thingy)
@@ -98,8 +98,8 @@ DECLARE b int
 DECLARE c int
 }
 DECLARE d double
-</code></pre></div><p>then our <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>S</mi></mrow></math> looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]</code> and our <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>T</mi></mrow></math> looks like <code>{a: [0], b: [0, 1], c: [1], d: [0]}</code><br>
-</br></p></details><p><br/></p><h4>T5: PQ</h4>
+</code></pre></div><p>then our <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>S</mi></mrow></math> looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]</code> and our <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>T</mi></mrow></math> looks like <code>{a: [0], b: [0, 1], c: [1], d: [0]}</code>
+</p></details><p><br/></p><h4>T5: PQ</h4>
 <details>
 <summary><a href="https://open.kattis.com/problems/continuousmedian">Continuous Median</a></summary>
     One of my favourite Leetcode problems. The idea is to have one max heap to store the first half of the "array" and then one min heap to store the latter half. For every iteration, insert to one of the heaps and balance the sizes whenever necessary (e.g. ensure that max heap size is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi><mo>/</mo><mn>2</mn></mrow></math> and min heap size if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi><mo>−</mo><mi>N</mi><mo>/</mo><mn>2</mn></mrow></math>). When reporting the median, check whether you need to peek the max heap or do you have to take the average of both heap peeks (depends on whether <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi></mrow></math> is currently odd or even)!
@@ -249,5 +249,8 @@ output ans
 <script src="../assets/js/breakpoints.min.js"></script>
 <script src="../assets/js/util.js"></script>
 <script src="../assets/js/main.js"></script>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css" rel="stylesheet"/>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 </div></body>
 </html>

@@ -5,7 +5,8 @@
 
 I will mainly discuss about NUS and NTU scholarships interviews. Other universities' may go the same way.
 
-Before we start, here are some useful links which I used for reference :
+Before we start, here are some useful links which I used for reference:
+
 - [Shu Ching Goh](https://shuchinggoh1.wordpress.com/2016/06/01/31st-may-2016-nus-asean-undergraduate-scholarship-interview/)
 - [When Silence is No Longer Golden](http://wsinlg.blogspot.com/2013/05/second-interview-nus-asean-scholarship.html)
 - [EasyForum](https://essayforum.com/undergraduate/nus-asean-scholarship-statement-key-qualities-75194/)

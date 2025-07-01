@@ -4,8 +4,16 @@ from bs4 import BeautifulSoup, NavigableString
 
 TW_WIDTH_LIMIT = 200
 md2html = lambda c: [markdown.markdown, mdtex2html.convert][1](c, extensions=[
-    'tables', 'pymdownx.arithmatex', 'pymdownx.superfences', 'nl2br', 'smarty', 'pymdownx.smartsymbols',
-    'pymdownx.tilde', 'pymdownx.emoji', 'pymdownx.highlight', 'pymdownx.inlinehilite'
+    'tables',
+    'pymdownx.arithmatex',
+    #'pymdownx.superfences',
+    'fenced_code',
+    'smarty',
+    'pymdownx.smartsymbols',
+    'pymdownx.tilde',
+    'pymdownx.emoji',
+    'pymdownx.highlight',
+    'pymdownx.inlinehilite'
 ])
 
 html_content = open(os.path.join('posts', 'index.html')).read()
@@ -59,14 +67,14 @@ for date, title, date_text, html_fn, md_soup_p in sorted(posts, reverse=True):
     new_p = soup.new_tag('p')
     new_p2 = soup.new_tag('p')
     new_h4 = soup.new_tag('h4')
-    new_h4.insert(0, NavigableString(title))
+    new_a.insert(0, NavigableString(title))
     new_p.insert(0, NavigableString(date_text))
     new_p2.insert(0, NavigableString(summary))
-    new_div.append(new_h4)
+    new_h4.append(new_a)
     new_div.append(new_p)
     new_div.append(new_p2)
-    new_a.append(new_div)
-    new_article.append(new_a)
+    new_article.append(new_h4)
+    new_article.append(new_div)
     posts_container.append(new_article)
 
 with open(os.path.join('posts', 'index.html'), 'w+') as f:

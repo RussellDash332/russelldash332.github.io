@@ -3,7 +3,7 @@
 
 Since I am no longer teaching CS2040 (Data Structures and Algorithms) as an undergraduate teaching assistant in NUS, I thought it would be nice to dump some additional Kattis problems here (initially for my students) that I usually call as KOTW (stands for the article title). Future CS2040 students might find this article useful.
 
-Little warning that these problems are **almost** sorted by difficulty.
+Little warning that these problems are **almost** sorted by difficulty. Hints can be found by clicking on the arrows on each question.
 
 ### T2: Sorting
 <details>

@@ -87,6 +87,7 @@ $$P \left( A=2 \, \middle| \, \dfrac{A^2}{B}>4 \right)$$
 $$\mathrm{e} = \sum_{n=0}^{\infty} \dfrac{1}{n!}$$
 
 $$
+\begin{align*}
 2x - 5y &=  8\\
 3x + 9y &=  -12\\
 2x - 5y &=  8\\

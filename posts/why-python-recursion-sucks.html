@@ -1,0 +1,204 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<title>Why Python recursion sucks for competitive programming</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+<link href="../assets/css/main.css" rel="stylesheet"/>
+<link href="../media/russell.png" rel="icon"/>
+</head>
+<body class="is-preload">
+<section id="header">
+<header>
+<a class="active" href="https://russelldash332.github.io/">
+<span class="image avatar"><img alt="" src="../media/profile.jpg"/></span>
+<h1 id="logo">Russell Saerang</h1>
+</a>
+<p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
+</header>
+<nav id="nav">
+<ul>
+<li><a class="active" href="index.html">Posts</a></li>
+</ul>
+</nav>
+<footer>
+<ul class="icons">
+<li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
+<li><a class="icon brands fa-instagram" href="https://www.instagram.com/russellsaerang2702/" rel="noopener noreferrer" target="_blank"><span class="label">Instagram</span></a></li>
+<li><a class="icon brands fa-github" href="https://github.com/RussellDash332/" rel="noopener noreferrer" target="_blank"><span class="label">Github</span></a></li>
+<li><a class="icon brands fa-medium-m" href="https://medium.com/@russellsaerang" rel="noopener noreferrer" target="_blank"><span class="label">Medium</span></a></li>
+<li><a class="icon solid fa-envelope" href="mailto:russellsaerang@gmail.com"><span class="label">Email</span></a></li>
+</ul>
+</footer>
+</section>
+<div id="wrapper">
+<div id="main">
+<section id="post">
+<div class="image main" data-position="center">
+<img alt="" src="../media/banner.jpg"/>
+</div>
+<div class="container"><div class="post-container"><h2>Why Python recursion sucks for competitive programming</h2>
+<div class="date"><p>1 July 2025</p></div>
+<p>Having done several competitive programming (CP) problems in pure Python, it is safe to say that recursion is worse in most instances, especially for problems with tight memory or time limit.</p>
+<p>While it’s simpler to implement and shorter to code, here are some reasons I can think of spontaneously on why Python recursion costs more than it benefits (as opposed to iteration, obviously).</p>
+<h3>1. Recursion limit</h3>
+<p>By default, Python’s recursion limit is 1000, which can be obtained from <code>import sys; print(sys.getrecursionlimit())</code>. For most CP questions, this value will not be enough, causing <code>RecursionError</code> on your program run as known as the Run-Time Error (RTE) verdict.</p>
+<p>Despite being able to change this value by doing <code>sys.setrecursionlimit(...)</code>, there are some caveats: values that are too high will exceed the memory limit (MLE) to store the recursive call stacks, while sufficiently high values might still slow down the program, causing a Time Limit Exceeded (TLE) verdict.</p>
+<p>Take this question from Kattis as an example: <a href="https://open.kattis.com/problems/dominos">Dominos</a>. In this question, one way to do it is by using Kosaraju’s algorithm to enumerate the strongly-connected components (SCC), which mainly uses the depth-first search (DFS) function. In general, DFS is implemented as a recursive function, so initially I implemented DFS as such.</p>
+<pre><code class="language-python">def DFS(s):
+    vis.add(s)      # vis is a set to store visited vertices
+    for v in g[s]:  # g is a graph represented by adjacency list (list-of-list of vertices)
+        if v not in vis: DFS(v)
+</code></pre>
+<p>Since the problem constraint specifies that there can be at most 100K vertices, I have no choice but to use something like <code>sys.setrecursionlimit(10**5+9)</code> (have a small extra buffer on the recursion limit). However, this gives me the TLE verdict, leaving me no choice but to redesign the DFS function to be iterative.</p>
+<h3>2. Constant factor disadvantage</h3>
+<p>Even when still having the same time complexity as the iterative counterpart, recursive functions have way more function calls. It is worth noting that function calls cause slight memory overhead/delays in the CPU, making array usage sometimes better in practice. You can check the memory allocation using <code>sys.getsizeof(x)</code> or <code>x.__sizeof__()</code>, where <code>x</code> is the variable that you want to check on.</p>
+<p>Some recursive functions can be made faster through memoization, and normally there are two ways I would do it, and usually I’d pick whichever came to my mind first.</p>
+<ul>
+<li>
+<p>Using the builtin dictionary.</p>
+<p>Here’s an example of how it’s done.</p>
+</li>
+</ul>
+<pre><code class="language-python">memo = {}
+def fib(n):
+    if n &lt; 2: return n
+    if n in memo: return memo[n]
+    memo[n] = fib(n-1) + fib(n-2); return memo[n]
+</code></pre>
+<ul>
+<li>
+<p>Using <code>functools.cache</code>.</p>
+<p>Here’s an example of how it’s done. Alternatvely, you can use <code>@lru_cache</code> or <code>@lru_cache(maxsize=None)</code>, but it takes more characters (I also aimed at short code lengths) and might be slower as well.</p>
+</li>
+</ul>
+<pre><code class="language-python">from functools import *
+@cache
+def fib(n):
+    if n &lt; 2: return n
+    return fib(n-1) + fib(n-2)
+</code></pre>
+<p>While it speeds things up, both methods require storing the cache keys in a separate data structure such as dictionary (which is slower than lists) on top of the already many function calls.</p>
+<h3>3. Wishful thinking makes you take things for granted</h3>
+<p>Recursion allows one to do what’s been taught as <em>wishful thinking</em>. In my own terms, you assume the smaller recursion states work correctly and you only need to piece these puzzles together via a recursive step to make up the bigger states. For example, in the above Fibonacci example, you assume that you know the exact results of <code>fib(n-1)</code> and <code>fib(n-2)</code>, you just need to know how to piece these two together to make up <code>fib(n)</code>.</p>
+<p>But do you really know how it works when you have to trace the recursive calls in case something wrong happens?</p>
+<p>In Python competitive programming, it is important to be able to convert a recursive function into iterative and vice versa, and this can only be done if you know the order of the recursive calls and what happens on each respective calls.</p>
+<h4>DFS</h4>
+<p>Going back to the DFS example above, converting that same function to iterative is rather straightforward using a stack, as shown below.</p>
+<pre><code class="language-python">def DFS(u):
+    stack = [u]
+    while stack:
+        s = stack.pop()
+        vis.add(s)
+        for v in g[s][::-1]:
+            if v not in vis: stack.append(v)
+</code></pre>
+<p>The reversal of <code>g[s]</code> in the code above is to ensure the order of visitation remains the same as the recursive DFS function, though it may be unnecessary in the context of the Kattis question itself.</p>
+<p>Suppose the value of <code>g[s]</code> is <code>[v_1, v_2, ..., v_k]</code>, where <code>v_i</code> represent the <code>i</code>-th neighbour of <code>s</code>, and the recursive DFS function will visit these vertices in that same order. If in the iterative DFS we keep the iteration order as such (i.e. not reversing <code>g[s]</code>), then <code>v_k</code> will be popped right after the iteration ends, then after some other vertices get popped, it will be <code>v_(k-1)</code>, and so on until <code>v_2</code>, then possibly some other vertices, and finally <code>v_1</code>. Therefore, if we want to maintain the order of visitation (possibly for easier tracing), you have to reverse <code>g[s]</code>.</p>
+<p>Here comes the interesting part, what if in the recursive DFS function, there are some post-processing steps after the recursive calls? Notice the differences between the two codes.</p>
+<pre><code class="language-python"># before
+def DFS(s):
+    vis.add(s)
+    for v in g[s]:
+        if v not in vis: DFS(v)
+
+# after
+def DFS(s, t): # t is some boolean indicator
+    vis.add(s)
+    for v in g[s]:
+        if v not in vis: DFS(v, t)
+    if t: top.append(s) # to store the topological sort
+</code></pre>
+<p>How do we ensure that we can convert this to iterative, but still retaining the order of the values inside the <code>top</code> array? Instead of just storing <code>s</code> as the state, store a pair <code>(s, b)</code> where <code>s</code> is still the state but now we introduce <code>b</code>, a boolean indicating whether it’s the pre-processing or the post-processing. I call this <strong>the stack-state approach</strong>. Personally, I like to store this state as a single integer <code>2*s+b</code> because it’s more memory-efficient.</p>
+<pre><code class="language-python">def DFS(u, t):
+    stack = [2*u] # (u, 0)
+    while stack:
+        sb = stack.pop()
+        s, b = sb//2, sb%2 # decompose 2*s+b to s and b
+        if b and t: top.append(u)
+        elif s not in vis:
+            vis.add(s)
+            stack.append(2*s+1) # (s, 1)
+            for v in g[s][::-1]:
+                if v not in vis: stack.append(2*v) # (v, 0)
+</code></pre>
+<p><strong>What does this mean?</strong> When you process a vertex <code>s</code>, you actually start with visiting <code>(s, 0)</code> first. In this state, you do some pre-processing such as marking <code>s</code> as visited in <code>vis</code>. Then, you’ll add <code>(s, 1)</code>, then the neighbours <code>(v_k, 0), (v_(k-1), 0), ..., (v_2, 0), (v_1, 0)</code> in that order, so that <code>(v_1, 0)</code> will be processed right after <code>(s, 0)</code>. Only after you finish processing the <code>v_i</code>s as a whole, then you can finally deal with <code>(s, 1)</code> and do the post-processing there, which is adding <code>s</code> to <code>top</code>.</p>
+<h4>Another example</h4>
+<p>DFS is actually one <del>simple</del> example, so let’s turn things up a notch with another Kattis question: <a href="https://open.kattis.com/problems/runningroutes">Running Routes</a>.</p>
+<p>It is a dynamic programming (DP) question, but the conversion from recursion to iteration that I could think of initially was different than using stack-state like <code>2*s+b</code>. Instead, when you use recursion for a top-down approach, you can use iteration by converting into a bottom-up approach.</p>
+<p>Let’s start with the recursive version, which passes the test cases in <strong>9.7 seconds</strong> given the 12-second time limit. Short code, but slow code.</p>
+<pre><code class="language-python">from functools import *
+N = ... # suppose you have N and a function check(a, b) that returns either 0 or 1 depending on some black-boxed condition
+@cache
+def f(i, j):
+    if j &lt; 2: return 0
+    if j &lt; 3: return check(i, i+1)
+    return max(max(f(i, k) + check(i+j-1, i+k) + f(i+k+1, j-k-2) for k in range(j-1)), f(i, j-1))
+print(f(0, N))
+</code></pre>
+<p>The transition from <code>f(i, j)</code> to <code>f(i, k)</code> and <code>f(i+k+1, j-k-2)</code>, as well as to <code>f(i, j-1)</code> guarantees that there is no cyclic dependency: the value of <code>j</code> keeps getting strictly smaller, so this also motivates one to convert this short recursion to iterative.</p>
+<p>Here’s the iterative bottom-up approach, which also passes the test cases, but in <strong>1.4 seconds</strong>! The margin is huge!</p>
+<pre><code class="language-python">N = ...         # suppose you have N and a function check(a, b) that returns either 0 or 1 depending on some black-boxed condition
+D = [0]*N*(N+1) # store the cached values f(i, j) in index j*N+i
+for j in range(1, N+1):
+    for i in range(N-j+1):
+        if j &lt; 2:   D[j*N+i] = 0
+        elif j &lt; 3: D[j*N+i] = check(i, i+1)
+        else:       D[j*N+i] = max(max(D[k*N+i] + check(i+j-1, i+k) + D[(j-k-2)*N+(i+k+1)] for k in range(j-1)), D[(j-1)*N+i])
+print(D[N*N]) # same as f(0, N)
+</code></pre>
+<p>The pressure point on implementing the iterative version is <u>the order of iteration</u> for <code>(i, j)</code>. Once that’s settled, you can see the insides are very similar to the recursive steps defined previously.</p>
+<p>In case you’re still curious on how it’s done using the stack-state approach, here’s one that runs in <strong>0.6 seconds</strong>, much faster but is way more complex.</p>
+<pre><code class="language-python">N = ...         # suppose you have N and a function check(a, b) that returns either 0 or 1 depending on some black-boxed condition
+D = [0]*N*(N+1) # store the cached values f(i, j) in index j*N+i
+V = [0]*N*(N+1) # has index x ever been added into the stack?
+S = [2*N*N]     # the stack itself, initially containing (N*N, 0)
+while S:
+    ub = S.pop() # (u, b) represented as 2*u+b
+    u, b = divmod(ub, 2)
+    j, i = divmod(u, N)
+    if j &lt; 2: continue # D[u] is already 0
+    if j &lt; 3: D[u] = check(i, i+1); continue
+    if not b:
+        if V[u]: continue
+        V[u] = 1
+        S.append(2*u+1)
+        for k in range(j-1): S.append(2*(k*N+i)); S.append(2*((j-k-2)*N+(i+k+1)))
+        S.append(2*(u-N)) # (j-1)*N+i = j*N+i-N = u-N
+    else:
+        D[u] = max(max(D[k*N+i] + check(i+j-1, i+k) + D[(j-k-2)*N+(i+k+1)] for k in range(j-1)), D[u-N])
+print(D[N*N]) # same as f(0, N)
+</code></pre>
+<p>It’s getting more confusing now, right? Let’s break it down one-by-one.</p>
+<ul>
+<li>The array <code>V</code> is to keep track of the states that have been added into the stack to be processed. Due to the nature of the DP state transition, the same state <code>(u, 0)</code> can be added into the stack more than once, but we only need to process <code>(u, 1)</code> once, hence the need of <code>V</code> to check when <code>b</code> is still at 0.</li>
+<li>In pre-processing (when <code>b</code> equals 0), you add <code>(u, 1)</code> first as usual, and then add all the smaller states <code>(v, 0)</code> that you want to compute into the stack. Any order is fine because you will just take the maximum out of these. To identify which states <code>(v, 0)</code> to add to <code>S</code>, notice all the recursive calls required when iterating from <code>k = 0</code> to <code>k = j-2</code>.</li>
+<li>In post-processing (when <code>b</code> equals 1), it is guaranteed that the smaller states have been computed correctly, so we can update <code>D[u]</code> similar to the other iterative code.</li>
+</ul>
+<p>The reasons why the second iterative code is faster is because it only explores states that are involved with <code>(N*N, 0)</code>, while the first iterative code tries to populate all entries of the cache array <code>D</code>. The first iterative code is faster than the recursive code because of the reasons previously stated, so we’ve come into a full circle.</p>
+<h3>Final Note</h3>
+<p>It is indeed rather niche to program competitively in Python instead of C++, and spending lots of time on Python makes you realize it behaves differently than C++ more often than you think. This is one great example of it that I think is worth writing.</p></div></div>
+</section>
+<section id="footer">
+<div class="container">
+<ul class="copyright">
+<li>© Russell Saerang 2025. All rights reserved.</li>
+<li>Design: <a href="http://html5up.net" rel="noopener noreferrer" target="_blank">HTML5 UP</a></li>
+<li>Illustration: <a href="http://linkedin.com" rel="noopener noreferrer" target="_blank">LinkedIn</a> and <a href="http://unsplash.com" rel="noopener noreferrer" target="_blank">Unsplash</a></li>
+</ul>
+</div>
+</section>
+</div>
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/jquery.scrollex.min.js"></script>
+<script src="../assets/js/jquery.scrolly.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css" rel="stylesheet"/>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</div></body>
+</html>

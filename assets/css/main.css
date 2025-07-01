@@ -98,7 +98,7 @@ input, select, textarea {
 		}
 
 	body, input, select, textarea {
-		color: #888;
+		color: #555;
 		font-family: "Lato", sans-serif;
 		font-size: 16pt;
 		font-weight: 400;
@@ -111,7 +111,7 @@ input, select, textarea {
 		-ms-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 		transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 		border-bottom: solid 1px #e4e4e4;
-		color: inherit;
+		color: #088fdd;
 		text-decoration: none;
 	}
 
@@ -121,7 +121,7 @@ input, select, textarea {
 		}
 
 	strong, b {
-		color: #777;
+		color: inherit;
 		font-weight: 700;
 	}
 
@@ -130,18 +130,17 @@ input, select, textarea {
 	}
 
 	p {
-		margin: 0 0 2.25em 0;
+		margin: 0 0 1.25em 0;
 	}
 
 	h1, h2, h3, h4, h5, h6 {
-		color: #777;
+		color: #555;
 		font-weight: 700;
 		line-height: 1em;
 		margin: 0 0 0.5625em 0;
 	}
 
 		h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
-			border: 0;
 			color: inherit;
 			text-decoration: none;
 		}
@@ -201,13 +200,13 @@ input, select, textarea {
 	}
 
 	code {
-		background: #555;
+		background: #e4e4e4;
 		border-radius: 5px;
-		color: #fff;
+		color: #555;
 		font-family: "Source Code Pro", monospace;
-		font-size: 0.9em;
+		font-size: 0.8em;
 		margin: 0 0.25em;
-		padding: 0.25em 0.65em;
+		padding: 0.25em 0.25em;
 	}
 
 	pre {
@@ -1790,7 +1789,7 @@ input, select, textarea {
 	}
 
 		header.major h2 + p {
-			color: #777;
+			color: #555;
 			font-size: 1.75em;
 			font-weight: 700;
 			margin-top: -0.75em;
@@ -1803,7 +1802,7 @@ input, select, textarea {
 	}
 
 	label {
-		color: #777;
+		color: #555;
 		display: block;
 		font-size: 0.9em;
 		font-weight: 700;
@@ -1862,7 +1861,7 @@ input, select, textarea {
 	}
 
 		select option {
-			color: #777;
+			color: #555;
 			background: #fff;
 		}
 
@@ -1902,7 +1901,7 @@ input, select, textarea {
 		input[type="checkbox"] + label,
 		input[type="radio"] + label {
 			text-decoration: none;
-			color: #888;
+			color: #555;
 			cursor: pointer;
 			display: inline-block;
 			font-size: 1em;
@@ -2463,7 +2462,7 @@ input, select, textarea {
 		}
 
 		table th {
-			color: #777;
+			color: #555;
 			font-size: 0.9em;
 			font-weight: 700;
 			padding: 0 0.75em 0.75em 0.75em;
@@ -2589,7 +2588,7 @@ input, select, textarea {
 		.button.alt {
 			background-color: transparent;
 			box-shadow: inset 0 0 0 2px #e4e4e4;
-			color: #777 !important;
+			color: #555 !important;
 		}
 
 			input[type="submit"].alt:hover,
@@ -2597,7 +2596,7 @@ input, select, textarea {
 			input[type="button"].alt:hover,
 			.button.alt:hover {
 				background-color: #f4f4f4;
-				color: #777 !important;
+				color: #555 !important;
 			}
 
 			input[type="submit"].alt:active,
@@ -2643,7 +2642,7 @@ input, select, textarea {
 		input[type="button"]:disabled,
 		.button.disabled,
 		.button:disabled {
-			background-color: #888 !important;
+			background-color: #555 !important;
 			box-shadow: inset 0 -0.15em 0 0 rgba(0, 0, 0, 0.15);
 			color: #fff !important;
 			cursor: default;
