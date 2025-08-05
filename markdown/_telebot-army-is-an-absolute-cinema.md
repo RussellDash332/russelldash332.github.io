@@ -34,7 +34,7 @@ The script generates a random 20-letter alphabetical string added with the `_bot
 
 Once the steps are complete, BotFather will give you an **HTTP API token**, which will be required for our next step. The token should look something like `0123456789:abcdefgh_ijklmno`. As prompted, keep them secure and store it safely, so if you decide to publish your Python script, mask the tokens first.
 
-Finally, we simply rinse and repeat until you sufficiently many bots to form your telebot army.
+Finally, we simply rinse and repeat until you've had sufficiently many bots to form your telebot army.
 
 ### Python
 
