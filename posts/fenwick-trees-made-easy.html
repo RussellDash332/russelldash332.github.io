@@ -84,6 +84,11 @@
 <script src="../assets/js/main.js"></script>
 <link href="../assets/css/highlight.min.css" rel="stylesheet"/>
 <script src="../assets/js/highlight.min.js"></script>
-<script>hljs.highlightAll();</script>
+<script>hljs.highlightAll(); hljs.addPlugin(
+        new CopyButtonPlugin({
+            autohide: false,
+            callback: (text, el) => console.log("Copied to clipboard", text),
+    }));
+</script>
 </div></body>
 </html>
