@@ -1,0 +1,671 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<title>Graph Realization Made Easy!</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+<link href="../assets/css/main.css" rel="stylesheet"/>
+<link href="../media/russell.png" rel="icon"/>
+</head>
+<body class="is-preload">
+<section id="header">
+<header>
+<a class="active" href="https://russelldash332.github.io/">
+<span class="image avatar"><img alt="" src="../media/profile.jpg"/></span>
+<h1 id="logo">Russell Saerang</h1>
+</a>
+<p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
+</header>
+<nav id="nav">
+<ul>
+<li><a class="active" href="index.html">Posts</a></li>
+</ul>
+</nav>
+<footer>
+<ul class="icons">
+<li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
+<li><a class="icon brands fa-instagram" href="https://www.instagram.com/russellsaerang2702/" rel="noopener noreferrer" target="_blank"><span class="label">Instagram</span></a></li>
+<li><a class="icon brands fa-github" href="https://github.com/RussellDash332/" rel="noopener noreferrer" target="_blank"><span class="label">Github</span></a></li>
+<li><a class="icon brands fa-medium-m" href="https://medium.com/@russellsaerang" rel="noopener noreferrer" target="_blank"><span class="label">Medium</span></a></li>
+<li><a class="icon solid fa-envelope" href="mailto:russellsaerang@gmail.com"><span class="label">Email</span></a></li>
+</ul>
+</footer>
+</section>
+<div id="wrapper">
+<div id="main">
+<section id="post">
+<div class="image main" data-position="center">
+<img alt="" src="../media/banner.jpg"/>
+</div>
+<div class="container"><div class="post-container"><h2>Graph Realization Made Easy!</h2>
+<div class="date"><p>3 November 2025</p></div>
+<p>This article serves as a detailed breakdown of the code provided in <a href="https://github.com/RussellDash332/pytils/blob/main/graph_realization.py">pytils</a>.</p>
+<h3>Degree Sequence</h3>
+<p>The degree sequence of a graph is defined as a non-increasing sequence of the graph’s vertex degrees, where the degree of a vertex is defined as the number of edges incident to the vertex itself.</p>
+<p>Given an undirected graph, constructing the degree sequence is rather easy, if not trivial.</p>
+<pre><code class="language-python"># suppose we represent the graph as an edge list instead of an adjacency list
+# vertices are 0-indexed here, get used to it!
+N = 5
+G = [(1, 2), (0, 1), (1, 3), (4, 1), (0, 4), (3, 4)]
+D = [0]*N
+for a, b in G:
+    D[a] += 1; D[b] += 1 # add one to the degree of both endpoint vertices
+print(D)                       # [2, 4, 1, 2, 3]
+print(sorted(D, reverse=True)) # [4, 3, 2, 2, 1]
+</code></pre>
+<p>Now let’s solve the inverse of the problem.</p>
+<blockquote>
+<p>Given a non-increasing array <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>D</mi></mrow></math> of size <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi></mrow></math>, can we construct an undirected graph with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi></mrow></math> vertices and degree sequence <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>D</mi></mrow></math>?</p>
+</blockquote>
+<p>To answer this YES/NO question, we can make use of the <a href="https://en.wikipedia.org/wiki/Erd%C5%91s%E2%80%93Gallai_theorem"><strong>Erdős–Gallai theorem</strong></a> that states the following.</p>
+<blockquote>
+<p>The answer is YES if and only if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>D</mi><mn>1</mn></msub><mo>+</mo><msub><mi>D</mi><mn>2</mn></msub><mo>+</mo><mi>…</mi><mo>+</mo><msub><mi>D</mi><mi>n</mi></msub></mrow></math> is even and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></msubsup><msub><mi>D</mi><mi>i</mi></msub><mo>≤</mo><mi>k</mi><mo stretchy="false">(</mo><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>k</mi><mo>+</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mo>min</mo><mo stretchy="false">(</mo><msub><mi>D</mi><mi>i</mi></msub><mo>,</mo><mi>k</mi><mo stretchy="false">)</mo><mo>,</mo><mo>∀</mo><mn>1</mn><mo>≤</mo><mi>k</mi><mo>≤</mo><mi>n</mi></mrow></math></p>
+</blockquote>
+<p>The verification in Python is rather straightforward for the left hand side as we make use of the prefix sum. As for the right hand side of the inequality, we can make use of a forward pointer since the degree sequence is non-increasing.</p>
+<p>Suppose we have another array <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>T</mi></mrow></math> where each of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>T</mi><mi>k</mi></msub></mrow></math> stores the maximum index <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>i</mi></mrow></math> of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>D</mi></mrow></math> such that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>D</mi><mi>i</mi></msub><mo>≥</mo><mi>k</mi></mrow></math>. Then, for a given <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>k</mi></mrow></math>, we can transform the right hand side as follows.</p>
+<p>​<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>k</mi><mo>+</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mo>min</mo><mo stretchy="false">(</mo><msub><mi>D</mi><mi>i</mi></msub><mo>,</mo><mi>k</mi><mo stretchy="false">)</mo><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>k</mi><mo>+</mo><mn>1</mn></mrow><mrow><msub><mi>T</mi><mi>k</mi></msub></mrow></msubsup><mi>k</mi><mo>+</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><msub><mi>T</mi><mi>k</mi></msub><mo>+</mo><mn>1</mn></mrow><mrow><mi>n</mi></mrow></msubsup><msub><mi>D</mi><mi>i</mi></msub><mo>=</mo><mi>k</mi><mo stretchy="false">(</mo><msub><mi>T</mi><mi>k</mi></msub><mo>−</mo><mi>k</mi><mo stretchy="false">)</mo><mo>+</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><msub><mi>T</mi><mi>k</mi></msub><mo>+</mo><mn>1</mn></mrow><mrow><mi>n</mi></mrow></msubsup><msub><mi>D</mi><mi>i</mi></msub></mrow></math></p>
+<p>Combining the above equation with the inequality stated by the theorem, we have</p>
+<p>​<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></msubsup><msub><mi>D</mi><mi>i</mi></msub><mo>≤</mo><mi>k</mi><mo stretchy="false">(</mo><msub><mi>T</mi><mi>k</mi></msub><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><msub><mi>T</mi><mi>k</mi></msub><mo>+</mo><mn>1</mn></mrow><mrow><mi>n</mi></mrow></msubsup><msub><mi>D</mi><mi>i</mi></msub><mo>,</mo><mo>∀</mo><mn>1</mn><mo>≤</mo><mi>k</mi><mo>≤</mo><mi>n</mi></mrow></math></p>
+<pre><code class="language-python"># use another non-increasing sequence if necessary
+D = [4, 3, 2, 2, 1]
+N = len(D)
+
+# create prefix sum for LHS
+P = [0]
+for d in D:
+    P.append(P[-1]+d)
+
+# pointer for RHS
+T = [0]*(N+1)
+p = 0
+for k in range(1, N+1):
+    while p &lt; N and D[p] &gt;= k:
+        p += 1
+    T[k] = p-1
+
+# final result
+print(sum(D) % 2 == 0 and all(P[k] &lt;= k*(T[k]-1) + P[N]-P[T[k]] for k in range(1, N+1)))
+</code></pre>
+<p>When the graph is directed, the similar theorem would be the <a href="https://en.wikipedia.org/wiki/Fulkerson%E2%80%93Chen%E2%80%93Anstee_theorem"><strong>Fulkerson–Chen–Anstee theorem</strong></a>. Suppose you have the degree sequence <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>D</mi><mo>=</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><msub><mi>O</mi><mn>1</mn></msub><mo>,</mo><msub><mi>I</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><msub><mi>O</mi><mn>2</mn></msub><mo>,</mo><msub><mi>I</mi><mn>2</mn></msub><mo stretchy="false">)</mo><mo>,</mo><mi>…</mi><mo>,</mo><mo stretchy="false">(</mo><msub><mi>O</mi><mi>n</mi></msub><mo>,</mo><msub><mi>I</mi><mi>n</mi></msub><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math> where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>O</mi><mn>1</mn></msub><mo>≥</mo><msub><mi>O</mi><mn>2</mn></msub><mo>≥</mo><mi>…</mi><mo>≥</mo><msub><mi>O</mi><mi>n</mi></msub></mrow></math>.</p>
+<blockquote>
+<p>The answer is YES if and only if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi></mrow></msubsup><msub><mi>O</mi><mi>i</mi></msub><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi></mrow></msubsup><msub><mi>I</mi><mi>i</mi></msub></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></msubsup><msub><mi>O</mi><mi>i</mi></msub><mo>≤</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></msubsup><mo>min</mo><mo stretchy="false">(</mo><msub><mi>I</mi><mi>i</mi></msub><mo>,</mo><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>k</mi><mo>+</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mo>min</mo><mo stretchy="false">(</mo><msub><mi>I</mi><mi>i</mi></msub><mo>,</mo><mi>k</mi><mo stretchy="false">)</mo><mo>,</mo><mo>∀</mo><mn>1</mn><mo>≤</mo><mi>k</mi><mo>≤</mo><mi>n</mi></mrow></math></p>
+</blockquote>
+<p>The equivalent Python code is left to you as an exercise, as this is not the main point of the article.</p>
+<p>Here’s the <em>real</em> challenge: <strong>if a construction exists, how do we construct such undirected graph?</strong></p>
+<h3>Havel-Hakimi Algorithm</h3>
+<p>Reference Kattis problem: <a href="https://open.kattis.com/problems/kjordaemikonigsbergs">Kjördæmi Königsbergs</a></p>
+<p>If we have to construct the undirected graph, obviously we can’t just verify using the Erdős–Gallai theorem. We have to come up with some algorithm to approach this, which is why <a href="https://en.wikipedia.org/wiki/Havel%E2%80%93Hakimi_algorithm">Havel-Hakimi</a> comes to the rescue.</p>
+<h3>The algorithm</h3>
+<p>The ELI5 version of this algorithm is to repetitively pick the vertex with the largest degree, say with a degree of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>s</mi></mrow></math>, connect this vertex to the next <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>s</mi></mrow></math> vertices with the highest degree, and then update (decrement) the degrees accordingly. In the end, the degree sequence should only consist of zeroes.</p>
+<p>Let’s take our previous <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>4</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math> degree sequence as an example. To make things easier, we will assume that the values in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>D</mi></mrow></math> are the degrees of vertices <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi><mo>−</mo><mn>1</mn></mrow></math> in that particular order.</p>
+<ul>
+<li>Currently, vertex 0 has the largest degree of 4. We connect 0 to the next 4 vertices with the highest degree: 1, 2, 3, 4.<ul>
+<li>Degree sequence becomes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Currently, vertex 1 has the largest degree of 2. We connect 0 to the next 2 vertices with the highest degree: 2, 3.<ul>
+<li>Degree sequence becomes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Our final edge list is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>. We are done.</li>
+</ul>
+<figure style="text-align: center;">
+<img alt="graphreal1" object-fit="contain" src="media/graphreal1.PNG" width="60%"/>
+<figcaption>(Credits: VisuAlgo)</figcaption>
+</figure>
+<p>If you noticed, the final result is different than our initial graph <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>4</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, and this is caused by the pre-sorting of the degree sequence <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>D</mi></mrow></math>. In fact, even if the initial array is not non-increasing, we can still order the degrees by storing <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>D</mi><mi>i</mi></msub><mo>,</mo><mi>i</mi><mo stretchy="false">)</mo></mrow></math> instead of just <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>D</mi><mi>i</mi></msub></mrow></math>, and in the end we re-map the indices based on the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>i</mi></mrow></math> attached to the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>D</mi><mi>i</mi></msub></mrow></math>’s.</p>
+<p>Repeating this process, but this time instead of storing <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>D</mi><mo>=</mo><mo stretchy="false">[</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">]</mo></mrow></math>, we have <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>D</mi><mo>=</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>4</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math> which is then sorted to be <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>4</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>. Remapping the edge list that we obtained earlier using <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">]</mo><mo>→</mo><mo stretchy="false">[</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>2</mn><mo stretchy="false">]</mo></mrow></math>, we get <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>4</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>4</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, which is finally the same as our initial graph.</p>
+<figure style="text-align: center;">
+<img alt="graphreal2" object-fit="contain" src="media/graphreal2.PNG" width="60%"/>
+<figcaption>(Credits: VisuAlgo)</figcaption>
+</figure>
+<p>Another thing that I’d like to point out is that <strong>the construction is not unique</strong>. The degree sequence <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math> can be obtained from any edge-pairing of the 6 vertices in the graph, and there is more than one configuration of the final matching.</p>
+<p>Time to implement this in Python using max priority queues. Every time we select the vertex with the largest degree <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math>, we store the next <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math> vertices into a temporary queue first (otherwise we might select the same vertex multiple times), and after connecting the edges accordingly we re-enqueue them.</p>
+<pre><code class="language-python"># use another non-increasing sequence if necessary
+D = [4, 3, 2, 2, 1]
+N = len(D)
+
+# convert to (-D_i, i)
+# -D_i instead of D_i due to heapq using min priority queue
+D = [(-D[i], i) for i in range(N)]
+E = [] # the final edge list
+
+# convert D to priority queue
+from heapq import *
+heapify(D)
+
+while D:
+    d, i = heappop(D)       # d &lt; 0
+    tmp = []
+    for _ in range(-d):
+        assert D            # cannot find such construction
+        e, j = heappop(D)   # e &lt; 0
+        tmp.append((e+1, j))
+        E.append((i, j))
+    while tmp:
+        heappush(D, tmp.pop()) # re-enqueue everything in tmp
+
+print(E) # [(0, 1), (0, 2), (0, 3), (0, 4), (1, 2), (1, 3)]
+</code></pre>
+<p>The code pushes/pops from the priority queue for a total of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></math> times (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>m</mi><mo stretchy="false">)</mo></mrow></math> from the one inside the <code>for</code> loop and the <code>while tmp</code> loop, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></math> from the main <code>heappop</code>), where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>m</mi></mrow></math> is the number of edges in the graph, and since there are <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></math> elements in the priority queue, the runtime of this code is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mo stretchy="false">(</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo stretchy="false">)</mo><mi>log</mi><mi>n</mi><mo stretchy="false">)</mo></mrow></math>.</p>
+<h4>Ensuring connectivity</h4>
+<p>This algorithm, however, has a problem when it comes to ensuring the connectivity of the graph. Consider the degree sequence <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>. Using the above algorithm, we get <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>4</mn><mo>,</mo><mn>5</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math> as our final edge list of an (apparently) unconnected graph! However, the graph <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>5</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math> is a connected graph that yields the same degree sequence!</p>
+<figure style="text-align: center;">
+<img alt="graphreal3" object-fit="contain" src="media/graphreal3.PNG" width="60%"/>
+<img alt="graphreal4" object-fit="contain" src="media/graphreal4.PNG" width="80%"/>
+<figcaption>Same degree sequence, only one is connected (Credits: VisuAlgo)</figcaption>
+</figure>
+<p>The trick here is to change on <strong>how we select the pivot vertex</strong>. Turns out, if you always pick the vertex with the <strong>smallest nonzero</strong> degree <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math>, but you still connect this with the top <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math> vertices with the largest degree, you actually still get a valid construction. However, in this approach, we are minimizing the number of small components formed by pairing small-degree vertices with small-degree vertices, and therefore increasing our chances of obtaining a connected graph. An edge case to consider is when <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><msub><mi>D</mi><mi>i</mi></msub><mo>&lt;</mo><mn>2</mn><mi>n</mi><mo>−</mo><mn>2</mn></mrow></math>, to which the graph will not be connected however we arrange the edges.</p>
+<p>Let’s use this new approach on the degree sequence <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>. Note that there is no need for a tiebreaker: you just need to ensure the vertices selected has indeed the largest/smallest degrees.</p>
+<ul>
+<li>Pick smallest-degree vertex: 5. Pick top-1 largest-degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo stretchy="false">]</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>5</mn><mo stretchy="false">)</mo></mrow></math> to edge list.<ul>
+<li>Degree sequence is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Pick smallest-degree vertex: 4. Pick top-1 largest-degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math> to edge list.<ul>
+<li>Degree sequence is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Pick smallest-degree vertex: 0. Pick top-2 largest-degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">]</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math> to edge list.<ul>
+<li>Degree sequence is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Pick smallest-degree vertex: 1. Pick top-2 largest-degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">]</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math> to edge list.<ul>
+<li>Degree sequence is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Pick smallest-degree vertex: 2. Pick top-1 largest-degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>3</mn><mo stretchy="false">]</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math> to edge list.<ul>
+<li>Degree sequence is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="false">]</mo></mrow></math>. We are done.</li>
+</ul>
+</li>
+</ul>
+<figure style="text-align: center;">
+<img alt="graphreal5" object-fit="contain" src="media/graphreal5.PNG" width="80%"/>
+<figcaption>(Credits: VisuAlgo)</figcaption>
+</figure>
+<p>Notice that the resulting graph <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>5</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math> is indeed connected, which leaves us with the challenge to implement this in Python. Since we now need to take the smallest as well as the largest out of the data structure, simply using a priority queue won’t suffice to maintain the time complexity. You can either use a custom-made BST or using <a href="https://github.com/RussellDash332/pytils/blob/main/sorted_list.py">the SortedList template</a> (the latter is theoretically not <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mi>n</mi><mo stretchy="false">)</mo></mrow></math> per query, but has been made fast enough to approach this time complexity).</p>
+<pre><code class="language-python">... # paste the whole SortedList class here
+
+# use another non-increasing sequence if necessary
+D = [4, 3, 2, 2, 1]
+N = len(D)
+
+# convert to (D_i, i)
+D = SortedList([(D[i], i) for i in range(N)])
+E = [] # the final edge list
+
+tmp = []
+while D:
+    d, i = D.pop(0)
+    for _ in range(d):
+        assert D
+        e, j = D.pop()
+        tmp.append((e-1, j))
+        E.append((i, j))
+    while tmp:
+        D.append(tmp.pop()) # re-enqueue everything in tmp
+
+print(E) # [(4, 0), (2, 1), (2, 0), (0, 3), (0, 1), (1, 3)]
+</code></pre>
+<p>With the same reasoning as our previous Python code, the runtime of this code is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mo stretchy="false">(</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo stretchy="false">)</mo><mi>log</mi><mi>n</mi><mo stretchy="false">)</mo></mrow></math>, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>m</mi><mo>,</mo><mi>n</mi></mrow></math> are respectively the number of edges and vertices in the graph.</p>
+<h4>Improving the runtime</h4>
+<p>We can actually improve the runtime from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mo stretchy="false">(</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo stretchy="false">)</mo><mi>log</mi><mi>n</mi><mo stretchy="false">)</mo></mrow></math> to just <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></math>!</p>
+<p>In order to do so, we make use of the degree buckets: use an array of arrays <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>Q</mi></mrow></math> where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>Q</mi><mi>i</mi></msub></mrow></math> stores the vertices with degree <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>i</mi></mrow></math> at the moment. Then, we keep track of a pointer <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>L</mi></mrow></math> for the position of the smallest-degree vertex and another pointer <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>R</mi></mrow></math> for the largest-degree vertex. I wanted to give a pseudocode but I think the comments within the code below are sufficient.</p>
+<pre><code class="language-python"># use another non-increasing sequence if necessary
+D = [4, 3, 2, 2, 1]
+N = len(D)
+E = [] # the final edge list
+
+# buckets
+Q = [[] for _ in range(max(D)+1)]
+for i in range(N):
+    Q[D[i]].append(i)
+
+# two pointers
+L = 1
+R = len(Q)-1
+tmp = []
+while L &lt;= R:
+    # increment L until we find a vertex with degree L
+    if not Q[L]:
+        L += 1
+        continue
+
+    # there is at least one vertex of degree L
+    v = Q[L].pop()
+
+    # decrement R until we find a vertex with degree R
+    while R and not Q[R]:
+        R -= 1
+
+    # We can't decrement R inside the for loop
+    # Let's say we will take vertices of degrees (x-3, x-2, x) -&gt; (x-4, x-3, x-1)
+    # If we keep decrementing R, in the end of this iteration we will get R &lt;= x-3
+    # But there is still a vertex with degree x-1, so R will be incorrect
+    # Let's have a copy of R called S that we'll keep decrementing instead of R
+    # Then after the iteration we will go back from S to R
+    # TLDR: R must always keep track of the largest-degree vertex
+    S = R
+
+    # find the L largest-degree vertices
+    for _ in range(L):
+        # decrement S until we find a vertex with degree S
+        while S and not Q[S]:
+            S -= 1
+
+        assert S &gt; 0 # we must find a nonzero-degree vertex
+
+        u = Q[S].pop()
+        E.append((u, v))
+        if S &gt; 1:
+            tmp.append((u, S-1))
+
+    # re-enqueue everything from tmp
+    while tmp:
+        u, x = tmp.pop()
+        Q[x].append(u)
+
+    # What happens when L == S here?
+    # We will re-enqueue something to Q[S-1], so we have to pull back L by 1 step
+    # Otherwise, some re-enqueued vertices will be ignored
+    # TLDR: L must always keep track of the smallest-degree vertex
+    if L == S:
+        L -= 1
+
+print(E) # [(0, 4), (0, 3), (1, 3), (1, 0), (2, 0), (2, 1)]
+</code></pre>
+<p>Analyzing the time complexity, we can see that using the buckets, we have cut down the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mi>n</mi><mo stretchy="false">)</mo></mrow></math> factor. The <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></math> is due to the fact that there are <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></math> appends and pops from this data structure, the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>L</mi></mrow></math> pointer only moves at most <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></math> steps to the right (even with the <code>L == S</code> case), and the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>R</mi></mrow></math> pointer moves at most <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></math> steps to the left.</p>
+<p>There is still one last problem. There can be a case where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>L</mi></mrow></math> is sufficiently high that the value of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>S</mi></mrow></math> before and after you find the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>L</mi></mrow></math> vertices are very far away, and therefore when processing the next smallest-degree vertex, you have to redo this journey again from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>S</mi><mrow><mi>b</mi><mi>e</mi><mi>f</mi><mi>o</mi><mi>r</mi><mi>e</mi></mrow></msub></mrow></math> to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>S</mi><mrow><mi>a</mi><mi>f</mi><mi>t</mi><mi>e</mi><mi>r</mi></mrow></msub></mrow></math>, while every bucket in between might’ve been empty. To optimize this, we can have a “jump array” called <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>J</mi></mrow></math> that stores where to jump from a particular index <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>k</mi></mrow></math> in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>Q</mi></mrow></math> instead of always being <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></math>.</p>
+<p>Let’s say we during the journey from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>S</mi><mo>=</mo><msub><mi>S</mi><mrow><mi>b</mi><mi>e</mi><mi>f</mi><mi>o</mi><mi>r</mi><mi>e</mi></mrow></msub></mrow></math> to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>S</mi><mo>=</mo><msub><mi>S</mi><mrow><mi>a</mi><mi>f</mi><mi>t</mi><mi>e</mi><mi>r</mi></mrow></msub></mrow></math>, we have a bunch of indices with vertices that we selected to connect with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>S</mi><mn>1</mn></msub><mo>≥</mo><msub><mi>S</mi><mn>2</mn></msub><mo>≥</mo><mi>…</mi><mo>≥</mo><msub><mi>S</mi><mi>L</mi></msub></mrow></math>. We can update the value of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>J</mi><mrow><msub><mi>S</mi><mi>i</mi></msub></mrow></msub></mrow></math> for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>L</mi></mrow></math> into <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>J</mi><mrow><msub><mi>J</mi><mrow><msub><mi>S</mi><mi>i</mi></msub></mrow></msub></mrow></msub></mrow></math>. For large gaps, the total number of steps will be expected to half every time it gets explored.</p>
+<p>Another edge case is when we have put <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>J</mi><mrow><mi>s</mi></mrow></msub></mrow></math> for some <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>s</mi></mrow></math> into something that is less than <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>s</mi><mo>−</mo><mn>1</mn></mrow></math>, but after taking a degree of a vertex in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>Q</mi><mo stretchy="false">[</mo><mi>s</mi><mo stretchy="false">]</mo></mrow></math>, we need to relocate this vertex to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>s</mi><mo>−</mo><mn>1</mn></mrow></math>. This means we have to be able to undo our update of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>J</mi><mrow><mi>s</mi></mrow></msub></mrow></math> back to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>s</mi><mo>−</mo><mn>1</mn></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>J</mi><mrow><mi>s</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow></math> to the old <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>J</mi><mrow><mi>s</mi></mrow></msub></mrow></math>.</p>
+<p>The time complexity remains the same, but the constant factor will get better. With this, behold the final version of the Havel-Hakimi algorithm.</p>
+<pre><code class="language-python">D = [4, 3, 2, 2, 1]
+
+N = len(D)
+E = [] # the final edge list
+
+# buckets
+Q = [[] for _ in range(max(D)+1)]
+for i in range(N):
+    Q[D[i]].append(i)
+
+# two pointers
+L = 1
+R = len(Q)-1
+tmp = []
+
+# initial jump array: from x to x-1
+J = [i-1 for i in range(R+1)]
+
+while L &lt;= R:
+    # increment L until we find a vertex with degree L
+    if not Q[L]:
+        L += 1
+        continue
+
+    v = Q[L].pop() # there is at least one vertex of degree L
+    B = [] # which indices of J to update
+    S = R
+
+    # find the L largest-degree vertices
+    for _ in range(L):
+        # go to next value of S until we find a vertex with degree S
+        while S and not Q[S]:
+            B.append(S) # update the value of J[S] later
+            S = J[S]
+
+        assert S &gt; 0 # we must find a nonzero-degree vertex
+
+        u = Q[S].pop()
+        E.append((u, v))
+        if S &gt; 1:
+            tmp.append((u, S-1))
+
+    while tmp:
+        u, x = tmp.pop()
+        if J[x+1] != x: # undo update of J
+            J[x], J[x+1] = J[x+1], x
+        Q[x].append(u)
+
+    # close the gaps
+    for b in B:
+        if not Q[J[b]]:
+            J[b] = J[J[b]]
+
+    if L == S:
+        L -= 1
+
+print(E) # [(0, 4), (0, 3), (1, 3), (1, 0), (2, 0), (2, 1)]
+</code></pre>
+<h3>Kleitman-Wang Algorithm</h3>
+<p>Reference Kattis problem: <a href="https://open.kattis.com/problems/followerforensics">Follower Forensics</a></p>
+<p>We can use the idea from the optimized Havel-Hakimi algorithm to solve the case when <strong>the graph is directed</strong> and we’re given two arrays instead: <em>the outdegree array and the indegree array</em>.</p>
+<p>Instead of just ensuring connectivity, we get to be more specific: <em>weak-connectivity</em>. The algorithm is expected to generate a weak-connected graph whenever possible, i.e. when you convert all the directed edges into undirected, the graph becomes connected.</p>
+<p>Instead of just selecting the smallest-degree vertex, we select <em>the smallest-outdegree/indegree vertex</em> (obviously ignoring those with degree of 0), whichever has a smaller such degree of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math> (if they are the same, take the outdegree first). This means we take <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math> vertices with <em>the highest indegree/outdegree</em>, and update their degrees accordingly after connecting them with the proper directed edges.</p>
+<p>For example, we start with a graph of 5 vertices with the outdegree <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo>=</mo><mo stretchy="false">[</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">]</mo></mrow></math> and the indegree <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi><mo>=</mo><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>2</mn><mo stretchy="false">]</mo></mrow></math>.</p>
+<ul>
+<li>Smallest outdegree = <strong>1 at vertex 1</strong>, smallest indegree = 2 at vertex 1, this means we process vertex 1.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertex: 3. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn><mo>→</mo><mn>3</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <strong>1 at vertex 3</strong>, smallest indegree = 2 at vertex 1, this means we process vertex 3.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertex: 1. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>3</mn><mo>→</mo><mn>1</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = 2 at vertex 0, smallest indegree = <strong>1 at vertex 1</strong>, this means we process vertex 1.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertex: 4. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>4</mn><mo>→</mo><mn>1</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <strong>2 at vertex 0</strong>, smallest indegree = 2 at vertex 2, this means we process vertex 0.<ul>
+<li>Pick top-2 largest <strong>in</strong>degree vertex: 2 and 3. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mn>2</mn></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mn>3</mn></mrow></math> to edge list.</li>
+<li>We could’ve picked 0 instead of 2 or 3, but since the vertex we’re processing is 0, we need to refrain from making a self-loop.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = 2 at vertex 2, smallest indegree = <strong>1 at vertex 3</strong>, this means we process vertex 3.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertex: 2. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>→</mo><mn>3</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <strong>1 at vertex 2</strong>, smallest indegree = 1 at vertex 4, this means we process vertex 2.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertex: 2. Since the processed vertex is also 2, we skip this and take the next largest: 4. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>→</mo><mn>4</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Now we have 2 outgoing edges from vertex 4 to vertex 2, which means something is wrong (the input is supposed to be a valid graph degree array).</li>
+</ul>
+<h4>Fixing the tiebreaker</h4>
+<p>So what went wrong? The tiebreaker for selecting the largest/smallest degree vertices was fixated on whichever has the smaller vertex label, so maybe this wasn’t the best strategy. Using the same logic, if we fix both selection tiebreakers on whichever has the larger vertex label, the same outcome might happen.</p>
+<p>The next intuitive tiebreaker would be to <em>break the ties on largest degrees by larger vertex number, and smallest degrees by smaller vertex number</em>. This means we can represent the degrees as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>D</mi><mi>i</mi></msub><mo>,</mo><mi>i</mi><mo stretchy="false">)</mo></mrow></math> instead of just <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>D</mi><mi>i</mi></msub></mrow></math> for easier readability.</p>
+<p>Start with the same graph of 5 vertices with the outdegree <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo>=</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math> and the indegree <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi><mo>=</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>. (vertices with 0 degree ignored)</p>
+<ul>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>, smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 1.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn><mo>→</mo><mn>3</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math>, smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 3.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>3</mn><mo>→</mo><mn>4</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>, smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 4.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>. Since the processed vertex is 4, we avoid self-loop and take the next largest: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>→</mo><mn>4</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math>, smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 2.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>→</mo><mn>3</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>, smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 3.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>4</mn><mo>→</mo><mn>3</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>, smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 0.<ul>
+<li>Pick top-2 largest <strong>in</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mn>1</mn></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mn>2</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>, smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 1.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>4</mn><mo>→</mo><mn>1</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>4</mn><mo>→</mo><mn>2</mn></mrow></math> to edge list.</li>
+<li>We end up with this adjacency list: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mo stretchy="false">[</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">]</mo><mo>,</mo><mn>1</mn><mo>→</mo><mo stretchy="false">[</mo><mn>3</mn><mo stretchy="false">]</mo><mo>,</mo><mn>2</mn><mo>→</mo><mo stretchy="false">[</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">]</mo><mo>,</mo><mn>3</mn><mo>→</mo><mo stretchy="false">[</mo><mn>4</mn><mo stretchy="false">]</mo><mo>,</mo><mn>4</mn><mo>→</mo><mo stretchy="false">[</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">]</mo></mrow></math>, which is indeed a valid weak-connected directed graph.</li>
+</ul>
+<figure style="text-align: center;">
+<img alt="graphreal6" object-fit="contain" src="media/graphreal6.PNG" width="60%"/>
+<figcaption>(Credits: VisuAlgo)</figcaption>
+</figure>
+<p>Let’s try another example with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo>=</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi><mo>=</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</p>
+<ul>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math>, smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 3.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>3</mn><mo>→</mo><mn>2</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>, smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 4.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertex (skip 4): <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>4</mn><mo>→</mo><mn>3</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math>, smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 0.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn><mo>→</mo><mn>0</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>, smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 3.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mn>3</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>, smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 0.<ul>
+<li>Pick top-2 largest <strong>in</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mn>2</mn></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mn>4</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>, smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 2.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math> (skip 2). Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>→</mo><mn>1</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>To avoid self-loop, the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math> in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> would mean we must have <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn><mo>→</mo><mn>4</mn></mrow></math>, which will make us end with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo>=</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi><mo>=</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>… a double-edge! <strong>This means our tiebreaker isn’t perfect yet!</strong></li>
+</ul>
+<p>Instead of doing the previous two tiebreakers, we should be doing this: <strong><em>while selecting the smallest/largest indegree/outdegree vertex, break ties by selecting the one with larger outdegree/indegree.</em></strong></p>
+<p>Starting with the first one: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo>=</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi><mo>=</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</p>
+<ul>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math> (instead of vertex 1 since vertex 3 has a larger indegree), smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math> (same reasoning), this means we process vertex 3.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math> (avoid 3). Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>3</mn><mo>→</mo><mn>4</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>, smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 1.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn><mo>→</mo><mn>3</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> (vertex 2 has larger indegree than vertex 0), smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 4.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> (vertex 2 still has larger indegree than vertex 0). Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>→</mo><mn>4</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math>, smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> (vertex 2 has the largest outdegree among vertices 1, 2, 3), this means we process vertex 2.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math> (same reasoning as above, but you avoid picking 2 again). Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>→</mo><mn>1</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>, smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 1.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>4</mn><mo>→</mo><mn>1</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math> (or vertex 4 is also fine since their indegrees are both 0), smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> (or vertex 3 is also fine since their outdegrees are both 0), this means we process vertex 0.<ul>
+<li>Pick top-2 largest <strong>in</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mn>2</mn></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mn>3</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>, smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> (or vertex 3 is also fine), this means we process vertex 2.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertex: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>4</mn><mo>→</mo><mn>2</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Final step connects <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>4</mn><mo>→</mo><mn>3</mn></mrow></math>, both <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> are now empty.</li>
+<li>We end up with this adjacency list: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mo stretchy="false">[</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">]</mo><mo>,</mo><mn>1</mn><mo>→</mo><mo stretchy="false">[</mo><mn>3</mn><mo stretchy="false">]</mo><mo>,</mo><mn>2</mn><mo>→</mo><mo stretchy="false">[</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">]</mo><mo>,</mo><mn>3</mn><mo>→</mo><mo stretchy="false">[</mo><mn>4</mn><mo stretchy="false">]</mo><mo>,</mo><mn>4</mn><mo>→</mo><mo stretchy="false">[</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">]</mo></mrow></math>, which is indeed a valid weak-connected directed graph.</li>
+</ul>
+<figure style="text-align: center;">
+<img alt="graphreal7" object-fit="contain" src="media/graphreal7.PNG" width="60%"/>
+<figcaption>(Credits: VisuAlgo)</figcaption>
+</figure>
+<p>Next one is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo>=</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi><mo>=</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</p>
+<ul>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math> (vertex 4 has the same indegree AND outdegree as vertex 3, so the choice between 3 or 4 doesn’t matter here), smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 3.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertices: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>3</mn><mo>→</mo><mn>2</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>, smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 4.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertices: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math> (break ties by largest outdegree as usual). Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>4</mn><mo>→</mo><mn>1</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math>, smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math> (tie between vertex 0 and 1, but any choice doesn’t matter), this means we process vertex 0.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertices: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math> (another tie between vertex 0 and 1, just avoid self-loop). Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn><mo>→</mo><mn>0</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> (apply tiebreaker rules), smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 1.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertices: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mn>1</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> (apply tiebreaker rules), smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> (apply tiebreaker rules), this means we process vertex 2.<ul>
+<li>Pick top-2 largest <strong>in</strong>degree vertices: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math> (avoid vertex 2). Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>→</mo><mn>3</mn></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>→</mo><mn>4</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math> (either vertex 0 or vertex 1 doesn’t matter since their indegrees are both 0), smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math> (either vertex 3 or 4 is fine since their outdegrees are both 0), this means we process vertex 3.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertices: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math> (or again, vertex 0 is also fine). Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn><mo>→</mo><mn>3</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest <strong>out</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math>, smallest indegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math>, this means we process vertex 1.<ul>
+<li>Pick top-1 largest <strong>in</strong>degree vertices: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn><mo>→</mo><mn>2</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Smallest outdegree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>, smallest <strong>in</strong>degree = <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> (either vertex 2 or 4 is fine since their outdegrees are both 0), this means we process vertex 2.<ul>
+<li>Pick top-1 largest <strong>out</strong>degree vertices: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></math>. Add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mn>2</mn></mrow></math> to edge list.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> is now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow></math>.</li>
+</ul>
+</li>
+<li>Final step connects <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mn>4</mn></mrow></math>, both <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> are now empty.</li>
+<li>We end up with this adjacency list: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn><mo>→</mo><mo stretchy="false">[</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">]</mo><mo>,</mo><mn>1</mn><mo>→</mo><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">]</mo><mo>,</mo><mn>2</mn><mo>→</mo><mo stretchy="false">[</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false">]</mo><mo>,</mo><mn>3</mn><mo>→</mo><mo stretchy="false">[</mo><mn>2</mn><mo stretchy="false">]</mo><mo>,</mo><mn>4</mn><mo>→</mo><mo stretchy="false">[</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>, which is indeed a valid weak-connected directed graph.</li>
+</ul>
+<figure style="text-align: center;">
+<img alt="graphreal8" object-fit="contain" src="media/graphreal8.PNG" width="80%"/>
+<figcaption>(Credits: VisuAlgo)</figcaption>
+</figure>
+<h4>Python code</h4>
+<p>The code has a lot of similarities with the Havel-Hakimi version, but now we have <strong>two</strong> degree buckets: one for outdegree, and one for indegree. Since we want to handle the tiebreaker, store the indegree in decreasing order on the outdegree bucket and vice versa for the other degree bucket using priority queues as shown below.</p>
+<pre><code class="language-python"># make sure that len(O) == len(I)
+O = [3, 3, 2, 1, 1]
+I = [1, 2, 3, 2, 2]
+
+N = len(O)
+E = [] # the final edge list
+
+# pointers and buckets
+L = 1
+R = max(O+I)
+P = [[] for _ in range(R+1)] # for outdegree
+Q = [[] for _ in range(R+1)] # for indegree
+from heapq import *
+for i in range(N):
+    P[O[i]].append((-I[i], i)) # decreasing indegree within the same outdegree
+    Q[I[i]].append((-O[i], i)) # decreasing outdegree within the same indegree
+for i in range(R+1):
+    heapify(P[i]) # convert both to PQ
+    heapify(Q[i])
+
+# jump array and tmp for re-enqueue
+J = [i-1 for i in range(R+1)]
+tmp = []
+
+while L &lt;= R:
+    # cannot find any vertex with in/outdegree L, check *both* P[L] and Q[L]
+    if not P[L] and not Q[L]:
+        L += 1; continue
+
+    # Should we process indegree or outdegree?
+    # If indegree, we simply swap the buckets along with the indegree/outdegree arrays
+    # This is so that without loss of generality, we'll always take the smallest from P and the largest from Q
+    swap = not P[L]
+    if swap:
+        P, Q, O, I = Q, P, I, O
+
+    _, v = heappop(P[L])
+    B = []
+    S = R
+    pos_v = 0
+
+    for _ in range(L):
+        # We try to skip if Q[S] only contains vertex v or is empty
+        # If v is found anywhere in Q[S], we will pop it first, and then get the next vertex
+        # There is definitely another vertex within Q[S] that is not v
+        # If we popped v from Q[S] at some time, add it back (use the pos_v variable) after finding the L vertices
+        while S and (not Q[S] or (len(Q[S]) == 1 and Q[S][0][1] == v)):
+            B.append(S)
+            S = J[S]
+
+        assert S &gt; 0
+
+        _, u = heappop(Q[S])
+        if u == v:
+            _, u = heappop(Q[S])
+            pos_v = S
+        E.append((u, v) if swap else (v, u))
+        O[v] -= 1 # update outdegree
+        I[u] -= 1 # update indegree
+        if S &gt; 1:
+            tmp.append((u, S-1))
+
+    # re-add v if popped
+    if pos_v:
+        heappush(Q[pos_v], (-O[v], v))
+
+    while tmp:
+        u, x = tmp.pop()
+        if J[x+1] != x:
+            J[x], J[x+1] = J[x+1], x
+        heappush(Q[x], (-O[u], u))
+
+    for b in B:
+        if not P[J[b]] and not Q[J[b]]: # check *both* P[J[b]] and Q[J[b]]
+            J[b] = J[J[b]]
+
+    if L == S:
+        L -= 1
+
+    # revert the swap back to normal
+    if swap:
+        P, Q, O, I = Q, P, I, O
+
+print(E) # [(3, 2), (4, 1), (1, 0), (0, 1), (2, 3), (2, 4), (1, 3), (1, 2), (0, 2), (0, 4)]
+</code></pre>
+<p>The time complexity is now to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>m</mi><mi>log</mi><mi>n</mi><mo stretchy="false">)</mo></mrow></math> due to the use of priority queues, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>m</mi></mrow></math> is the number of edges and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>n</mi></mrow></math> is the number of vertices. From what I heard, however, there is a technique to convert this algorithm into linear time like <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></math>, but I’ll leave that for the upcoming write-ups.</p></div></div>
+</section>
+<section id="footer">
+<div class="container">
+<ul class="copyright">
+<li>© Russell Saerang 2025. All rights reserved.</li>
+<li>Design: <a href="http://html5up.net" rel="noopener noreferrer" target="_blank">HTML5 UP</a></li>
+<li>Illustration: <a href="http://linkedin.com" rel="noopener noreferrer" target="_blank">LinkedIn</a> and <a href="http://unsplash.com" rel="noopener noreferrer" target="_blank">Unsplash</a></li>
+</ul>
+</div>
+</section>
+</div>
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/jquery.scrollex.min.js"></script>
+<script src="../assets/js/jquery.scrolly.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
+<link href="../assets/css/highlight.min.css" rel="stylesheet"/>
+<script src="../assets/js/highlight.min.js"></script>
+<script>hljs.highlightAll(); hljs.addPlugin(
+        new CopyButtonPlugin({
+            autohide: false,
+            callback: (text, el) => console.log("Copied to clipboard", text),
+    }));
+</script>
+</div></body>
+</html>
