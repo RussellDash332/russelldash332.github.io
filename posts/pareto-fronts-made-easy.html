@@ -7,6 +7,37 @@
 <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
 <link href="../assets/css/main.css" rel="stylesheet"/>
 <link href="../media/russell.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+        delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "\\[", right: "\\]", display: true},
+        {left: "$", right: "$", display: false},
+        ],
+        throwOnError: false,
+        strict: false,
+    });
+    });
+    </script>
+<style>
+    ul, ol {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    padding-left: 1.5em;
+    }
+    ul ul, ol ol, ul ol, ol ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    }
+    li {
+    margin-bottom: 0.25em;
+    }
+    ul + ul { margin-top: -0.5em; }
+    </style>
 </head>
 <body class="is-preload">
 <section id="header">
@@ -17,11 +48,7 @@
 </a>
 <p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
 </header>
-<nav id="nav">
-<ul>
-<li><a class="active" href="index.html">Posts</a></li>
-</ul>
-</nav>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#pareto-fronts-made-easy">Pareto Fronts Made Easy!</a></li><li><a href="#2d-pareto-front" style="font-size: 0.95em; font-weight: 500;">2D Pareto Front</a></li><li><a href="#3d-pareto-front" style="font-size: 0.95em; font-weight: 500;">3D Pareto Front</a></li></ul></nav>
 <footer>
 <ul class="icons">
 <li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
@@ -38,51 +65,74 @@
 <div class="image main" data-position="center">
 <img alt="" src="../media/banner.jpg"/>
 </div>
-<div class="container"><div class="post-container"><h2>Pareto Fronts Made Easy!</h2>
-<div class="date"><p>22 July 2024</p></div><p>Suppose you have a set <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>S</mi></mrow></math> of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi></mrow></math> different objects, each object having different scores for a particular set of metrics.</p><p>Suppose we ask ourselves this question:</p>
+<div class="container"><div class="post-container"><h2 id="pareto-fronts-made-easy">Pareto Fronts Made Easy!</h2>
+<div class="date"><p>22 July 2024</p></div>
+<p>Suppose you have a set $S$ of $N$ different objects, each object having different scores for a particular set of metrics.</p>
+<p>Suppose we ask ourselves this question:</p>
 <blockquote>
-<p>How does one select as many objects as possible, say to a set <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>T</mi></mrow></math>, such that there are <strong>no two distinct</strong> objects <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>x</mi><mo>∈</mo><mi>T</mi></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>y</mi><mo>∈</mo><mi>S</mi></mrow></math> where all metrics of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>x</mi></mrow></math> are lower compared to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>y</mi></mrow></math>?</p>
-</blockquote><p>The set of objects that we want to obtain here is called a <strong>Pareto front</strong>. If you look at the <a href="https://en.m.wikipedia.org/wiki/Pareto_front">Wikipedia page</a>, this particular concept is widely used for optimizations in engineering. However, what I’ll be discussing is just a small subset of it, particularly on simple objectives such as the main question above.</p><p>I’ll also discuss only the case for 2 metrics and 3 metrics, respectively the 2D Pareto front and the 3D Parento front. For more than 3 metrics, it would require more sophisticated (approximation) algorithms which is out of the scope of this article.</p><p>Finally, for simplicity, we shall assume that all values within the same metric are distinct. For example, if we have two points <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><msub><mi>y</mi><mn>1</mn></msub><mo stretchy="false">)</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>2</mn></msub><mo>,</mo><msub><mi>y</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow></math>, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>≠</mo><msub><mi>x</mi><mn>2</mn></msub></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>y</mi><mn>1</mn></msub><mo>≠</mo><msub><mi>y</mi><mn>2</mn></msub></mrow></math>.</p><h3>2D Pareto Front</h3>
-<p>An example where we are to obtain a 2D Pareto front is this Kattis problem: <a href="https://open.kattis.com/problems/physicalmusic">Physical Music</a>.</p><p>Let me simplify the problem statement:</p>
+<p>How does one select as many objects as possible, say to a set $T$, such that there are <strong>no two distinct</strong> objects $x\in T$ and $y\in S$ where all metrics of $x$ are lower compared to $y$?</p>
+</blockquote>
+<p>The set of objects that we want to obtain here is called a <strong>Pareto front</strong>. If you look at the <a href="https://en.m.wikipedia.org/wiki/Pareto_front">Wikipedia page</a>, this particular concept is widely used for optimizations in engineering. However, what I’ll be discussing is just a small subset of it, particularly on simple objectives such as the main question above.</p>
+<p>I’ll also discuss only the case for 2 metrics and 3 metrics, respectively the 2D Pareto front and the 3D Parento front. For more than 3 metrics, it would require more sophisticated (approximation) algorithms which is out of the scope of this article.</p>
+<p>Finally, for simplicity, we shall assume that all values within the same metric are distinct. For example, if we have two points $(x_1, y_1)$ and $(x_2, y_2)$, then $x_1 \neq x_2$ and $y_1 \neq y_2$.</p>
+<h3 id="2d-pareto-front">2D Pareto Front</h3>
+<p>An example where we are to obtain a 2D Pareto front is this Kattis problem: <a href="https://open.kattis.com/problems/physicalmusic">Physical Music</a>.</p>
+<p>Let me simplify the problem statement:</p>
 <blockquote>
-<p>There are <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi></mrow></math> CD singles each with their ranks on Single Top <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi></mrow></math> and on Download Top <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi></mrow></math>. We want to select as many CD singles as possible such that for any CD single in this selection we can’t find any other CD single with both higher rank on Single Top <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi></mrow></math> and lower rank on Download Top <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi></mrow></math>. Output the complement of this selection.</p>
-</blockquote><p>Suppose we represent these CD singles as point with the ranks as coordinates in the 2D Cartesian plane (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>s</mi><mi>i</mi></msub></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow></math>). Basically the Pareto front here is the set of points such that for any point <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow></math> in this selection, we can’t find any other point with both higher <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>x</mi></mrow></math>-coordinate and lower <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>y</mi></mrow></math>-coordinate.</p><p>Now let’s take a look at the sample input:</p><ul>
-<li>The first part has three points: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math>. All three points lie on the Pareto front, so we output <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0</mn></mrow></math>.</li>
-<li>The second part has four points: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo stretchy="false">(</mo><mn>4</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math>. Both points <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math> do not lie on the Pareto front because <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>4</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></math> have both higher single rank and lower download rank than <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math>, respectively. Therefore, we output both <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow></math>, meaning the actual output is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn></mrow></math> (because there are 2 points) and then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>3</mn></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>4</mn></mrow></math> (the download ranks in sorted order).</li>
-</ul><p><img alt="pareto1" object-fit="contain" src="media/pareto1.png" width="80%"/></p><p>Having visualized the sample input, let’s solve the problem:</p><ul>
-<li>We shall use a sorted set (like AVL tree) to solve this problem, denote this sorted set <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>P</mi></mrow></math>.</li>
-<li>Go through the points in ascending order of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>s</mi><mi>i</mi></msub></mrow></math>.</li>
-<li>For any point <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>s</mi><mi>i</mi></msub><mo>,</mo><msub><mi>d</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></math>, insert <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow></math> to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>P</mi></mrow></math>. If there are currently no element smaller than <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow></math> in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>P</mi></mrow></math>, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>s</mi><mi>i</mi></msub><mo>,</mo><msub><mi>d</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></math> belongs to the Pareto front.</li>
-<li>Since we’re taking the complement of this Pareto front, we simply negate the condition: we output <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow></math> if there is an element smaller than it in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>P</mi></mrow></math> at the moment of insertion of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow></math>.</li>
-</ul><p>Overall, the algorithm takes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>N</mi><mi>log</mi><mi>N</mi><mo stretchy="false">)</mo></mrow></math> time due to sorting of the points by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>s</mi><mi>i</mi></msub></mrow></math>, followed by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi></mrow></math> insertions of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow></math>, each costing <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mi>N</mi><mo stretchy="false">)</mo></mrow></math>. Thus, one should be able to pass the time limit even if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi><mo>=</mo><msup><mn>10</mn><mn>5</mn></msup></mrow></math>.</p><p>If we do it naively using double loops, it will take <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>N</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></math>, which is suboptimal for the problem.</p><h3>3D Pareto Front</h3>
-<p>This would be a great opportunity to use another Kattis problem as an example: <a href="https://open.kattis.com/problems/excellentengineers">Excellent Engineers</a>.</p><p>Here’s the simplified problem statement:</p>
+<p>There are $N$ CD singles each with their ranks on Single Top $N$ and on Download Top $N$. We want to select as many CD singles as possible such that for any CD single in this selection we can’t find any other CD single with both higher rank on Single Top $N$ and lower rank on Download Top $N$. Output the complement of this selection.</p>
+</blockquote>
+<p>Suppose we represent these CD singles as point with the ranks as coordinates in the 2D Cartesian plane ($s_i$, $d_i$). Basically the Pareto front here is the set of points such that for any point $(x, y)$ in this selection, we can’t find any other point with both higher $x$-coordinate and lower $y$-coordinate.</p>
+<p>Now let’s take a look at the sample input:</p>
+<ul>
+<li>The first part has three points: $(1, 1), (2, 2), (3, 3)$. All three points lie on the Pareto front, so we output $0$.</li>
+<li>The second part has four points: $(1, 4), (2, 3), (3, 1), (4, 2)$. Both points $(1, 4)$ and $(2, 3)$ do not lie on the Pareto front because $(3, 1)$ and $(4, 2)$ have both higher single rank and lower download rank than $(1, 4)$ and $(2, 3)$, respectively. Therefore, we output both $(1, 4)$ and $(2, 3)$, meaning the actual output is $2$ (because there are 2 points) and then $3$ and $4$ (the download ranks in sorted order).</li>
+</ul>
+<p><img alt="pareto1" object-fit="contain" src="media/pareto1.png" width="80%"/></p>
+<p>Having visualized the sample input, let’s solve the problem:</p>
+<ul>
+<li>We shall use a sorted set (like AVL tree) to solve this problem, denote this sorted set $P$.</li>
+<li>Go through the points in ascending order of $s_i$.</li>
+<li>For any point $(s_i, d_i)$, insert $d_i$ to $P$. If there are currently no element smaller than $d_i$ in $P$, then $(s_i, d_i)$ belongs to the Pareto front.</li>
+<li>Since we’re taking the complement of this Pareto front, we simply negate the condition: we output $d_i$ if there is an element smaller than it in $P$ at the moment of insertion of $d_i$.</li>
+</ul>
+<p>Overall, the algorithm takes $O(N \log N)$ time due to sorting of the points by $s_i$, followed by $N$ insertions of $d_i$, each costing $O(\log N)$. Thus, one should be able to pass the time limit even if $N = 10^5$.</p>
+<p>If we do it naively using double loops, it will take $O(N^2)$, which is suboptimal for the problem.</p>
+<h3 id="3d-pareto-front">3D Pareto Front</h3>
+<p>This would be a great opportunity to use another Kattis problem as an example: <a href="https://open.kattis.com/problems/excellentengineers">Excellent Engineers</a>.</p>
+<p>Here’s the simplified problem statement:</p>
 <blockquote>
-<p>Suppose we have <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi></mrow></math> points in the 3D cartesian plane. We want to shortlist these points such that for any point <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>z</mi><mo stretchy="false">)</mo></mrow></math> in this shortlist, none of the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>N</mi></mrow></math> points have lower values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>x</mi></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>y</mi></mrow></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>z</mi></mrow></math> simultaneously. Simply output the size of the 3D Pareto front.</p>
-</blockquote><p>So how exactly can we extend from the 2D scenario to this?</p><ul>
-<li>Again, let’s use a sorted set and call this <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>P</mi></mrow></math>.</li>
-<li>Sort these points in ascending <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>z</mi></mrow></math>-coordinate.</li>
-<li>For every point <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>,</mo><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><msub><mi>z</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></math> that we want to insert:<ul>
-<li>Insert <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow></math> to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>P</mi></mrow></math>.</li>
-<li>Suppose <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>x</mi><mi>j</mi></msub></mrow></math> is the largest element of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>P</mi></mrow></math> that is smaller than <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>j</mi></msub><mo>,</mo><msub><mi>y</mi><mi>j</mi></msub><mo>,</mo><msub><mi>z</mi><mi>j</mi></msub><mo stretchy="false">)</mo></mrow></math> is the point with the corresponding <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>x</mi><mi>j</mi></msub></mrow></math>. Note that this means <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>x</mi><mi>j</mi></msub><mo>&lt;</mo><msub><mi>x</mi><mi>i</mi></msub></mrow></math>.<ul>
-<li>If such point exists and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>y</mi><mi>j</mi></msub><mo>&lt;</mo><msub><mi>y</mi><mi>i</mi></msub></mrow></math>, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>,</mo><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><msub><mi>z</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></math> will never belong to the Pareto front and we have to redelete it from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>P</mi></mrow></math>. This is because <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>j</mi></msub><mo>,</mo><msub><mi>y</mi><mi>j</mi></msub><mo>,</mo><msub><mi>z</mi><mi>j</mi></msub><mo stretchy="false">)</mo></mrow></math> were inserted before <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>,</mo><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><msub><mi>z</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></math> and thus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>z</mi><mi>j</mi></msub><mo>&lt;</mo><msub><mi>z</mi><mi>i</mi></msub></mrow></math>. Combining the three inequalities led to such conclusion.</li>
-<li>Otherwise, we add <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>,</mo><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><msub><mi>z</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></math> to the Pareto front and keep <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow></math> at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>P</mi></mrow></math>.</li>
+<p>Suppose we have $N$ points in the 3D cartesian plane. We want to shortlist these points such that for any point $(x, y, z)$ in this shortlist, none of the $N$ points have lower values of $x$, $y$, and $z$ simultaneously. Simply output the size of the 3D Pareto front.</p>
+</blockquote>
+<p>So how exactly can we extend from the 2D scenario to this?</p>
+<ul>
+<li>Again, let’s use a sorted set and call this $P$.</li>
+<li>Sort these points in ascending $z$-coordinate.</li>
+<li>For every point $(x_i, y_i, z_i)$ that we want to insert:<ul>
+<li>Insert $x_i$ to $P$.</li>
+<li>Suppose $x_j$ is the largest element of $P$ that is smaller than $x_i$ and $(x_j, y_j, z_j)$ is the point with the corresponding $x_j$. Note that this means $x_j &lt; x_i$.<ul>
+<li>If such point exists and $y_j &lt; y_i$, then $(x_i, y_i, z_i)$ will never belong to the Pareto front and we have to redelete it from $P$. This is because $(x_j, y_j, z_j)$ were inserted before $(x_i, y_i, z_i)$ and thus $z_j &lt; z_i$. Combining the three inequalities led to such conclusion.</li>
+<li>Otherwise, we add $(x_i, y_i, z_i)$ to the Pareto front and keep $x_i$ at $P$.</li>
 </ul>
 </li>
-<li>While there exists an element of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>P</mi></mrow></math> that is larger than <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow></math>, do the following:<ul>
-<li>Suppose <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>x</mi><mi>k</mi></msub></mrow></math> is the smallest such element and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>k</mi></msub><mo>,</mo><msub><mi>y</mi><mi>k</mi></msub><mo>,</mo><msub><mi>z</mi><mi>k</mi></msub><mo stretchy="false">)</mo></mrow></math> is the point with the corresponding <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>x</mi><mi>k</mi></msub></mrow></math>.</li>
-<li>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>y</mi><mi>k</mi></msub><mo>&gt;</mo><msub><mi>y</mi><mi>i</mi></msub></mrow></math>, we remove <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>x</mi><mi>k</mi></msub></mrow></math> from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>P</mi></mrow></math>. This is because we know that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>x</mi><mi>k</mi></msub><mo>&gt;</mo><msub><mi>x</mi><mi>i</mi></msub></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>y</mi><mi>k</mi></msub><mo>&gt;</mo><msub><mi>y</mi><mi>i</mi></msub></mrow></math>, but <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>z</mi><mi>k</mi></msub><mo>&lt;</mo><msub><mi>z</mi><mi>i</mi></msub></mrow></math>. So both points might still belong to the Pareto front, but since we only check the previous <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>x</mi></mrow></math>-coordinate during the insertion of a new point, we want to avoid false positives and maintain the elements of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>P</mi></mrow></math> in ascending order <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>x</mi></mrow></math> to be in descending order of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>y</mi></mrow></math>. The image below will show you a scenario where this deletion actually matters.</li>
-<li>Otherwise (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>y</mi><mi>k</mi></msub><mo>&lt;</mo><msub><mi>y</mi><mi>i</mi></msub></mrow></math>), we stop the process and move on to the next point to be inserted, if any.</li>
+<li>While there exists an element of $P$ that is larger than $x_i$, do the following:<ul>
+<li>Suppose $x_k$ is the smallest such element and $(x_k, y_k, z_k)$ is the point with the corresponding $x_k$.</li>
+<li>If $y_k &gt; y_i$, we remove $x_k$ from $P$. This is because we know that $x_k &gt; x_i$ and $y_k &gt; y_i$, but $z_k &lt; z_i$. So both points might still belong to the Pareto front, but since we only check the previous $x$-coordinate during the insertion of a new point, we want to avoid false positives and maintain the elements of $P$ in ascending order $x$ to be in descending order of $y$. The image below will show you a scenario where this deletion actually matters.</li>
+<li>Otherwise ($y_k &lt; y_i$), we stop the process and move on to the next point to be inserted, if any.</li>
 </ul>
 </li>
 </ul>
 </li>
-</ul><p><img alt="pareto2" object-fit="contain" src="media/pareto2.png" width="90%"/>
+</ul>
+<p><img alt="pareto2" object-fit="contain" src="media/pareto2.png" width="90%"/>
 <img alt="pareto3" object-fit="contain" src="media/pareto3.png" width="90%"/>
-<img alt="pareto4" object-fit="contain" src="media/pareto4.png" width="90%"/></p><p>Overall, the algorithm still takes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>N</mi><mi>log</mi><mi>N</mi><mo stretchy="false">)</mo></mrow></math> time because of these reasons:</p><ul>
-<li>sorting by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>z</mi></mrow></math>-coordinates takes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>N</mi><mi>log</mi><mi>N</mi><mo stretchy="false">)</mo></mrow></math> time</li>
-<li>every insertion of a point takes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mi>N</mi><mo stretchy="false">)</mo></mrow></math> time, so in total this takes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>N</mi><mi>log</mi><mi>N</mi><mo stretchy="false">)</mo></mrow></math> time</li>
-<li>all while loops combined ensure that every point is deleted at most once, so these while loops will take at most another <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>N</mi><mi>log</mi><mi>N</mi><mo stretchy="false">)</mo></mrow></math> time (see also: <a href="https://en.m.wikipedia.org/wiki/Amortized_analysis">Amortized analysis</a>)</li>
-</ul><p>Similar to the 2D case, if we do this naively, it will take <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>N</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></math> time, which is also suboptimal for the problem.</p></div></div>
+<img alt="pareto4" object-fit="contain" src="media/pareto4.png" width="90%"/></p>
+<p>Overall, the algorithm still takes $O(N \log N)$ time because of these reasons:</p>
+<ul>
+<li>sorting by $z$-coordinates takes $O(N \log N)$ time</li>
+<li>every insertion of a point takes $O(\log N)$ time, so in total this takes $O(N \log N)$ time</li>
+<li>all while loops combined ensure that every point is deleted at most once, so these while loops will take at most another $O(N \log N)$ time (see also: <a href="https://en.m.wikipedia.org/wiki/Amortized_analysis">Amortized analysis</a>)</li>
+</ul>
+<p>Similar to the 2D case, if we do this naively, it will take $O(N^2)$ time, which is also suboptimal for the problem.</p></div></div>
 </section>
 <section id="footer">
 <div class="container">

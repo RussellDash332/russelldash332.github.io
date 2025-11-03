@@ -7,6 +7,37 @@
 <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
 <link href="../assets/css/main.css" rel="stylesheet"/>
 <link href="../media/russell.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+        delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "\\[", right: "\\]", display: true},
+        {left: "$", right: "$", display: false},
+        ],
+        throwOnError: false,
+        strict: false,
+    });
+    });
+    </script>
+<style>
+    ul, ol {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    padding-left: 1.5em;
+    }
+    ul ul, ol ol, ul ol, ol ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    }
+    li {
+    margin-bottom: 0.25em;
+    }
+    ul + ul { margin-top: -0.5em; }
+    </style>
 </head>
 <body class="is-preload">
 <section id="header">
@@ -17,11 +48,7 @@
 </a>
 <p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
 </header>
-<nav id="nav">
-<ul>
-<li><a class="active" href="index.html">Posts</a></li>
-</ul>
-</nav>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#telebot-army-is-an-absolute-cinema">Telebot army is an...</a></li><li><a href="#preface-2022" style="font-size: 0.95em; font-weight: 500;">Preface: 2022</a></li><li><a href="#how-it-s-done" style="font-size: 0.95em; font-weight: 500;">How it’s done</a></li><li><a href="#botfather" style="font-size: 0.85em; font-weight: 400;">BotFather</a></li><li><a href="#python" style="font-size: 0.85em; font-weight: 400;">Python</a></li><li><a href="#aftermath" style="font-size: 0.85em; font-weight: 400;">Aftermath</a></li><li><a href="#epilogue-2025" style="font-size: 0.95em; font-weight: 500;">Epilogue: 2025</a></li></ul></nav>
 <footer>
 <ul class="icons">
 <li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
@@ -38,14 +65,14 @@
 <div class="image main" data-position="center">
 <img alt="" src="../media/banner.jpg"/>
 </div>
-<div class="container"><div class="post-container"><h2>Telebot army is an absolute cinema</h2>
+<div class="container"><div class="post-container"><h2 id="telebot-army-is-an-absolute-cinema">Telebot army is an absolute cinema</h2>
 <div class="date"><p>6 August 2025</p></div>
-<h3>Preface: 2022</h3>
+<h3 id="preface-2022">Preface: 2022</h3>
 <p>It was the COVID era where everything was online, thus the rise of Telegram scammers trying to add random users to a particular set of scam and/or spam investment group chats. It was very disturbing for users who did not set up their privacy settings properly.</p>
 <p>One of my friends was an unfortunate victim of the frequent spams. While I don’t get those invitations as often as him at that time, I was also looking for a funny way to deal with this. After all, one should live a little, right?</p>
 <p>One night, I proposed to him if we can make use of Telegram bots (known as <em>telebots</em>), a topic that we were both learning on, to deal with the spammers. In summary, we make use of a telebot army and spam back the group we were invited to if there’s an access loophole. This doesn’t solve the problem as a whole, but it’ll be definitely a funny victory once it works. I think he liked the idea, so we continued working on this silly mini-project.</p>
-<h3>How it’s done</h3>
-<h4>BotFather</h4>
+<h3 id="how-it-s-done">How it’s done</h3>
+<h4 id="botfather">BotFather</h4>
 <p>First and foremost, you need to make the bots using BotFather on Telegram.</p>
 <p><img alt="botfather" object-fit="contain" src="media/botfather.JPG" width="50%"/></p>
 <p>The steps of creating a single bot is rather simple:</p>
@@ -63,7 +90,7 @@ print(''.join(choice(ascii_letters) for _ in range(20)) + '_bot')
 <p>The script generates a random 20-letter alphabetical string added with the <code>_bot</code> suffix.</p>
 <p>Once the steps are complete, BotFather will give you an <strong>HTTP API token</strong>, which will be required for our next step. The token should look something like <code>0123456789:abcdefgh_ijklmno</code>. As prompted, keep them secure and store it safely, so if you decide to publish your Python script, mask the tokens first.</p>
 <p>Finally, we simply rinse and repeat until you’ve had sufficiently many bots to form your telebot army.</p>
-<h4>Python</h4>
+<h4 id="python">Python</h4>
 <p>Next, you need a Python script to execute the whole project. You only need these three modules, which you have to import on the very first line of your Python script.</p>
 <pre><code class="language-python">import requests, time, threading
 </code></pre>
@@ -101,7 +128,7 @@ def get_message():
     if verbose:
         print(r.json())
 </code></pre>
-<p>Finally, the main function itself. We make use of the <code>threading</code> module that we have imported to parallelize the processes, and <code>time</code> to delay the process to <a href="https://github.com/python-telegram-bot/python-telegram-bot/wiki/Avoiding-flood-limits">avoid the rate limit</a>. The duration of the delay is experimental, but I find <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mfrac><mrow><mn>3</mn></mrow><mrow><mi>n</mi></mrow></mfrac></mrow></math> seconds to be a good estimate. What this means is that the same bot is supposed to send another message after 3 seconds, so the number of messages sent by a particular bot in one minute isn’t too many, but the target gets a constant flow of messages within a much quicker rate. You can also think of this as a round-robin style of sending a message to the same target chat.</p>
+<p>Finally, the main function itself. We make use of the <code>threading</code> module that we have imported to parallelize the processes, and <code>time</code> to delay the process to <a href="https://github.com/python-telegram-bot/python-telegram-bot/wiki/Avoiding-flood-limits">avoid the rate limit</a>. The duration of the delay is experimental, but I find $\frac{3}{n}$ seconds to be a good estimate. What this means is that the same bot is supposed to send another message after 3 seconds, so the number of messages sent by a particular bot in one minute isn’t too many, but the target gets a constant flow of messages within a much quicker rate. You can also think of this as a round-robin style of sending a message to the same target chat.</p>
 <pre><code class="language-python">def main(target_chat):
     while True:
         threads = [threading.Thread(target=send_message, args=(token, target_chat, get_message())) for token in TOKENS]
@@ -113,7 +140,7 @@ def get_message():
 
 main(CHAT_ID)
 </code></pre>
-<h4>Aftermath</h4>
+<h4 id="aftermath">Aftermath</h4>
 <p>Combining everything explained above will yield a single Python script that you can just copy within a single click.</p>
 <pre><code class="language-python">import requests, time, threading
 
@@ -153,7 +180,7 @@ main(CHAT_ID)
 <p>Note that you can further customize the script, like storing chat IDs as a list instead of a single chat ID, and many more. For now, I’ll keep the script as is for educational purposes.</p>
 <p>Now that we’re all set, it’s time for action and pester back the spammers.</p>
 <p><img alt="spam" object-fit="contain" src="media/spam.png" width="40%"/></p>
-<h3>Epilogue: 2025</h3>
+<h3 id="epilogue-2025">Epilogue: 2025</h3>
 <p>Now that these spam techniques are not so frequent anymore, I can still make use of the telebot army for other purposes. One I thought of recently was treating them as an alarm clock. Making use of the Telegram Desktop notification sound on my laptop, spamming myself with these bots should make sufficiently repetitive noises that would wake me up.</p>
 <p>Guess what? It worked, at least for the whole week I was experimenting myself on. It’s silly, but it’s honest work.</p>
 <p>What I changed from the previous Python code is simply adding the <code>datetime</code> module to indicate in how long do I want the alarm to start being triggered. We also have to modify the main part slightly as shown below.</p>

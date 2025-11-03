@@ -1,12 +1,10 @@
 # Converts all Markdown files to a HTML blog!
-import os, mdtex2html, markdown, datetime as dt, textwrap as tw
+import re, os, markdown, datetime as dt, textwrap as tw
 from bs4 import BeautifulSoup, NavigableString
 
 TW_WIDTH_LIMIT = 200
-md2html = lambda c: [markdown.markdown, mdtex2html.convert][1](c, extensions=[
+md2html = lambda c: markdown.markdown(c, extensions=[
     'tables',
-    'pymdownx.arithmatex',
-    #'pymdownx.superfences',
     'fenced_code',
     'smarty',
     'pymdownx.smartsymbols',
@@ -22,12 +20,20 @@ soup = BeautifulSoup(html_content, 'html.parser')
 posts_container = soup.find('div', id='posts-container')
 posts_container.clear()
 posts = []
+
 for path, dirs, files in os.walk('markdown'):
     for file in files:
         if file.endswith('.md'):
-            markdown_content = open(os.path.join(path, file)).read().replace('../posts/media', 'media')
+            markdown_content = open(os.path.join(path, file)).read().replace('../posts/media', 'media').replace('align*', 'align\*').replace('\\'*2, '\\'*3)
             md2html_content = md2html(markdown_content)
             md_soup = BeautifulSoup(md2html_content, 'html.parser')
+
+            for ul in md_soup.find_all('ul'):
+                nxt = ul.find_next_sibling()
+                if nxt and nxt.name == 'ul':
+                    for li in nxt.find_all('li'):
+                        ul.append(li)
+                    nxt.decompose()
 
             first_p = md_soup.find('p')
             first_h1 = md_soup.find('h1')
@@ -43,6 +49,25 @@ for path, dirs, files in os.walk('markdown'):
             for h in md_soup.findAll('h2'): h.name = 'h3'
             for h in md_soup.findAll('h1'): h.name = 'h2'
 
+            # rebuild nav
+            headers = md_soup.find_all(['h2', 'h3', 'h4'])
+            nav_ul = BeautifulSoup('<ul></ul>', 'html.parser').ul
+            nav_ul.append(BeautifulSoup('<li><a class="active" href="index.html">Back to all write-ups</a></li>', 'html.parser'))
+            nav_ul.append(md_soup.new_tag('br'))
+            for h in headers:
+                anchor = re.sub(r'[^a-zA-Z0-9]+', '-', h.text).strip('-').lower()
+                h['id'] = anchor
+                li = md_soup.new_tag('li')
+                a = md_soup.new_tag('a', href=f'#{anchor}')
+                a.string = tw.shorten(h.text, width=25, placeholder='...')
+                if h.name == 'h3': a['style'] = 'font-size: 0.95em; font-weight: 500;'
+                elif h.name == 'h4': a['style'] = 'font-size: 0.85em; font-weight: 400;'
+                elif h.name == 'h5': a['style'] = 'font-size: 0.75em; font-weight: 300;'
+                li.append(a)
+                nav_ul.append(li)
+            nav_tag = md_soup.new_tag('nav', id='nav')
+            nav_tag.append(nav_ul)
+
             html_fn = os.path.join('posts', file[1:][:-3]+'.html')
             posts.append((date, first_h1.text, first_p.text, html_fn.split('/')[-1], '\n'.join(p.text for p in md_soup.findAll('p')[1:])))
 
@@ -50,6 +75,9 @@ for path, dirs, files in os.walk('markdown'):
             template_title = template_soup.find('title')
             template_title.insert(0, NavigableString(first_h1.text))
             post_container = template_soup.find('div', {'class': 'post-container'})
+            existing_nav = template_soup.find('nav', id='nav')
+            if existing_nav: existing_nav.replace_with(nav_tag)
+            else: post_container.insert_before(nav_tag)
             post_container.insert(0, md_soup)
 
             with open(html_fn, 'w+') as f:
@@ -63,7 +91,6 @@ for date, title, date_text, html_fn, md_soup_p in sorted(posts, reverse=True):
     new_a = soup.new_tag("a")
     new_a['href'] = html_fn
     new_div = soup.new_tag('div')
-    #new_div['class'] = 'inner'
     new_p = soup.new_tag('p')
     new_p2 = soup.new_tag('p')
     new_h4 = soup.new_tag('h4')

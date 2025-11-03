@@ -55,7 +55,7 @@ There some interesting properties derived from the existence of the nine-point c
 
 The Euler line of $\triangle ABC$ is a line, that passes through the orthocenter $H$, the centroid $G$, the circumcenter $O$, and the nine-point center $N$ with the following property:
 
-$OG:GN:NH = 2:1:3$
+$$OG:GN:NH = 2:1:3$$
 
 While the proof might be out of scope, I would like to keep this article short and simple as the main purpose is to appreciate how we can construct such well-worded arguments to proof the existence of the nine-point circle!
 

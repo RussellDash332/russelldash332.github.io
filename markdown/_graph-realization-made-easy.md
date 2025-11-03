@@ -26,17 +26,27 @@ Now let's solve the inverse of the problem.
 
 To answer this YES/NO question, we can make use of the [**Erdős–Gallai theorem**](https://en.wikipedia.org/wiki/Erd%C5%91s%E2%80%93Gallai_theorem) that states the following.
 
-> The answer is YES if and only if $D_1 + D_2 + \ldots + D_n$ is even and $\sum_{i=1}^k D_i \le k(k-1) + \sum_{i=k+1}^n \min(D_i, k), \forall 1 \le k \le n$
+> The answer is YES if and only if $D_1 + D_2 + \ldots + D_n$ is even and $$\sum_{i=1}^k D_i \le k(k-1) + \sum_{i=k+1}^n \min(D_i, k), \forall 1 \le k \le n$$
 
 The verification in Python is rather straightforward for the left hand side as we make use of the prefix sum. As for the right hand side of the inequality, we can make use of a forward pointer since the degree sequence is non-increasing.
 
 Suppose we have another array $T$ where each of $T_k$ stores the maximum index $i$ of $D$ such that $D_i \ge k$. Then, for a given $k$, we can transform the right hand side as follows.
 
-$\sum_{i=k+1}^n \min(D_i, k) = \sum_{i=k+1}^{T_k} k + \sum_{i=T_k+1}^{n} D_i = k(T_k-k) + \sum_{i=T_k+1}^{n} D_i$
+$$
+\begin{align\*}
+\sum_{i=k+1}^n \min(D_i, k) &= \sum_{i=k+1}^{T_k} k + \sum_{i=T_k+1}^{n} D_i \\
+&= k(T_k-k) + \sum_{i=T_k+1}^{n} D_i
+\end{align\*}
+$$
 
 Combining the above equation with the inequality stated by the theorem, we have
 
-$\sum_{i=1}^k D_i \le k(T_k-1) + \sum_{i=T_k+1}^{n} D_i, \forall 1 \le k \le n$
+$$
+\begin{align\*}
+\sum_{i=1}^k D_i &\le k(k-1) + k(T_k-k) + \sum_{i=T_k+1}^{n} D_i \\
+&=k(T_k-1) + \sum_{i=T_k+1}^{n} D_i, &\forall 1 \le k \le n
+\end{align\*}
+$$
 
 ```python
 # use another non-increasing sequence if necessary
@@ -60,9 +70,9 @@ for k in range(1, N+1):
 print(sum(D) % 2 == 0 and all(P[k] <= k*(T[k]-1) + P[N]-P[T[k]] for k in range(1, N+1)))
 ```
 
-When the graph is directed, the similar theorem would be the [**Fulkerson–Chen–Anstee theorem**](https://en.wikipedia.org/wiki/Fulkerson%E2%80%93Chen%E2%80%93Anstee_theorem). Suppose you have the degree sequence $D = [(O_1, I_1), (O_2, I_2), \ldots, (O_n, I_n)]$ where $O_1 \ge O_2 \ge \ldots \ge O_n$.
+When the graph is directed, the similar theorem would be the [**Fulkerson–Chen–Anstee theorem**](https://en.wikipedia.org/wiki/Fulkerson%E2%80%93Chen%E2%80%93Anstee_theorem). Suppose you have the degree sequence $D = [(O_1, I_1), (O_2, I_2), \ldots, (O_n, I_n)]$ where $O_1 \ge O_2 \ge \ldots \ge O_n$ are the outdegrees of the vertices in non-increasing order and $I_1, I_2, \ldots, I_n$ are the corresponding vertex indegrees.
 
-> The answer is YES if and only if $\sum_{i=1}^{n} O_i = \sum_{i=1}^{n} I_i$ and $\sum_{i=1}^k O_i \le \sum_{i=1}^k \min(I_i, k-1) + \sum_{i=k+1}^n \min(I_i, k), \forall 1 \le k \le n$
+> The answer is YES if and only if $$\sum_{i=1}^{n} O_i = \sum_{i=1}^{n} I_i$$ and $$\sum_{i=1}^k O_i \le \sum_{i=1}^k \min(I_i, k-1) + \sum_{i=k+1}^n \min(I_i, k), \forall 1 \le k \le n$$
 
 The equivalent Python code is left to you as an exercise, as this is not the main point of the article.
 
@@ -73,7 +83,7 @@ Reference Kattis problem: [Kjördæmi Königsbergs](https://open.kattis.com/prob
 
 If we have to construct the undirected graph, obviously we can't just verify using the Erdős–Gallai theorem. We have to come up with some algorithm to approach this, which is why [Havel-Hakimi](https://en.wikipedia.org/wiki/Havel%E2%80%93Hakimi_algorithm) comes to the rescue.
 
-## The algorithm
+### The algorithm
 The ELI5 version of this algorithm is to repetitively pick the vertex with the largest degree, say with a degree of $s$, connect this vertex to the next $s$ vertices with the highest degree, and then update (decrement) the degrees accordingly. In the end, the degree sequence should only consist of zeroes.
 
 Let's take our previous $[4, 3, 2, 2, 1]$ degree sequence as an example. To make things easier, we will assume that the values in $D$ are the degrees of vertices $0, 1, \ldots, n-1$ in that particular order.
@@ -262,9 +272,9 @@ print(E) # [(0, 4), (0, 3), (1, 3), (1, 0), (2, 0), (2, 1)]
 
 Analyzing the time complexity, we can see that using the buckets, we have cut down the $O(\log n)$ factor. The $O(m+n)$ is due to the fact that there are $O(m+n)$ appends and pops from this data structure, the $L$ pointer only moves at most $O(m+n)$ steps to the right (even with the `L == S` case), and the $R$ pointer moves at most $O(n)$ steps to the left.
 
-There is still one last problem. There can be a case where $L$ is sufficiently high that the value of $S$ before and after you find the $L$ vertices are very far away, and therefore when processing the next smallest-degree vertex, you have to redo this journey again from $S_{before}$ to $S_{after}$, while every bucket in between might've been empty. To optimize this, we can have a "jump array" called $J$ that stores where to jump from a particular index $k$ in $Q$ instead of always being $k-1$.
+There is still one last problem. There can be a case where $L$ is sufficiently high that the value of $S$ before and after you find the $L$ vertices are very far away, and therefore when processing the next smallest-degree vertex, you have to redo this journey again from $S_{\text{before}}$ to $S_{\text{after}}$, while every bucket in between might've been empty. To optimize this, we can have a "jump array" called $J$ that stores where to jump from a particular index $k$ in $Q$ instead of always being $k-1$.
 
-Let's say we during the journey from $S = S_{before}$ to $S = S_{after}$, we have a bunch of indices with vertices that we selected to connect with $S_1 \ge S_2 \ge \ldots \ge S_L$. We can update the value of $J_{S_i}$ for $i = 1, 2, \ldots, L$ into $J_{J_{S_i}}$. For large gaps, the total number of steps will be expected to half every time it gets explored.
+Let's say we during the journey from $S = S_{\text{before}}$ to $S = S_{\text{after}}$, we have a bunch of indices with vertices that we selected to connect with $S_1 \ge S_2 \ge \ldots \ge S_L$. We can update the value of $J_{S_i}$ for $i = 1, 2, \ldots, L$ into $J_{J_{S_i}}$. For large gaps, the total number of steps will be expected to half every time it gets explored.
 
 Another edge case is when we have put $J_{s}$ for some $s$ into something that is less than $s-1$, but after taking a degree of a vertex in $Q[s]$, we need to relocate this vertex to $s-1$. This means we have to be able to undo our update of $J_{s}$ back to $s-1$ and $J_{s-1}$ to the old $J_{s}$.
 

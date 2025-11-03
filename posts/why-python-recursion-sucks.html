@@ -7,6 +7,37 @@
 <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
 <link href="../assets/css/main.css" rel="stylesheet"/>
 <link href="../media/russell.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+        delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "\\[", right: "\\]", display: true},
+        {left: "$", right: "$", display: false},
+        ],
+        throwOnError: false,
+        strict: false,
+    });
+    });
+    </script>
+<style>
+    ul, ol {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    padding-left: 1.5em;
+    }
+    ul ul, ol ol, ul ol, ol ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    }
+    li {
+    margin-bottom: 0.25em;
+    }
+    ul + ul { margin-top: -0.5em; }
+    </style>
 </head>
 <body class="is-preload">
 <section id="header">
@@ -17,11 +48,7 @@
 </a>
 <p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
 </header>
-<nav id="nav">
-<ul>
-<li><a class="active" href="index.html">Posts</a></li>
-</ul>
-</nav>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#why-python-recursion-sucks-for-competitive-programming">Why Python recursion...</a></li><li><a href="#1-recursion-limit" style="font-size: 0.95em; font-weight: 500;">1. Recursion limit</a></li><li><a href="#2-constant-factor-disadvantage" style="font-size: 0.95em; font-weight: 500;">2. Constant factor...</a></li><li><a href="#3-wishful-thinking-makes-you-take-things-for-granted" style="font-size: 0.95em; font-weight: 500;">3. Wishful thinking...</a></li><li><a href="#dfs" style="font-size: 0.85em; font-weight: 400;">DFS</a></li><li><a href="#another-example" style="font-size: 0.85em; font-weight: 400;">Another example</a></li><li><a href="#final-note" style="font-size: 0.95em; font-weight: 500;">Final Note</a></li></ul></nav>
 <footer>
 <ul class="icons">
 <li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
@@ -38,11 +65,11 @@
 <div class="image main" data-position="center">
 <img alt="" src="../media/banner.jpg"/>
 </div>
-<div class="container"><div class="post-container"><h2>Why Python recursion sucks for competitive programming</h2>
+<div class="container"><div class="post-container"><h2 id="why-python-recursion-sucks-for-competitive-programming">Why Python recursion sucks for competitive programming</h2>
 <div class="date"><p>1 July 2025</p></div>
 <p>Having done several competitive programming (CP) problems in pure Python, it is safe to say that recursion is worse for most instances, especially for problems with tight memory or time limit.</p>
 <p>While it’s simpler to implement and shorter to code, here are some reasons I can think of spontaneously on why Python recursion costs more than it benefits (as opposed to iteration, obviously).</p>
-<h3>1. Recursion limit</h3>
+<h3 id="1-recursion-limit">1. Recursion limit</h3>
 <p>By default, Python’s recursion limit is 1000, which can be obtained from <code>import sys; print(sys.getrecursionlimit())</code>. For most CP questions, this value will not be enough, causing <code>RecursionError</code> on your program run as known as the Run-Time Error (RTE) verdict.</p>
 <p>Despite being able to change this value by doing <code>sys.setrecursionlimit(...)</code>, there are some caveats: values that are too high will exceed the memory limit (MLE) to store the recursive call stacks, while sufficiently high values might still slow down the program, causing a Time Limit Exceeded (TLE) verdict.</p>
 <p>Take this question from Kattis as an example: <a href="https://open.kattis.com/problems/dominos">Dominos</a>. In this question, one way to do it is by using Kosaraju’s algorithm to enumerate the strongly-connected components (SCC), which mainly uses the depth-first search (DFS) function. In general, DFS is implemented as a recursive function, so initially I implemented DFS as such.</p>
@@ -52,7 +79,7 @@
         if v not in vis: DFS(v)
 </code></pre>
 <p>Since the problem constraint specifies that there can be at most 100K vertices, I have no choice but to use something like <code>sys.setrecursionlimit(10**5+9)</code> (have a small extra buffer on the recursion limit). However, this gives me the TLE verdict, leaving me no choice but to redesign the DFS function to be iterative.</p>
-<h3>2. Constant factor disadvantage</h3>
+<h3 id="2-constant-factor-disadvantage">2. Constant factor disadvantage</h3>
 <p>Even when still having the same time complexity as the iterative counterpart, recursive functions have way more function calls. It is worth noting that function calls cause slight memory overhead/delays in the CPU, making array usage sometimes better in practice. You can check the memory allocation using <code>sys.getsizeof(x)</code> or <code>x.__sizeof__()</code>, where <code>x</code> is the variable that you want to check on.</p>
 <p>Some recursive functions can be made faster through memoization, and normally there are two ways I would do it, and usually I’d pick whichever came to my mind first.</p>
 <ul>
@@ -80,11 +107,11 @@ def fib(n):
     return fib(n-1) + fib(n-2)
 </code></pre>
 <p>While it speeds things up, both methods require storing the cache keys in a separate data structure such as dictionary (which is slower than lists) on top of the already many function calls.</p>
-<h3>3. Wishful thinking makes you take things for granted</h3>
+<h3 id="3-wishful-thinking-makes-you-take-things-for-granted">3. Wishful thinking makes you take things for granted</h3>
 <p>Recursion allows one to do what’s been taught as <em>wishful thinking</em>. In my own terms, you assume the smaller recursion states work correctly and you only need to piece these puzzles together via a recursive step to make up the bigger states. For example, in the above Fibonacci example, you assume that you know the exact results of <code>fib(n-1)</code> and <code>fib(n-2)</code>, you just need to know how to piece these two together to make up <code>fib(n)</code>.</p>
 <p>But do you really know how it works when you have to trace the recursive calls in case something wrong happens?</p>
 <p>In Python competitive programming, it is important to be able to convert a recursive function into iterative and vice versa, and this can only be done if you know the order of the recursive calls and what happens on each respective calls.</p>
-<h4>DFS</h4>
+<h4 id="dfs">DFS</h4>
 <p>Going back to the DFS example above, converting that same function to iterative is rather straightforward using a stack, as shown below.</p>
 <pre><code class="language-python">def DFS(u):
     stack = [u]
@@ -124,7 +151,7 @@ def DFS(s, t): # t is some boolean indicator
                 if v not in vis: stack.append(2*v) # (v, 0)
 </code></pre>
 <p><strong>What does this mean?</strong> When you process a vertex <code>s</code>, you actually start with visiting <code>(s, 0)</code> first. In this state, you do some pre-processing such as marking <code>s</code> as visited in <code>vis</code>. Then, you’ll add <code>(s, 1)</code>, then the neighbours <code>(v_k, 0), (v_(k-1), 0), ..., (v_2, 0), (v_1, 0)</code> in that order, so that <code>(v_1, 0)</code> will be processed right after <code>(s, 0)</code>. Only after you finish processing the <code>v_i</code>s as a whole, then you can finally deal with <code>(s, 1)</code> and do the post-processing there, which is adding <code>s</code> to <code>top</code>.</p>
-<h4>Another example</h4>
+<h4 id="another-example">Another example</h4>
 <p>DFS is actually one <del>simple</del> example, so let’s turn things up a notch with another Kattis question: <a href="https://open.kattis.com/problems/runningroutes">Running Routes</a>.</p>
 <p>It is a dynamic programming (DP) question, but the conversion from recursion to iteration that I could think of initially was different than using stack-state like <code>2*s+b</code>. Instead, when you use recursion for a top-down approach, you can use iteration by converting into a bottom-up approach.</p>
 <p>Let’s start with the recursive version, which passes the test cases in <strong>9.7 seconds</strong> given the 12-second time limit. Short code, but slow code.</p>
@@ -177,7 +204,7 @@ print(D[N*N]) # same as f(0, N)
 <li>In post-processing (when <code>b</code> equals 1), it is guaranteed that the smaller states have been computed correctly, so we can update <code>D[u]</code> similar to the other iterative code.</li>
 </ul>
 <p>The reasons why the second iterative code is faster is because it only explores states that are involved with <code>(N*N, 0)</code>, while the first iterative code tries to populate all entries of the cache array <code>D</code>. The first iterative code is faster than the recursive code because of the reasons previously stated, so we’ve come into a full circle.</p>
-<h3>Final Note</h3>
+<h3 id="final-note">Final Note</h3>
 <p>It is indeed rather niche to program competitively in Python instead of C++, and spending lots of time on Python makes you realize it behaves differently than C++ more often than you think. This is one great example of it that I think is worth writing.</p></div></div>
 </section>
 <section id="footer">

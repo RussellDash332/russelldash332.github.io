@@ -7,6 +7,37 @@
 <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
 <link href="../assets/css/main.css" rel="stylesheet"/>
 <link href="../media/russell.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+        delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "\\[", right: "\\]", display: true},
+        {left: "$", right: "$", display: false},
+        ],
+        throwOnError: false,
+        strict: false,
+    });
+    });
+    </script>
+<style>
+    ul, ol {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    padding-left: 1.5em;
+    }
+    ul ul, ol ol, ul ol, ol ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    }
+    li {
+    margin-bottom: 0.25em;
+    }
+    ul + ul { margin-top: -0.5em; }
+    </style>
 </head>
 <body class="is-preload">
 <section id="header">
@@ -17,11 +48,7 @@
 </a>
 <p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
 </header>
-<nav id="nav">
-<ul>
-<li><a class="active" href="index.html">Posts</a></li>
-</ul>
-</nav>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#uni-interview-prep">Uni Interview Prep</a></li><li><a href="#bonus" style="font-size: 0.95em; font-weight: 500;">BONUS</a></li></ul></nav>
 <footer>
 <ul class="icons">
 <li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
@@ -38,14 +65,22 @@
 <div class="image main" data-position="center">
 <img alt="" src="../media/banner.jpg"/>
 </div>
-<div class="container"><div class="post-container"><h2>Uni Interview Prep</h2>
-<div class="date"><p>14 January 2024</p></div><blockquote>
+<div class="container"><div class="post-container"><h2 id="uni-interview-prep">Uni Interview Prep</h2>
+<div class="date"><p>14 January 2024</p></div>
+<blockquote>
 <p>The original article was written in 23 June 2020 and was written mainly based on my own opinion.</p>
-</blockquote><p>I will mainly discuss about NUS and NTU scholarships interviews. Other universities’ may go the same way.</p><p>Before we start, here are some useful links which I used for reference:</p><ul>
+</blockquote>
+<p>I will mainly discuss about NUS and NTU scholarships interviews. Other universities’ may go the same way.</p>
+<p>Before we start, here are some useful links which I used for reference:</p>
+<ul>
 <li><a href="https://shuchinggoh1.wordpress.com/2016/06/01/31st-may-2016-nus-asean-undergraduate-scholarship-interview/">Shu Ching Goh</a></li>
 <li><a href="http://wsinlg.blogspot.com/2013/05/second-interview-nus-asean-scholarship.html">When Silence is No Longer Golden</a></li>
 <li><a href="https://essayforum.com/undergraduate/nus-asean-scholarship-statement-key-qualities-75194/">EasyForum</a></li>
-</ul><p>If you have finished the NUS and NTU UEE, then congratulations! I congratulate you again if it turns out you have already received an admission offer in either NTU or NUS (or even both, too imba). 😊</p><p>Basically, after the admission result email, you might receive another email about the scholarship interview. In this context, we are talking about the ASEAN Undergraduate Scholarship (AUS) interview.</p><p>Many of you have known the AUS before, but what to prepare for the AUS interview? Well, here is a list of possibly asked questions and my suggestion for your response, if exists. These questions will be based on what came through my mind at the moment of writing.</p><ol>
+</ul>
+<p>If you have finished the NUS and NTU UEE, then congratulations! I congratulate you again if it turns out you have already received an admission offer in either NTU or NUS (or even both, too imba). 😊</p>
+<p>Basically, after the admission result email, you might receive another email about the scholarship interview. In this context, we are talking about the ASEAN Undergraduate Scholarship (AUS) interview.</p>
+<p>Many of you have known the AUS before, but what to prepare for the AUS interview? Well, here is a list of possibly asked questions and my suggestion for your response, if exists. These questions will be based on what came through my mind at the moment of writing.</p>
+<ol>
 <li><strong>Where are you from? / Where is your school located? / What subjects do you like most and least?</strong>
     The interviewer will likely start the whole interview with these kinds of questions. Just answer truthfully, and you’re safe. Since the answer is obvious, I won’t say much about this.</li>
 <li><strong>Tell us about yourself!</strong>
@@ -101,18 +136,29 @@
 <li><strong>Are there any questions?</strong>
 <strong>NEVER ANSWER NO</strong>. From now, think about a question that might mind-blow the interviewers, but be relatable. If possible, make sure if the question is major-related.
     In addition, you can ask first whether you can ask more than one question or not, in case you have a lot of stunning questions in mind.</li>
-</ol><p>I’ll quote a tip I found from <a href="http://wsinlg.blogspot.com/2013/05/second-interview-nus-asean-scholarship.html">WSINLG</a>:</p>
+</ol>
+<p>I’ll quote a tip I found from <a href="http://wsinlg.blogspot.com/2013/05/second-interview-nus-asean-scholarship.html">WSINLG</a>:</p>
 <blockquote>
 <p>“More mistakes that should never be committed if you are applying for a scholarship not provided by your home country: <strong>Do not ever say that you want to go back to your home country ever so quickly, taking the lesson you learn from them to help other countries grow</strong>. I mean, it is their right to get us to work for them upon graduation because, well, education is not a cheap investment. Let’s say that we scholarship applicants are investments for the country providing the scholarship. If you know that the investment will not benefit you much but instead drains your knowledge for the benefit of other country, why would you want to pay for his/her education so that he/she can go back to where he/she came from and save the day?”</p>
-</blockquote><p>It is definitely possible that there might be questions other than these, but usually they are related directly to your answers in the previous questions. So, prepare your answers and how the interviewer will probably respond to the answer. For example, if you are applying for an engineering major, you might be asked “What does an engineer do?” or “What does a chemical engineer do?”, if you are applying for the Chemical Engineering major. Don’t worry since there won’t be questions based on academics in NTU/NUS.</p><p>Ah, forgot one thing. During the interview, <strong>SMILE</strong>. Don’t make yourself look nervous since it’s not professional to them. If the COVID-19 was eradicated, you would do the interview face-to-face, unlike me. Good luck for the interview! 😉</p><h3>BONUS</h3><p>In addition, before you attend the NUS AUS interview, you are required to submit another essay for the scholarship application. This is not the same as your personal statement which I believe you should’ve made before, and what is asked may vary every year.</p><p>I’m just going to put the question I got from NUS for the scholarship interview.</p><blockquote>
+</blockquote>
+<p>It is definitely possible that there might be questions other than these, but usually they are related directly to your answers in the previous questions. So, prepare your answers and how the interviewer will probably respond to the answer. For example, if you are applying for an engineering major, you might be asked “What does an engineer do?” or “What does a chemical engineer do?”, if you are applying for the Chemical Engineering major. Don’t worry since there won’t be questions based on academics in NTU/NUS.</p>
+<p>Ah, forgot one thing. During the interview, <strong>SMILE</strong>. Don’t make yourself look nervous since it’s not professional to them. If the COVID-19 was eradicated, you would do the interview face-to-face, unlike me. Good luck for the interview! 😉</p>
+<h3 id="bonus">BONUS</h3>
+<p>In addition, before you attend the NUS AUS interview, you are required to submit another essay for the scholarship application. This is not the same as your personal statement which I believe you should’ve made before, and what is asked may vary every year.</p>
+<p>I’m just going to put the question I got from NUS for the scholarship interview.</p>
+<blockquote>
 <p>State, in less than 2000 characters, why you should be offered the NUS Scholarships. You may elaborate on how you have been enterprising and innovative, how you have shown integrity and commitment, and/or cite your most outstanding achievements.</p>
-</blockquote><p>Four paragraphs are enough to create a good essay. Here are the suggested outlines of each paragraph.</p><ul>
+</blockquote>
+<p>Four paragraphs are enough to create a good essay. Here are the suggested outlines of each paragraph.</p>
+<ul>
 <li>P1: Why you should be offered the NUS Scholarships. (your personal qualities in highlight)</li>
 <li>P2: How you have shown integrity and commitment that resulted in outstanding achievements. (academic achievements, mainly)</li>
 <li>P3: How you have been enterprising and innovative. (mention you CCAs if possible)
 P4: Rephrase and conclude why you should be offered the NUS Scholarships.</li>
-</ul><p><strong>[Taken from an external source]</strong>
-However, since the question basically hints for you to market yourself rather explicitly to NUS, it helps to bear some of these ideas in mind while crafting your essay.</p><ul>
+</ul>
+<p><strong>[Taken from an external source]</strong>
+However, since the question basically hints for you to market yourself rather explicitly to NUS, it helps to bear some of these ideas in mind while crafting your essay.</p>
+<ul>
 <li>How can you contribute your experience and expertise to your team and CCA? Provide guidance to the new students?</li>
 <li>How will you set an example for other students?</li>
 <li>In what ways can you contribute to student life?</li>
@@ -121,7 +167,8 @@ However, since the question basically hints for you to market yourself rather ex
 <li>A pivotal turning point in your CCA “career” and how it has changed you acutely in some way.</li>
 <li>How some of your CCA projects have made an impact to society through charity, raising awareness etc</li>
 <li>Various lessons you have learnt throughout your respective CCA journeys</li>
-</ul><p><strong>That’s all, folks!</strong></p></div></div>
+</ul>
+<p><strong>That’s all, folks!</strong></p></div></div>
 </section>
 <section id="footer">
 <div class="container">

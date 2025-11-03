@@ -7,6 +7,37 @@
 <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
 <link href="../assets/css/main.css" rel="stylesheet"/>
 <link href="../media/russell.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+        delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "\\[", right: "\\]", display: true},
+        {left: "$", right: "$", display: false},
+        ],
+        throwOnError: false,
+        strict: false,
+    });
+    });
+    </script>
+<style>
+    ul, ol {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    padding-left: 1.5em;
+    }
+    ul ul, ol ol, ul ol, ol ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    }
+    li {
+    margin-bottom: 0.25em;
+    }
+    ul + ul { margin-top: -0.5em; }
+    </style>
 </head>
 <body class="is-preload">
 <section id="header">
@@ -17,11 +48,7 @@
 </a>
 <p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
 </header>
-<nav id="nav">
-<ul>
-<li><a class="active" href="index.html">Posts</a></li>
-</ul>
-</nav>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#clash-of-champions-season-2-pythonized">Clash of Champions...</a></li><li><a href="#viral-protocol" style="font-size: 0.95em; font-weight: 500;">Viral Protocol</a></li><li><a href="#logic-race" style="font-size: 0.95em; font-weight: 500;">Logic Race</a></li></ul></nav>
 <footer>
 <ul class="icons">
 <li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
@@ -38,11 +65,11 @@
 <div class="image main" data-position="center">
 <img alt="" src="../media/banner.jpg"/>
 </div>
-<div class="container"><div class="post-container"><h2>Clash of Champions Season 2, Pythonized</h2>
+<div class="container"><div class="post-container"><h2 id="clash-of-champions-season-2-pythonized">Clash of Champions Season 2, Pythonized</h2>
 <div class="date"><p>30 September 2025</p></div>
 <p>It’s been a month since the second season of Clash of Champions’ final episode. While the games were entertaining and the questions were interesting to try out along, I decided to take things up a notch and decided to rest my mind from straining due to logic and code some Python instead.</p>
 <p>In this write-up, there are two games that I tried coding in Python and I thought are worth explaining: Viral Protocol and Logic Race.</p>
-<h3>Viral Protocol</h3>
+<h3 id="viral-protocol">Viral Protocol</h3>
 <p>You can watch the original episode <a href="https://www.youtube.com/watch?v=22lVgADtFFE">here</a>.</p>
 <p>The game starts with 16 people, each assigned to one of the four roles: carrier, immune, infected, and healthy. The main task is to figure out the assignment of every single player in the game, not just oneself.</p>
 <p>There are two phases in the game: <strong>logical statements</strong>, and <strong>asking questions</strong>.</p>
@@ -82,7 +109,7 @@ IMMUNE = 2
 INFECTED = 3
 HEALTHY = 4
 </code></pre>
-<p>We want to represent our answer as a list of 16 integers, each being an integer in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><mn>1</mn><mo>,</mo><mn>4</mn><mo stretchy="false">]</mo></mrow></math>. Next, we will use a backtracking function to try out different assignments in this list and then validate the answer once we have reached the end of the list.</p>
+<p>We want to represent our answer as a list of 16 integers, each being an integer in $[1,4]$. Next, we will use a backtracking function to try out different assignments in this list and then validate the answer once we have reached the end of the list.</p>
 <pre><code class="language-python">ans = [1]*16
 
 def backtrack(ans, idx):
@@ -217,7 +244,7 @@ backtrack(ans, 0)
 [3, 2, 3, 1, 3, 2, 4, 1, 3, 2, 3, 1, 3, 2, 4, 1]
 [3, 2, 3, 1, 3, 2, 4, 1, 4, 2, 3, 1, 3, 2, 4, 1]
 </code></pre>
-<p>Also, note that when I bypassed rule 11 and 14, the backtracking becomes much faster. You can uncomment the lines <code>if idx%4 == 3: return backtrack(ans, idx+1)</code> and <code>ans[3] = ans[7] = ans[11] = ans[15] = 1</code> that pre-assigns the four patients to the Carrier status and then skips these indices during backtracking. You can test it out for yourself, mine ran in about 10 seconds as shown below. Without this commenting, the code might take way longer. (Theoretically, if fixing 4 values yields 10 seconds, then not doing that might make the code run for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>10</mn><mi>·</mi><msup><mn>4</mn><mn>4</mn></msup><mo>=</mo><mn>2560</mn></mrow></math> seconds which is about 42 minutes)</p>
+<p>Also, note that when I bypassed rule 11 and 14, the backtracking becomes much faster. You can uncomment the lines <code>if idx%4 == 3: return backtrack(ans, idx+1)</code> and <code>ans[3] = ans[7] = ans[11] = ans[15] = 1</code> that pre-assigns the four patients to the Carrier status and then skips these indices during backtracking. You can test it out for yourself, mine ran in about 10 seconds as shown below. Without this commenting, the code might take way longer. (Theoretically, if fixing 4 values yields 10 seconds, then not doing that might make the code run for $10 \cdot 4^4 = 2560$ seconds which is about 42 minutes)</p>
 <pre><code class="language-bash">$ time python main.py
 [3, 2, 3, 1, 3, 2, 4, 1, 2, 2, 3, 1, 3, 4, 4, 1]
 [3, 2, 3, 1, 3, 2, 4, 1, 3, 2, 3, 1, 3, 2, 4, 1]
@@ -227,7 +254,7 @@ real    0m10.081s
 user    0m10.077s
 sys     0m0.004s
 </code></pre>
-<h3>Logic Race</h3>
+<h3 id="logic-race">Logic Race</h3>
 <p>You can watch the full episode <a href="https://www.youtube.com/watch?v=6zuyauQbAAE">here</a>. (congrats, Vannes!)</p>
 <p>You can also try out the game yourself <a href="https://cta.ruangguru.com/Logic-Race">here!</a></p>
 <p>It all went down to the final game of the season and I actually came to the watch party of the final episode during the Final Chapter event, which was, without a doubt, not a regret.</p>
