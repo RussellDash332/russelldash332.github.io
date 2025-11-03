@@ -22,13 +22,16 @@
             strict: false,
         });
     });
-    window.addEventListener("resize", () => {
+    function scaleKatex() {
         document.querySelectorAll(".katex-display > .katex").forEach(el => {
-            const scale = Math.min(1, window.innerWidth / el.scrollWidth);
+            const parentWidth = el.parentElement.clientWidth;
+            const mathWidth = el.scrollWidth;
+            const scale = Math.min(1, parentWidth / mathWidth);
             el.style.transform = `scale(${scale})`;
-            el.style.transformOrigin = "center top";
         });
-    });
+    }
+    window.addEventListener("load", scaleKatex);
+    window.addEventListener("resize", scaleKatex);
     </script>
 <style>
     ul, ol {
