@@ -12,15 +12,22 @@
 <script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-    renderMathInElement(document.body, {
-        delimiters: [
-        {left: "$$", right: "$$", display: true},
-        {left: "\\[", right: "\\]", display: true},
-        {left: "$", right: "$", display: false},
-        ],
-        throwOnError: false,
-        strict: false,
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+            ],
+            throwOnError: false,
+            strict: false,
+        });
     });
+    window.addEventListener("resize", () => {
+        document.querySelectorAll(".katex-display > .katex").forEach(el => {
+            const scale = Math.min(1, window.innerWidth / el.scrollWidth);
+            el.style.transform = `scale(${scale})`;
+            el.style.transformOrigin = "center top";
+        });
     });
     </script>
 <style>
