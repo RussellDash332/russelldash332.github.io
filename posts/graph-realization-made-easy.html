@@ -22,16 +22,6 @@
             strict: false,
         });
     });
-    function scaleKatex() {
-        document.querySelectorAll(".katex-display > .katex").forEach(el => {
-            const parentWidth = el.parentElement.clientWidth;
-            const mathWidth = el.scrollWidth;
-            const scale = Math.min(1, parentWidth / mathWidth);
-            el.style.transform = `scale(${scale})`;
-        });
-    }
-    window.addEventListener("load", scaleKatex);
-    window.addEventListener("resize", scaleKatex);
     </script>
 <style>
     ul, ol {
@@ -47,6 +37,13 @@
     margin-bottom: 0.25em;
     }
     ul + ul { margin-top: -0.5em; }
+    .katex-display {
+        overflow: auto hidden;
+        margin: 0.5em 0;
+    }
+    .katex-display > .katex {
+        white-space: normal;
+    }
     </style>
 </head>
 <body class="is-preload">
@@ -79,7 +76,7 @@
 <div class="date"><p>3 November 2025</p></div>
 <p>This article serves as a detailed breakdown of the code provided in <a href="https://github.com/RussellDash332/pytils/blob/main/graph_realization.py">pytils</a>.</p>
 <h3 id="degree-sequence">Degree Sequence</h3>
-<p>The degree sequence of a graph is defined as a non-increasing sequence of the graph’s vertex degrees, where the degree of a vertex is defined as the number of edges incident to the vertex itself.</p>
+<p>The degree sequence of a graph is defined as a non-increasing sequence of the graph's vertex degrees, where the degree of a vertex is defined as the number of edges incident to the vertex itself.</p>
 <p>Given an undirected graph, constructing the degree sequence is rather easy, if not trivial.</p>
 <pre><code class="language-python"># suppose we represent the graph as an edge list instead of an adjacency list
 # vertices are 0-indexed here, get used to it!
@@ -91,7 +88,7 @@ for a, b in G:
 print(D)                       # [2, 4, 1, 2, 3]
 print(sorted(D, reverse=True)) # [4, 3, 2, 2, 1]
 </code></pre>
-<p>Now let’s solve the inverse of the problem.</p>
+<p>Now let's solve the inverse of the problem.</p>
 <blockquote>
 <p>Given a non-increasing array $D$ of size $N$, can we construct an undirected graph with $N$ vertices and degree sequence $D$?</p>
 </blockquote>
@@ -139,13 +136,13 @@ print(sum(D) % 2 == 0 and all(P[k] &lt;= k*(T[k]-1) + P[N]-P[T[k]] for k in rang
 <p>The answer is YES if and only if $$\sum_{i=1}^{n} O_i = \sum_{i=1}^{n} I_i$$ and $$\sum_{i=1}^k O_i \le \sum_{i=1}^k \min(I_i, k-1) + \sum_{i=k+1}^n \min(I_i, k), \forall 1 \le k \le n$$</p>
 </blockquote>
 <p>The equivalent Python code is left to you as an exercise, as this is not the main point of the article.</p>
-<p>Here’s the <em>real</em> challenge: <strong>if a construction exists, how do we construct such undirected graph?</strong></p>
+<p>Here's the <em>real</em> challenge: <strong>if a construction exists, how do we construct such undirected graph?</strong></p>
 <h3 id="havel-hakimi-algorithm">Havel-Hakimi Algorithm</h3>
 <p>Reference Kattis problem: <a href="https://open.kattis.com/problems/kjordaemikonigsbergs">Kjördæmi Königsbergs</a></p>
-<p>If we have to construct the undirected graph, obviously we can’t just verify using the Erdős–Gallai theorem. We have to come up with some algorithm to approach this, which is why <a href="https://en.wikipedia.org/wiki/Havel%E2%80%93Hakimi_algorithm">Havel-Hakimi</a> comes to the rescue.</p>
+<p>If we have to construct the undirected graph, obviously we can't just verify using the Erdős–Gallai theorem. We have to come up with some algorithm to approach this, which is why <a href="https://en.wikipedia.org/wiki/Havel%E2%80%93Hakimi_algorithm">Havel-Hakimi</a> comes to the rescue.</p>
 <h4 id="the-algorithm">The algorithm</h4>
 <p>The ELI5 version of this algorithm is to repetitively pick the vertex with the largest degree, say with a degree of $s$, connect this vertex to the next $s$ vertices with the highest degree, and then update (decrement) the degrees accordingly. In the end, the degree sequence should only consist of zeroes.</p>
-<p>Let’s take our previous $[4, 3, 2, 2, 1]$ degree sequence as an example. To make things easier, we will assume that the values in $D$ are the degrees of vertices $0, 1, \ldots, n-1$ in that particular order.</p>
+<p>Let's take our previous $[4, 3, 2, 2, 1]$ degree sequence as an example. To make things easier, we will assume that the values in $D$ are the degrees of vertices $0, 1, \ldots, n-1$ in that particular order.</p>
 <ul>
 <li>Currently, vertex 0 has the largest degree of 4. We connect 0 to the next 4 vertices with the highest degree: 1, 2, 3, 4.<ul>
 <li>Degree sequence becomes $[0, 2, 1, 1, 0]$.</li>
@@ -161,13 +158,13 @@ print(sum(D) % 2 == 0 and all(P[k] &lt;= k*(T[k]-1) + P[N]-P[T[k]] for k in rang
 <img alt="graphreal1" object-fit="contain" src="media/graphreal1.PNG" width="60%"/>
 <figcaption>(Credits: VisuAlgo)</figcaption>
 </figure>
-<p>If you noticed, the final result is different than our initial graph $[(1, 2), (0, 1), (1, 3), (4, 1), (0, 4), (3, 4)]$, and this is caused by the pre-sorting of the degree sequence $D$. In fact, even if the initial array is not non-increasing, we can still order the degrees by storing $(D_i, i)$ instead of just $D_i$, and in the end we re-map the indices based on the values of $i$ attached to the $D_i$’s.</p>
+<p>If you noticed, the final result is different than our initial graph $[(1, 2), (0, 1), (1, 3), (4, 1), (0, 4), (3, 4)]$, and this is caused by the pre-sorting of the degree sequence $D$. In fact, even if the initial array is not non-increasing, we can still order the degrees by storing $(D_i, i)$ instead of just $D_i$, and in the end we re-map the indices based on the values of $i$ attached to the $D_i$'s.</p>
 <p>Repeating this process, but this time instead of storing $D = [2, 4, 1, 2, 3]$, we have $D = [(2, 0), (4, 1), (1, 2), (2, 3), (3, 4)]$ which is then sorted to be $[(4, 1), (3, 4), (2, 0), (2, 3), (1, 2)]$. Remapping the edge list that we obtained earlier using $[0, 1, 2, 3, 4] \rightarrow [1, 4, 0, 3, 2]$, we get $[(1, 4), (1, 0), (1, 3), (1, 2), (4, 0), (4, 3)]$, which is finally the same as our initial graph.</p>
 <figure style="text-align: center;">
 <img alt="graphreal2" object-fit="contain" src="media/graphreal2.PNG" width="60%"/>
 <figcaption>(Credits: VisuAlgo)</figcaption>
 </figure>
-<p>Another thing that I’d like to point out is that <strong>the construction is not unique</strong>. The degree sequence $[1, 1, 1, 1, 1, 1]$ can be obtained from any edge-pairing of the 6 vertices in the graph, and there is more than one configuration of the final matching.</p>
+<p>Another thing that I'd like to point out is that <strong>the construction is not unique</strong>. The degree sequence $[1, 1, 1, 1, 1, 1]$ can be obtained from any edge-pairing of the 6 vertices in the graph, and there is more than one configuration of the final matching.</p>
 <p>Time to implement this in Python using max priority queues. Every time we select the vertex with the largest degree $d$, we store the next $d$ vertices into a temporary queue first (otherwise we might select the same vertex multiple times), and after connecting the edges accordingly we re-enqueue them.</p>
 <pre><code class="language-python"># use another non-increasing sequence if necessary
 D = [4, 3, 2, 2, 1]
@@ -204,7 +201,7 @@ print(E) # [(0, 1), (0, 2), (0, 3), (0, 4), (1, 2), (1, 3)]
 <figcaption>Same degree sequence, only one is connected (Credits: VisuAlgo)</figcaption>
 </figure>
 <p>The trick here is to change on <strong>how we select the pivot vertex</strong>. Turns out, if you always pick the vertex with the <strong>smallest nonzero</strong> degree $d$, but you still connect this with the top $d$ vertices with the largest degree, you actually still get a valid construction. However, in this approach, we are minimizing the number of small components formed by pairing small-degree vertices with small-degree vertices, and therefore increasing our chances of obtaining a connected graph. An edge case to consider is when $\sum_{i=1}^n D_i &lt; 2n-2$, to which the graph will not be connected however we arrange the edges.</p>
-<p>Let’s use this new approach on the degree sequence $[3, 3, 3, 3, 1, 1]$. Note that there is no need for a tiebreaker: you just need to ensure the vertices selected has indeed the largest/smallest degrees.</p>
+<p>Let's use this new approach on the degree sequence $[3, 3, 3, 3, 1, 1]$. Note that there is no need for a tiebreaker: you just need to ensure the vertices selected has indeed the largest/smallest degrees.</p>
 <ul>
 <li>Pick smallest-degree vertex: 5. Pick top-1 largest-degree vertex: $[0]$. Add $(0, 5)$ to edge list.<ul>
 <li>Degree sequence is now $[2, 3, 3, 3, 1, 0]$.</li>
@@ -231,7 +228,7 @@ print(E) # [(0, 1), (0, 2), (0, 3), (0, 4), (1, 2), (1, 3)]
 <img alt="graphreal5" object-fit="contain" src="media/graphreal5.PNG" width="80%"/>
 <figcaption>(Credits: VisuAlgo)</figcaption>
 </figure>
-<p>Notice that the resulting graph $[(0, 5), (1, 4), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]$ is indeed connected, which leaves us with the challenge to implement this in Python. Since we now need to take the smallest as well as the largest out of the data structure, simply using a priority queue won’t suffice to maintain the time complexity. You can either use a custom-made BST or using <a href="https://github.com/RussellDash332/pytils/blob/main/sorted_list.py">the SortedList template</a> (the latter is theoretically not $O(\log n)$ per query, but has been made fast enough to approach this time complexity).</p>
+<p>Notice that the resulting graph $[(0, 5), (1, 4), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]$ is indeed connected, which leaves us with the challenge to implement this in Python. Since we now need to take the smallest as well as the largest out of the data structure, simply using a priority queue won't suffice to maintain the time complexity. You can either use a custom-made BST or using <a href="https://github.com/RussellDash332/pytils/blob/main/sorted_list.py">the SortedList template</a> (the latter is theoretically not $O(\log n)$ per query, but has been made fast enough to approach this time complexity).</p>
 <pre><code class="language-python">... # paste the whole SortedList class here
 
 # use another non-increasing sequence if necessary
@@ -323,8 +320,8 @@ while L &lt;= R:
 print(E) # [(0, 4), (0, 3), (1, 3), (1, 0), (2, 0), (2, 1)]
 </code></pre>
 <p>Analyzing the time complexity, we can see that using the buckets, we have cut down the $O(\log n)$ factor. The $O(m+n)$ is due to the fact that there are $O(m+n)$ appends and pops from this data structure, the $L$ pointer only moves at most $O(m+n)$ steps to the right (even with the <code>L == S</code> case), and the $R$ pointer moves at most $O(n)$ steps to the left.</p>
-<p>There is still one last problem. There can be a case where $L$ is sufficiently high that the value of $S$ before and after you find the $L$ vertices are very far away, and therefore when processing the next smallest-degree vertex, you have to redo this journey again from $S_{\text{before}}$ to $S_{\text{after}}$, while every bucket in between might’ve been empty. To optimize this, we can have a “jump array” called $J$ that stores where to jump from a particular index $k$ in $Q$ instead of always being $k-1$.</p>
-<p>Let’s say we during the journey from $S = S_{\text{before}}$ to $S = S_{\text{after}}$, we have a bunch of indices with vertices that we selected to connect with $S_1 \ge S_2 \ge \ldots \ge S_L$. We can update the value of $J_{S_i}$ for $i = 1, 2, \ldots, L$ into $J_{J_{S_i}}$. For large gaps, the total number of steps will be expected to half every time it gets explored.</p>
+<p>There is still one last problem. There can be a case where $L$ is sufficiently high that the value of $S$ before and after you find the $L$ vertices are very far away, and therefore when processing the next smallest-degree vertex, you have to redo this journey again from $S_{\text{before}}$ to $S_{\text{after}}$, while every bucket in between might've been empty. To optimize this, we can have a "jump array" called $J$ that stores where to jump from a particular index $k$ in $Q$ instead of always being $k-1$.</p>
+<p>Let's say we during the journey from $S = S_{\text{before}}$ to $S = S_{\text{after}}$, we have a bunch of indices with vertices that we selected to connect with $S_1 \ge S_2 \ge \ldots \ge S_L$. We can update the value of $J_{S_i}$ for $i = 1, 2, \ldots, L$ into $J_{J_{S_i}}$. For large gaps, the total number of steps will be expected to half every time it gets explored.</p>
 <p>Another edge case is when we have put $J_{s}$ for some $s$ into something that is less than $s-1$, but after taking a degree of a vertex in $Q[s]$, we need to relocate this vertex to $s-1$. This means we have to be able to undo our update of $J_{s}$ back to $s-1$ and $J_{s-1}$ to the old $J_{s}$.</p>
 <p>The time complexity remains the same, but the constant factor will get better. With this, behold the final version of the Havel-Hakimi algorithm.</p>
 <pre><code class="language-python">D = [4, 3, 2, 2, 1]
@@ -387,7 +384,7 @@ print(E) # [(0, 4), (0, 3), (1, 3), (1, 0), (2, 0), (2, 1)]
 </code></pre>
 <h3 id="kleitman-wang-algorithm">Kleitman-Wang Algorithm</h3>
 <p>Reference Kattis problem: <a href="https://open.kattis.com/problems/followerforensics">Follower Forensics</a></p>
-<p>We can use the idea from the optimized Havel-Hakimi algorithm to solve the case when <strong>the graph is directed</strong> and we’re given two arrays instead: <em>the outdegree array and the indegree array</em>.</p>
+<p>We can use the idea from the optimized Havel-Hakimi algorithm to solve the case when <strong>the graph is directed</strong> and we're given two arrays instead: <em>the outdegree array and the indegree array</em>.</p>
 <p>Instead of just ensuring connectivity, we get to be more specific: <em>weak-connectivity</em>. The algorithm is expected to generate a weak-connected graph whenever possible, i.e. when you convert all the directed edges into undirected, the graph becomes connected.</p>
 <p>Instead of just selecting the smallest-degree vertex, we select <em>the smallest-outdegree/indegree vertex</em> (obviously ignoring those with degree of 0), whichever has a smaller such degree of $d$ (if they are the same, take the outdegree first). This means we take $d$ vertices with <em>the highest indegree/outdegree</em>, and update their degrees accordingly after connecting them with the proper directed edges.</p>
 <p>For example, we start with a graph of 5 vertices with the outdegree $O = [2, 1, 2, 1, 3]$ and the indegree $I = [0, 2, 2, 3, 2]$.</p>
@@ -409,7 +406,7 @@ print(E) # [(0, 4), (0, 3), (1, 3), (1, 0), (2, 0), (2, 1)]
 </li>
 <li>Smallest outdegree = <strong>2 at vertex 0</strong>, smallest indegree = 2 at vertex 2, this means we process vertex 0.<ul>
 <li>Pick top-2 largest <strong>in</strong>degree vertex: 2 and 3. Add $0 \rightarrow 2$ and $0 \rightarrow 3$ to edge list.</li>
-<li>We could’ve picked 0 instead of 2 or 3, but since the vertex we’re processing is 0, we need to refrain from making a self-loop.</li>
+<li>We could've picked 0 instead of 2 or 3, but since the vertex we're processing is 0, we need to refrain from making a self-loop.</li>
 <li>$O$ is now $[0, 0, 2, 0, 2]$, $I$ is now $[0, 0, 2, 1, 1]$.</li>
 </ul>
 </li>
@@ -426,7 +423,7 @@ print(E) # [(0, 4), (0, 3), (1, 3), (1, 0), (2, 0), (2, 1)]
 <li>Now we have 2 outgoing edges from vertex 4 to vertex 2, which means something is wrong (the input is supposed to be a valid graph degree array).</li>
 </ul>
 <h4 id="fixing-the-tiebreaker">Fixing the tiebreaker</h4>
-<p>So what went wrong? The tiebreaker for selecting the largest/smallest degree vertices was fixated on whichever has the smaller vertex label, so maybe this wasn’t the best strategy. Using the same logic, if we fix both selection tiebreakers on whichever has the larger vertex label, the same outcome might happen.</p>
+<p>So what went wrong? The tiebreaker for selecting the largest/smallest degree vertices was fixated on whichever has the smaller vertex label, so maybe this wasn't the best strategy. Using the same logic, if we fix both selection tiebreakers on whichever has the larger vertex label, the same outcome might happen.</p>
 <p>The next intuitive tiebreaker would be to <em>break the ties on largest degrees by larger vertex number, and smallest degrees by smaller vertex number</em>. This means we can represent the degrees as $(D_i, i)$ instead of just $D_i$ for easier readability.</p>
 <p>Start with the same graph of 5 vertices with the outdegree $O = [(2, 0), (1, 1), (2, 2), (1, 3), (3, 4)]$ and the indegree $I = [(2, 1), (2, 2), (3, 3), (2, 4)]$. (vertices with 0 degree ignored)</p>
 <ul>
@@ -472,7 +469,7 @@ print(E) # [(0, 4), (0, 3), (1, 3), (1, 0), (2, 0), (2, 1)]
 <img alt="graphreal6" object-fit="contain" src="media/graphreal6.PNG" width="60%"/>
 <figcaption>(Credits: VisuAlgo)</figcaption>
 </figure>
-<p>Let’s try another example with $O = [(3, 0), (3, 1), (2, 2), (1, 3), (1, 4)]$ and $I = [(1, 0), (2, 1), (3, 2), (2, 3), (2, 4)]$.</p>
+<p>Let's try another example with $O = [(3, 0), (3, 1), (2, 2), (1, 3), (1, 4)]$ and $I = [(1, 0), (2, 1), (3, 2), (2, 3), (2, 4)]$.</p>
 <ul>
 <li>Smallest <strong>out</strong>degree = $(1, 3)$, smallest indegree = $(1, 0)$, this means we process vertex 3.<ul>
 <li>Pick top-1 largest <strong>in</strong>degree vertex: $(3, 2)$. Add $3 \rightarrow 2$ to edge list.</li>
@@ -504,7 +501,7 @@ print(E) # [(0, 4), (0, 3), (1, 3), (1, 0), (2, 0), (2, 1)]
 <li>$O$ is now $[(1, 1), (2, 2)]$, $I$ is now $[(2, 1), (1, 4)]$.</li>
 </ul>
 </li>
-<li>To avoid self-loop, the $(1, 1)$ in $O$ would mean we must have $1 \rightarrow 4$, which will make us end with $O = [(2, 2)]$ and $I = [(2, 1)]$… a double-edge! <strong>This means our tiebreaker isn’t perfect yet!</strong></li>
+<li>To avoid self-loop, the $(1, 1)$ in $O$ would mean we must have $1 \rightarrow 4$, which will make us end with $O = [(2, 2)]$ and $I = [(2, 1)]$... a double-edge! <strong>This means our tiebreaker isn't perfect yet!</strong></li>
 </ul>
 <p>Instead of doing the previous two tiebreakers, we should be doing this: <strong><em>while selecting the smallest/largest indegree/outdegree vertex, break ties by selecting the one with larger outdegree/indegree.</em></strong></p>
 <p>Starting with the first one: $O = [(2, 0), (1, 1), (2, 2), (1, 3), (3, 4)]$ and $I = [(2, 1), (2, 2), (3, 3), (2, 4)]$.</p>
@@ -553,7 +550,7 @@ print(E) # [(0, 4), (0, 3), (1, 3), (1, 0), (2, 0), (2, 1)]
 </figure>
 <p>Next one is $O = [(3, 0), (3, 1), (2, 2), (1, 3), (1, 4)]$ and $I = [(1, 0), (2, 1), (3, 2), (2, 3), (2, 4)]$.</p>
 <ul>
-<li>Smallest <strong>out</strong>degree = $(1, 3)$ (vertex 4 has the same indegree AND outdegree as vertex 3, so the choice between 3 or 4 doesn’t matter here), smallest indegree = $(1, 0)$, this means we process vertex 3.<ul>
+<li>Smallest <strong>out</strong>degree = $(1, 3)$ (vertex 4 has the same indegree AND outdegree as vertex 3, so the choice between 3 or 4 doesn't matter here), smallest indegree = $(1, 0)$, this means we process vertex 3.<ul>
 <li>Pick top-1 largest <strong>in</strong>degree vertices: $(3, 2)$. Add $3 \rightarrow 2$ to edge list.</li>
 <li>$O$ is now $[(3, 0), (3, 1), (2, 2), (1, 4)]$, $I$ is now $[(1, 0), (2, 1), (2, 2), (2, 3), (2, 4)]$.</li>
 </ul>
@@ -563,7 +560,7 @@ print(E) # [(0, 4), (0, 3), (1, 3), (1, 0), (2, 0), (2, 1)]
 <li>$O$ is now $[(3, 0), (3, 1), (2, 2)]$, $I$ is now $[(1, 0), (1, 1), (2, 2), (2, 3), (2, 4)]$.</li>
 </ul>
 </li>
-<li>Smallest outdegree = $(2, 2)$, smallest <strong>in</strong>degree = $(1, 0)$ (tie between vertex 0 and 1, but any choice doesn’t matter), this means we process vertex 0.<ul>
+<li>Smallest outdegree = $(2, 2)$, smallest <strong>in</strong>degree = $(1, 0)$ (tie between vertex 0 and 1, but any choice doesn't matter), this means we process vertex 0.<ul>
 <li>Pick top-1 largest <strong>out</strong>degree vertices: $(3, 1)$ (another tie between vertex 0 and 1, just avoid self-loop). Add $1 \rightarrow 0$ to edge list.</li>
 <li>$O$ is now $[(3, 0), (2, 1), (2, 2)]$, $I$ is now $[(1, 1), (2, 2), (2, 3), (2, 4)]$.</li>
 </ul>
@@ -578,7 +575,7 @@ print(E) # [(0, 4), (0, 3), (1, 3), (1, 0), (2, 0), (2, 1)]
 <li>$O$ is now $[(2, 0), (2, 1)]$, $I$ is now $[(2, 2), (1, 3), (1, 4)]$.</li>
 </ul>
 </li>
-<li>Smallest outdegree = $(2, 1)$ (either vertex 0 or vertex 1 doesn’t matter since their indegrees are both 0), smallest <strong>in</strong>degree = $(1, 3)$ (either vertex 3 or 4 is fine since their outdegrees are both 0), this means we process vertex 3.<ul>
+<li>Smallest outdegree = $(2, 1)$ (either vertex 0 or vertex 1 doesn't matter since their indegrees are both 0), smallest <strong>in</strong>degree = $(1, 3)$ (either vertex 3 or 4 is fine since their outdegrees are both 0), this means we process vertex 3.<ul>
 <li>Pick top-1 largest <strong>out</strong>degree vertices: $(2, 1)$ (or again, vertex 0 is also fine). Add $1 \rightarrow 3$ to edge list.</li>
 <li>$O$ is now $[(2, 0), (1, 1)]$, $I$ is now $[(2, 2), (1, 4)]$.</li>
 </ul>
@@ -687,7 +684,7 @@ while L &lt;= R:
 
 print(E) # [(3, 2), (4, 1), (1, 0), (0, 1), (2, 3), (2, 4), (1, 3), (1, 2), (0, 2), (0, 4)]
 </code></pre>
-<p>The time complexity is now to $O(m \log n)$ due to the use of priority queues, where $m$ is the number of edges and $n$ is the number of vertices. From what I heard, however, there is a technique to convert this algorithm into linear time like $O(m+n)$, but I’ll leave that for the upcoming write-ups.</p></div></div>
+<p>The time complexity is now to $O(m \log n)$ due to the use of priority queues, where $m$ is the number of edges and $n$ is the number of vertices. From what I heard, however, there is a technique to convert this algorithm into linear time like $O(m+n)$, but I'll leave that for the upcoming write-ups.</p></div></div>
 </section>
 <section id="footer">
 <div class="container">
