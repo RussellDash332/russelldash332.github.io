@@ -6,7 +6,6 @@ TW_WIDTH_LIMIT = 200
 md2html = lambda c: markdown.markdown(c, extensions=[
     'tables',
     'fenced_code',
-    'smarty',
     'pymdownx.smartsymbols',
     'pymdownx.tilde',
     'pymdownx.emoji',
@@ -24,7 +23,7 @@ posts = []
 for path, dirs, files in os.walk('markdown'):
     for file in files:
         if file.endswith('.md'):
-            markdown_content = open(os.path.join(path, file)).read().replace('../posts/media', 'media').replace('align*', 'align\*').replace('\\'*2, '\\'*3)
+            markdown_content = open(os.path.join(path, file), encoding='utf-8').read().replace('../posts/media', 'media').replace('align*', 'align\*').replace('\\'*2, '\\'*3)
             md2html_content = md2html(markdown_content)
             md_soup = BeautifulSoup(md2html_content, 'html.parser')
 
@@ -68,7 +67,7 @@ for path, dirs, files in os.walk('markdown'):
             nav_tag = md_soup.new_tag('nav', id='nav')
             nav_tag.append(nav_ul)
 
-            html_fn = os.path.join('posts', file[1:][:-3]+'.html')
+            html_fn = 'posts/'+file[1:][:-3]+'.html'
             posts.append((date, first_h1.text, first_p.text, html_fn.split('/')[-1], '\n'.join(p.text for p in md_soup.findAll('p')[1:])))
 
             template_soup = BeautifulSoup(template_content, 'html.parser')
@@ -80,7 +79,7 @@ for path, dirs, files in os.walk('markdown'):
             else: post_container.insert_before(nav_tag)
             post_container.insert(0, md_soup)
 
-            with open(html_fn, 'w+') as f:
+            with open(html_fn, 'w+', encoding='utf-8') as f:
                 f.write(str(template_soup))
 
 for date, title, date_text, html_fn, md_soup_p in sorted(posts, reverse=True):
