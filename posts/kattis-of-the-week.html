@@ -22,32 +22,7 @@
             strict: false,
         });
     });
-    function scaleKatex() {
-        document.querySelectorAll(".katex-display > .katex").forEach(el => {
-            const parentWidth = el.parentElement.clientWidth;
-            const mathWidth = el.scrollWidth;
-            const scale = Math.min(1, parentWidth / mathWidth);
-            el.style.transform = `scale(${scale})`;
-        });
-    }
-    window.addEventListener("load", scaleKatex);
-    window.addEventListener("resize", scaleKatex);
     </script>
-<style>
-    ul, ol {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    padding-left: 1.5em;
-    }
-    ul ul, ol ol, ul ol, ol ul {
-    margin-top: 0;
-    margin-bottom: 0;
-    }
-    li {
-    margin-bottom: 0.25em;
-    }
-    ul + ul { margin-top: -0.5em; }
-    </style>
 </head>
 <body class="is-preload">
 <section id="header">

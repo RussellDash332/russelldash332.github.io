@@ -22,32 +22,7 @@
             strict: false,
         });
     });
-    function scaleKatex() {
-        document.querySelectorAll(".katex-display > .katex").forEach(el => {
-            const parentWidth = el.parentElement.clientWidth;
-            const mathWidth = el.scrollWidth;
-            const scale = Math.min(1, parentWidth / mathWidth);
-            el.style.transform = `scale(${scale})`;
-        });
-    }
-    window.addEventListener("load", scaleKatex);
-    window.addEventListener("resize", scaleKatex);
     </script>
-<style>
-    ul, ol {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    padding-left: 1.5em;
-    }
-    ul ul, ol ol, ul ol, ol ul {
-    margin-top: 0;
-    margin-bottom: 0;
-    }
-    li {
-    margin-bottom: 0.25em;
-    }
-    ul + ul { margin-top: -0.5em; }
-    </style>
 </head>
 <body class="is-preload">
 <section id="header">
@@ -77,7 +52,7 @@
 </div>
 <div class="container"><div class="post-container"><h2 id="clash-of-champions-season-2-pythonized">Clash of Champions Season 2, Pythonized</h2>
 <div class="date"><p>30 September 2025</p></div>
-<p>It’s been a month since the second season of Clash of Champions’ final episode. While the games were entertaining and the questions were interesting to try out along, I decided to take things up a notch and decided to rest my mind from straining due to logic and code some Python instead.</p>
+<p>It's been a month since the second season of Clash of Champions' final episode. While the games were entertaining and the questions were interesting to try out along, I decided to take things up a notch and decided to rest my mind from straining due to logic and code some Python instead.</p>
 <p>In this write-up, there are two games that I tried coding in Python and I thought are worth explaining: Viral Protocol and Logic Race.</p>
 <h3 id="viral-protocol">Viral Protocol</h3>
 <p>You can watch the original episode <a href="https://www.youtube.com/watch?v=22lVgADtFFE">here</a>.</p>
@@ -88,7 +63,7 @@
 <li><strong>Asking questions</strong>: in turns, each player gets to ask for the role of a particular player, say player X. Then, a question of either pictorial, quantitive, or palindromic category will be selected and the whole player in the game must answer the particular question. If player X is the fastest to answer correctly, the role of player X will be revealed to only X, otherwise it will be such to all the players who answered correctly.</li>
 </ul>
 <p>The earlier you gain more correct deductions, the more bonus points you gain, but this is specific to the game itself and I only wanted to solve the logical statements.</p>
-<p>Let’s start with the list of logical statements that was shown in the game.</p>
+<p>Let's start with the list of logical statements that was shown in the game.</p>
 <pre><code class="language-text">1. There are 4 Immune patients.
 2. One of the patients 1, 3, 7, 8 is Healthy and another one a Carrier.
 3. There are no Infected patients sequentially after a Healthy one.
@@ -111,9 +86,9 @@
 20. If patient 10 is not Immune, then patient 14 is a Carrier.
 </code></pre>
 <blockquote>
-<p>Using pure deduction and no guesswork, you can deduce at most 14 of them right away. I’ll leave that as a practice for you readers.</p>
+<p>Using pure deduction and no guesswork, you can deduce at most 14 of them right away. I'll leave that as a practice for you readers.</p>
 </blockquote>
-<p>Now that we have our logical statements, let’s start coding! Begin with defining some enums like <code>CARRIER</code>, <code>IMMUNE</code>, <code>INFECTED</code>, and <code>HEALTHY</code> for readability.</p>
+<p>Now that we have our logical statements, let's start coding! Begin with defining some enums like <code>CARRIER</code>, <code>IMMUNE</code>, <code>INFECTED</code>, and <code>HEALTHY</code> for readability.</p>
 <pre><code class="language-python">CARRIER = 1
 IMMUNE = 2
 INFECTED = 3
@@ -133,7 +108,7 @@ def backtrack(ans, idx):
 def check(ans):
     ... # to be defined later
 </code></pre>
-<p>The backtracking function keeps track of the index of <code>ans</code>, <code>idx</code>, that you want to try filling the values on. If you’re done with <code>idx</code>, you move on to <code>idx+1</code>. Therefore, it makes sense to put <code>idx == len(ans)</code> as the base case and validate your answer when this is reached. The <code>for</code> loop tries to fill <code>ans[idx]</code> which each of the 4 values available.</p>
+<p>The backtracking function keeps track of the index of <code>ans</code>, <code>idx</code>, that you want to try filling the values on. If you're done with <code>idx</code>, you move on to <code>idx+1</code>. Therefore, it makes sense to put <code>idx == len(ans)</code> as the base case and validate your answer when this is reached. The <code>for</code> loop tries to fill <code>ans[idx]</code> which each of the 4 values available.</p>
 <p>The validation function <code>check(ans)</code> is rather simple in concept but tedious to implement due to the many logical statements. My plan is for this function to return one of the rule number it violates and <code>-1</code> otherwise, i.e. no violation. If the return value is indeed <code>-1</code>, then I can simply print the answer in the backtracking function. This way, it will print all the valid solutions instead of just one.</p>
 <p>Take note that indexing starts from 0, so I had to subtract the patient numbers by 1. For example, the status of patient 5 in <code>ans</code> would be represented as <code>ans[4]</code>. Another example would be patient with numbers being multiples of 4 will have their indices equivalent to 3 modulo 4. Also, some rules were reordered for slight optimization and readability.</p>
 <pre><code class="language-python">from collections import *
@@ -181,7 +156,7 @@ def check(ans):
     return -1
 </code></pre>
 <p>To implement the validation function <code>check</code>, you definitely need a <code>Counter</code> to tabulate the frequencies of a subset of the patients in your assignment. Each of the return statements are checking if the opposite of the logical statement is true. For example, on rule 20 that says <code>If patient 10 is not Immune, then patient 14 is a Carrier.</code>, the opposite of would be <code>Patient 10 is not Immune and patient 14 is not a Carrier.</code>, which translates to <code>if ans[9] != IMMUNE and ans[13] == CARRIER: return 20</code>.</p>
-<p>While pruning can be done to optimize the code even more, the techniques are not generalizable for this question, because if the logical statement changes, the pruning methods used will differ. Therefore, we’ll leave pruning out of scope for the sake of simplicity.</p>
+<p>While pruning can be done to optimize the code even more, the techniques are not generalizable for this question, because if the logical statement changes, the pruning methods used will differ. Therefore, we'll leave pruning out of scope for the sake of simplicity.</p>
 <p>Combining all that we have above, the final Python code becomes like this.</p>
 <pre><code class="language-python">CARRIER = 1
 IMMUNE = 2
@@ -268,15 +243,15 @@ sys     0m0.004s
 <p>You can watch the full episode <a href="https://www.youtube.com/watch?v=6zuyauQbAAE">here</a>. (congrats, Vannes!)</p>
 <p>You can also try out the game yourself <a href="https://cta.ruangguru.com/Logic-Race">here!</a></p>
 <p>It all went down to the final game of the season and I actually came to the watch party of the final episode during the Final Chapter event, which was, without a doubt, not a regret.</p>
-<p>As the announcer showed how the Logic Race game works, my mind instantly thought of the Queens game on LinkedIn. Pretty sure you’ve tried it once– right? Corporate workers?? LinkedIn warriors??</p>
-<p>Anyways, while it’s not exactly 100% like Queens, it is more complex and more challenging for an obvious reason. <strong>The regions of the same colour can be disconnected and some cells may be invalid</strong> on top of the usual no-two-queens-can-attack rule. There are multiple boards of various sizes to be solved, and the first to solve all boards wins. (Take note that the Queens game on LinkedIn has a small rule difference: two pieces can lie on the same diagonal, just not diagonally adjacent)</p>
-<p>Without further ado, let’s see how the boards look like.</p>
+<p>As the announcer showed how the Logic Race game works, my mind instantly thought of the Queens game on LinkedIn. Pretty sure you've tried it once-- right? Corporate workers?? LinkedIn warriors??</p>
+<p>Anyways, while it's not exactly 100% like Queens, it is more complex and more challenging for an obvious reason. <strong>The regions of the same colour can be disconnected and some cells may be invalid</strong> on top of the usual no-two-queens-can-attack rule. There are multiple boards of various sizes to be solved, and the first to solve all boards wins. (Take note that the Queens game on LinkedIn has a small rule difference: two pieces can lie on the same diagonal, just not diagonally adjacent)</p>
+<p>Without further ado, let's see how the boards look like.</p>
 <figure style="text-align: center;">
 <img alt="logicrace" object-fit="contain" src="media/logicrace.png" width="100%"/>
 <figcaption>Logic Race boards (Credits: Ruangguru)</figcaption>
 </figure>
 <p>Technically, this question can be solved with backtracking as well!</p>
-<p>Let’s start with modelling the board in Python. I eventually used a multistring like the following example. Assume I have a function <code>solve(board, title)</code> that takes in the board representation and the board label, and solves that particular board.</p>
+<p>Let's start with modelling the board in Python. I eventually used a multistring like the following example. Assume I have a function <code>solve(board, title)</code> that takes in the board representation and the board label, and solves that particular board.</p>
 <pre><code class="language-python">def solve(board, title):
     ... # to be defined later
 
@@ -311,7 +286,7 @@ BBBCFF
  6, # rows
  6) # columns
 </code></pre>
-<p>Using this new representation of the board and the board dimensions, we can display/print it nicely so we don’t have to strain our eyes.</p>
+<p>Using this new representation of the board and the board dimensions, we can display/print it nicely so we don't have to strain our eyes.</p>
 <p>Suppose we have our finalized assignment of the pieces, and we also want to show them. One way is to override our displayed board with a bunch of <code>*</code> at the positions of the pieces.</p>
 <pre><code class="language-python">def display(board, rows, cols, asg={}):
     ans = [['X']*cols for _ in range(rows)]
@@ -322,7 +297,7 @@ BBBCFF
         ans[r][c] = '*'
     print('\n'.join(map(''.join, ans)), end='\n\n')
 </code></pre>
-<p>So, let’s say we display our parsing result above. The code will be able to print the original board again.</p>
+<p>So, let's say we display our parsing result above. The code will be able to print the original board again.</p>
 <pre><code class="language-python">AFFEEB
 AAFEEB
 AXEEDD
@@ -338,11 +313,11 @@ XXECDD
 BBCCCD
 BB*CFF
 </code></pre>
-<p>We’re done with the convenience functions, which means we’re left with the backtracking.</p>
+<p>We're done with the convenience functions, which means we're left with the backtracking.</p>
 <p>The goal is to ensure that each of the distinct letters (excluding <code>'X'</code>) has a cell assigned to it, while respecting the fact that there can only be one piece on each row, each column, and each diagonal.</p>
 <p>Similar to what we did on Viral Protocol, instead of going through the indices/patients, we go through the letters, keeping track which rows have been used, which columns have been used, which diagonals have been used. Suppose for each of these we have a set to keep track, namely <code>row</code>, <code>col</code>, <code>dip</code>, and <code>din</code> (the final two stands for diagonal-positive and diagonal-negative).</p>
 <p>Whenever we add an assignment at position <code>(r, c)</code> for a letter, we have to add <code>r</code> to <code>row</code> to indicate that row <code>r</code> has been taken. Similarly, <code>c</code> to <code>col</code>, <code>r+c</code> to <code>dip</code> and <code>r-c</code> to <code>din</code>. Note that two pieces on the same diagonal will have either the same <code>r+c</code> value or the same <code>r-c</code> value, depending the direction of the diagonal, so this storing makes sense.</p>
-<p>Once you add the respective values to the sets that keep track of the current assignment, we move on to the next letter. If we’re done with backtracking the next letter, we revert our assignment and trackr sets to the original state by discarding the same values that were added.</p>
+<p>Once you add the respective values to the sets that keep track of the current assignment, we move on to the next letter. If we're done with backtracking the next letter, we revert our assignment and trackr sets to the original state by discarding the same values that were added.</p>
 <p>The difference with the backtracking at Viral Protocol is that we can validate our current assignments on-the-go instead of having to wait until the base case <code>idx == len(letters)</code>. Once there are two pieces with the same <code>r</code> value, or same <code>c</code> value, or same <code>r+c</code> value, or even same <code>r-c</code> value, then the whole assignment is invalid.</p>
 <pre><code class="language-python">import time
 def solve(board, title):
@@ -388,8 +363,8 @@ def solve(board, title):
     print('='*20)
 </code></pre>
 <p>One optimization I can think of now is to sort the letters by the number of cells the letter occupies. If we work on the easier letters, we can terminate our backtracking faster, which might influence our solving speed. This heuristic is interestingly also a strategy that humans might use!</p>
-<p>I also added some functionality to print out the elapsed time just because. Maybe to see how much faster the algorithm can do it better than humans can…?</p>
-<p>Anyways, wrapping up everything, we have the following Python code. After the backtracking comes the 9 boards from the game so you don’t have to recreate the boards yourself again.</p>
+<p>I also added some functionality to print out the elapsed time just because. Maybe to see how much faster the algorithm can do it better than humans can...?</p>
+<p>Anyways, wrapping up everything, we have the following Python code. After the backtracking comes the 9 boards from the game so you don't have to recreate the boards yourself again.</p>
 <pre><code class="language-python">def parse(board):
     new_board = {}
     board = board.strip().split('\n')
@@ -811,7 +786,7 @@ Solved in 0.00122 seconds
 ====================
 </code></pre>
 <p>On top of being blazing fast, we can also see that some boards have multiple valid solutions, and only one is needed to solve the entire board. This is a rather unique insight since most of the audience will think there is a unique solution for each board.</p>
-<p>That’s all the backtracking fun! I hope you gained an insight or two on how Python backtracking can be implemented. Time to lock in for another month before I can come up with another write-up. (hopefully…)</p></div></div>
+<p>That's all the backtracking fun! I hope you gained an insight or two on how Python backtracking can be implemented. Time to lock in for another month before I can come up with another write-up. (hopefully...)</p></div></div>
 </section>
 <section id="footer">
 <div class="container">

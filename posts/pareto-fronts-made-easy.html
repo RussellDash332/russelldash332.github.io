@@ -22,32 +22,7 @@
             strict: false,
         });
     });
-    function scaleKatex() {
-        document.querySelectorAll(".katex-display > .katex").forEach(el => {
-            const parentWidth = el.parentElement.clientWidth;
-            const mathWidth = el.scrollWidth;
-            const scale = Math.min(1, parentWidth / mathWidth);
-            el.style.transform = `scale(${scale})`;
-        });
-    }
-    window.addEventListener("load", scaleKatex);
-    window.addEventListener("resize", scaleKatex);
     </script>
-<style>
-    ul, ol {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    padding-left: 1.5em;
-    }
-    ul ul, ol ol, ul ol, ol ul {
-    margin-top: 0;
-    margin-bottom: 0;
-    }
-    li {
-    margin-bottom: 0.25em;
-    }
-    ul + ul { margin-top: -0.5em; }
-    </style>
 </head>
 <body class="is-preload">
 <section id="header">
@@ -82,40 +57,40 @@
 <blockquote>
 <p>How does one select as many objects as possible, say to a set $T$, such that there are <strong>no two distinct</strong> objects $x\in T$ and $y\in S$ where all metrics of $x$ are lower compared to $y$?</p>
 </blockquote>
-<p>The set of objects that we want to obtain here is called a <strong>Pareto front</strong>. If you look at the <a href="https://en.m.wikipedia.org/wiki/Pareto_front">Wikipedia page</a>, this particular concept is widely used for optimizations in engineering. However, what I’ll be discussing is just a small subset of it, particularly on simple objectives such as the main question above.</p>
-<p>I’ll also discuss only the case for 2 metrics and 3 metrics, respectively the 2D Pareto front and the 3D Parento front. For more than 3 metrics, it would require more sophisticated (approximation) algorithms which is out of the scope of this article.</p>
+<p>The set of objects that we want to obtain here is called a <strong>Pareto front</strong>. If you look at the <a href="https://en.m.wikipedia.org/wiki/Pareto_front">Wikipedia page</a>, this particular concept is widely used for optimizations in engineering. However, what I'll be discussing is just a small subset of it, particularly on simple objectives such as the main question above.</p>
+<p>I'll also discuss only the case for 2 metrics and 3 metrics, respectively the 2D Pareto front and the 3D Parento front. For more than 3 metrics, it would require more sophisticated (approximation) algorithms which is out of the scope of this article.</p>
 <p>Finally, for simplicity, we shall assume that all values within the same metric are distinct. For example, if we have two points $(x_1, y_1)$ and $(x_2, y_2)$, then $x_1 \neq x_2$ and $y_1 \neq y_2$.</p>
 <h3 id="2d-pareto-front">2D Pareto Front</h3>
 <p>An example where we are to obtain a 2D Pareto front is this Kattis problem: <a href="https://open.kattis.com/problems/physicalmusic">Physical Music</a>.</p>
 <p>Let me simplify the problem statement:</p>
 <blockquote>
-<p>There are $N$ CD singles each with their ranks on Single Top $N$ and on Download Top $N$. We want to select as many CD singles as possible such that for any CD single in this selection we can’t find any other CD single with both higher rank on Single Top $N$ and lower rank on Download Top $N$. Output the complement of this selection.</p>
+<p>There are $N$ CD singles each with their ranks on Single Top $N$ and on Download Top $N$. We want to select as many CD singles as possible such that for any CD single in this selection we can't find any other CD single with both higher rank on Single Top $N$ and lower rank on Download Top $N$. Output the complement of this selection.</p>
 </blockquote>
-<p>Suppose we represent these CD singles as point with the ranks as coordinates in the 2D Cartesian plane ($s_i$, $d_i$). Basically the Pareto front here is the set of points such that for any point $(x, y)$ in this selection, we can’t find any other point with both higher $x$-coordinate and lower $y$-coordinate.</p>
-<p>Now let’s take a look at the sample input:</p>
+<p>Suppose we represent these CD singles as point with the ranks as coordinates in the 2D Cartesian plane ($s_i$, $d_i$). Basically the Pareto front here is the set of points such that for any point $(x, y)$ in this selection, we can't find any other point with both higher $x$-coordinate and lower $y$-coordinate.</p>
+<p>Now let's take a look at the sample input:</p>
 <ul>
 <li>The first part has three points: $(1, 1), (2, 2), (3, 3)$. All three points lie on the Pareto front, so we output $0$.</li>
 <li>The second part has four points: $(1, 4), (2, 3), (3, 1), (4, 2)$. Both points $(1, 4)$ and $(2, 3)$ do not lie on the Pareto front because $(3, 1)$ and $(4, 2)$ have both higher single rank and lower download rank than $(1, 4)$ and $(2, 3)$, respectively. Therefore, we output both $(1, 4)$ and $(2, 3)$, meaning the actual output is $2$ (because there are 2 points) and then $3$ and $4$ (the download ranks in sorted order).</li>
 </ul>
 <p><img alt="pareto1" object-fit="contain" src="media/pareto1.png" width="80%"/></p>
-<p>Having visualized the sample input, let’s solve the problem:</p>
+<p>Having visualized the sample input, let's solve the problem:</p>
 <ul>
 <li>We shall use a sorted set (like AVL tree) to solve this problem, denote this sorted set $P$.</li>
 <li>Go through the points in ascending order of $s_i$.</li>
 <li>For any point $(s_i, d_i)$, insert $d_i$ to $P$. If there are currently no element smaller than $d_i$ in $P$, then $(s_i, d_i)$ belongs to the Pareto front.</li>
-<li>Since we’re taking the complement of this Pareto front, we simply negate the condition: we output $d_i$ if there is an element smaller than it in $P$ at the moment of insertion of $d_i$.</li>
+<li>Since we're taking the complement of this Pareto front, we simply negate the condition: we output $d_i$ if there is an element smaller than it in $P$ at the moment of insertion of $d_i$.</li>
 </ul>
 <p>Overall, the algorithm takes $O(N \log N)$ time due to sorting of the points by $s_i$, followed by $N$ insertions of $d_i$, each costing $O(\log N)$. Thus, one should be able to pass the time limit even if $N = 10^5$.</p>
 <p>If we do it naively using double loops, it will take $O(N^2)$, which is suboptimal for the problem.</p>
 <h3 id="3d-pareto-front">3D Pareto Front</h3>
 <p>This would be a great opportunity to use another Kattis problem as an example: <a href="https://open.kattis.com/problems/excellentengineers">Excellent Engineers</a>.</p>
-<p>Here’s the simplified problem statement:</p>
+<p>Here's the simplified problem statement:</p>
 <blockquote>
 <p>Suppose we have $N$ points in the 3D cartesian plane. We want to shortlist these points such that for any point $(x, y, z)$ in this shortlist, none of the $N$ points have lower values of $x$, $y$, and $z$ simultaneously. Simply output the size of the 3D Pareto front.</p>
 </blockquote>
 <p>So how exactly can we extend from the 2D scenario to this?</p>
 <ul>
-<li>Again, let’s use a sorted set and call this $P$.</li>
+<li>Again, let's use a sorted set and call this $P$.</li>
 <li>Sort these points in ascending $z$-coordinate.</li>
 <li>For every point $(x_i, y_i, z_i)$ that we want to insert:<ul>
 <li>Insert $x_i$ to $P$.</li>

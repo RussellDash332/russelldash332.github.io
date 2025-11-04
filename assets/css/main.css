@@ -3320,3 +3320,30 @@ input, select, textarea {
 a:hover #logo {
     color: #a58bb4;
 }
+
+ul, ol {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    padding-left: 1.5em;
+}
+
+ul ul, ol ol, ul ol, ol ul {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+li {
+	margin-bottom: 0.25em;
+}
+
+ul + ul {
+	margin-top: -0.5em;
+}
+
+.katex-display {
+	overflow: auto hidden;
+	margin: 0.5em 0;
+}
+.katex-display > .katex {
+	white-space: normal;
+}

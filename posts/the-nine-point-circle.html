@@ -22,32 +22,7 @@
             strict: false,
         });
     });
-    function scaleKatex() {
-        document.querySelectorAll(".katex-display > .katex").forEach(el => {
-            const parentWidth = el.parentElement.clientWidth;
-            const mathWidth = el.scrollWidth;
-            const scale = Math.min(1, parentWidth / mathWidth);
-            el.style.transform = `scale(${scale})`;
-        });
-    }
-    window.addEventListener("load", scaleKatex);
-    window.addEventListener("resize", scaleKatex);
     </script>
-<style>
-    ul, ol {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    padding-left: 1.5em;
-    }
-    ul ul, ol ol, ul ol, ol ul {
-    margin-top: 0;
-    margin-bottom: 0;
-    }
-    li {
-    margin-bottom: 0.25em;
-    }
-    ul + ul { margin-top: -0.5em; }
-    </style>
 </head>
 <body class="is-preload">
 <section id="header">
@@ -58,7 +33,7 @@
 </a>
 <p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
 </header>
-<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#the-nine-point-circle">The Nine-point Circle</a></li><li><a href="#the-proof" style="font-size: 0.95em; font-weight: 500;">The Proof</a></li><li><a href="#what-s-next" style="font-size: 0.95em; font-weight: 500;">What’s Next</a></li></ul></nav>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#the-nine-point-circle">The Nine-point Circle</a></li><li><a href="#the-proof" style="font-size: 0.95em; font-weight: 500;">The Proof</a></li><li><a href="#what-s-next" style="font-size: 0.95em; font-weight: 500;">What's Next</a></li></ul></nav>
 <footer>
 <ul class="icons">
 <li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
@@ -83,9 +58,9 @@
 <p><img alt="npc02" object-fit="contain" src="media/npc02.jpg" width="60%"/></p>
 <p>Finally, the midpoints of $BC, CA, AB$ denoted as $M_A, M_B, M_C$.</p>
 <p><img alt="npc03" object-fit="contain" src="media/npc03.jpg" width="60%"/></p>
-<p>In case you haven’t known, the points $H_A,H_B,H_C,M_A,M_B,M_C,T_A,T_B,T_C$ all lie inside a common circle, thus the name <em>nine-point circle</em>. Therefore, let’s explore the proof that these nine points indeed lie on a single circle!</p>
+<p>In case you haven't known, the points $H_A,H_B,H_C,M_A,M_B,M_C,T_A,T_B,T_C$ all lie inside a common circle, thus the name <em>nine-point circle</em>. Therefore, let's explore the proof that these nine points indeed lie on a single circle!</p>
 <h3 id="the-proof">The Proof</h3>
-<p>Let’s focus ourselves on $\triangle ABH$. Note that both $M_C$ and $T_B$ are midpoints of $BA$ and $BH$ respectively. Therefore, $M_CT_B \parallel AH$.</p>
+<p>Let's focus ourselves on $\triangle ABH$. Note that both $M_C$ and $T_B$ are midpoints of $BA$ and $BH$ respectively. Therefore, $M_CT_B \parallel AH$.</p>
 <p><img alt="npc04" object-fit="contain" src="media/npc04.jpg" width="60%"/></p>
 <p>We can use the same idea to prove that $M_BT_C \parallel AH$.</p>
 <p><img alt="npc05" object-fit="contain" src="media/npc05.jpg" width="60%"/></p>
@@ -96,12 +71,12 @@
 <p>Consider the circle that inscribes $M_BM_CT_BT_C$. SInce $M_BM_CT_BT_C$ is a rectangle, both $M_BT_B$ and $M_CT_C$ are diameters of this circle.</p>
 <p>Now, we can repeat these arguments again to prove that $M_AM_BT_AT_B$ and $M_AM_CT_AT_C$ are also rectangles and are inscribed within this same circle because they have common diameters.</p>
 <p><img alt="npc08" object-fit="contain" src="media/npc08.jpg" width="60%"/></p>
-<p>Therefore, at this point, we managed to prove that $M_A, M_B, M_C, T_A, T_B, T_C$ all lie on the same circle and we’re left with proving that $H_A, H_B, H_C$ also lie on this circle.</p>
+<p>Therefore, at this point, we managed to prove that $M_A, M_B, M_C, T_A, T_B, T_C$ all lie on the same circle and we're left with proving that $H_A, H_B, H_C$ also lie on this circle.</p>
 <p>This can be done rather quickly because we know that $M_AT_A$ is a diameter of the circle so for any point $X \neq M_A, T_A$ in the circle, $\angle M_AXT_A$ is a right angle. But this is the case for $X = H_A$ because $AH_A \perp BC \parallel H_AM_A$. Therefore, $H_A$ lies on this circle.</p>
 <p><img alt="npc09" object-fit="contain" src="media/npc09.jpg" width="60%"/></p>
 <p>Analogously we can prove that $H_B$ and $H_C$ lie on the circle and therefore our proof is complete!</p>
 <p><img alt="npc10" object-fit="contain" src="media/npc10.jpg" width="60%"/></p>
-<h3 id="what-s-next">What’s Next</h3>
+<h3 id="what-s-next">What's Next</h3>
 <p>There some interesting properties derived from the existence of the nine-point circle. You can easily find these online, but my personal favourite would be the Euler line!</p>
 <p>The Euler line of $\triangle ABC$ is a line, that passes through the orthocenter $H$, the centroid $G$, the circumcenter $O$, and the nine-point center $N$ with the following property:</p>
 <p>$$OG:GN:NH = 2:1:3$$</p>
