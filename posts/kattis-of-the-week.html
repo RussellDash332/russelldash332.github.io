@@ -71,7 +71,6 @@
 <summary><a href="https://open.kattis.com/problems/pivot">Pivot</a> (hard problem)</summary>
     You probably see this question very often in your VisuAlgo quiz. If an element is a possible pivot, all elements to its left must be smaller and all elements to its right must be larger. To keep track of this, you can use an array to keep track of the minimum/maximum so far as you iterate through array from the right/left direction. This technique is also known as the <b>running min/max</b>
 </details>
-<p><br/></p>
 <h4 id="t3-lists-stacks-queues">T3: Lists, Stacks, Queues</h4>
 <details>
 <summary><a href="https://open.kattis.com/problems/circuitmath">Circuit Math</a></summary>
@@ -93,7 +92,6 @@
 <summary><a href="https://open.kattis.com/problems/bungeebuilder">Bungee Builder</a></summary>
     Now that you've learnt about monotonic stacks, try this out :)
 </details>
-<p><br/></p>
 <h4 id="t4-hashing">T4: Hashing</h4>
 <details>
 <summary><a href="https://open.kattis.com/problems/iwannabe">I Wanna Be The Very Best</a></summary>
@@ -132,7 +130,6 @@
 
 then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]</code> and our $T$ looks like <code>{a: [0], b: [0, 1], c: [1], d: [0]}</code>
 </details>
-<p><br/></p>
 <h4 id="t5-pq">T5: PQ</h4>
 <details>
 <summary><a href="https://open.kattis.com/problems/continuousmedian">Continuous Median</a></summary>
@@ -162,7 +159,6 @@ then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]<
 <summary><a href="https://open.kattis.com/problems/stockprices">Stock Prices</a></summary>
     Have a max heap for the buy prices and min heap for sell prices, keep polling from both queues accordingly using a while loop!
 </details>
-<p><br/></p>
 <h4 id="t6-ufds">T6: UFDS</h4>
 <details>
 <summary><a href="https://open.kattis.com/problems/unionfind">Union-Find</a></summary>
@@ -184,7 +180,6 @@ then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]<
 <summary><a href="https://open.kattis.com/problems/tildes">Tildes</a></summary>
     Keep track of size, then answer the query accordingly
 </details>
-<p><br/></p>
 <h4 id="t7-bst">T7: BST</h4>
 <details>
 <summary><a href="https://open.kattis.com/problems/continuousmedian">Continuous Median</a> (again!)</summary>
@@ -202,7 +197,6 @@ then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]<
 <summary><a href="https://open.kattis.com/problems/classrooms">Classrooms</a> (hard problem?)</summary>
     See <a href="https://en.m.wikipedia.org/wiki/Interval_scheduling#Unweighted"><b>interval scheduling on Wikipedia</b></a> for the official term for this problem but you use an AVL tree to store the compatible intervals so far!
 </details>
-<p><br/></p>
 <h4 id="t8-graph-ds-and-trav">T8: Graph DS and Trav</h4>
 <details>
 <summary><a href="https://open.kattis.com/problems/cutthenegativity">Cut the Negativity</a></summary>
@@ -224,7 +218,6 @@ then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]<
 <summary><a href="https://open.kattis.com/problems/pachinkoprobability">Pachinko Probability</a> (slightly hard)</summary>
     Interesting problem that uses toposort to count the number of paths from any vertex with indegree 0 to those with outdegree 0, then among those paths how many land on the squared vertices (if you're using Kahn's algorithm, accumulate the number of paths in reverse topological order)
 </details>
-<p><br/></p>
 <h4 id="t9-mst">T9: MST</h4>
 <details>
 <summary><a href="https://open.kattis.com/problems/minspantree">Minimum Spanning Tree</a></summary>
@@ -246,7 +239,6 @@ then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]<
 <summary><a href="https://open.kattis.com/problems/gridmst">Grid MST</a> <b>(very hard, proceed with caution)</b></summary>
     Kruskal's but you need a way to reduce the graph using BFS since without it $O(N^2logN)$ is too big thus TLE, more details are omitted in this article
 </details>
-<p><br/></p>
 <h4 id="t10-sssp-p1">T10: SSSP P1</h4>
 <details>
 <summary><a href="https://open.kattis.com/problems/buttonbashing">Button Bashing</a></summary>
@@ -277,7 +269,6 @@ then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]<
     Interesting SP problem, even with negative cycles doesn't mean the shortest path to any vertex cannot be found since it may be outside the negative cycle itself<br/><br/>
 <b>How to tackle:</b> Run bellman ford and compare the $(V-1)$-th iteration with the next $k$ iterations (at most $V-1$ more iterations). If the value doesn't change, that's the SP already. Otherwise, the vertex is part of a negative cycle. You can use a while loop to keep track of which vertices has its value changed but not marked as part of negative cycle.
 </details>
-<p><br/></p>
 <h4 id="t11-sssp-p2-apsp">T11: SSSP P2 + APSP</h4>
 <details>
 <summary><a href="https://open.kattis.com/problems/fendofftitan">Fend Off Titan</a></summary>
