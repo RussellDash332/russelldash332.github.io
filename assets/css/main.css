@@ -3347,3 +3347,15 @@ ul + ul {
 .katex-display > .katex {
 	white-space: normal;
 }
+
+details {
+    margin-bottom: 1em;
+}
+
+details .boxed {
+	border: 1px solid #ccc;
+	padding: 10px;
+	margin-top: 5px;
+	border-radius: 5px;
+	background-color: #f9f9f9;
+  }
