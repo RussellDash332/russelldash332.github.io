@@ -26,8 +26,6 @@ Little warning that these problems are **almost** sorted by difficulty. Hints ca
     You probably see this question very often in your VisuAlgo quiz. If an element is a possible pivot, all elements to its left must be smaller and all elements to its right must be larger. To keep track of this, you can use an array to keep track of the minimum/maximum so far as you iterate through array from the right/left direction. This technique is also known as the <b>running min/max</b>
 </details>
 
-<br>
-
 ### T3: Lists, Stacks, Queues
 <details>
     <summary><a href="https://open.kattis.com/problems/circuitmath">Circuit Math</a></summary>
@@ -53,8 +51,6 @@ Little warning that these problems are **almost** sorted by difficulty. Hints ca
     <summary><a href="https://open.kattis.com/problems/bungeebuilder">Bungee Builder</a></summary>
     Now that you've learnt about monotonic stacks, try this out :)
 </details>
-
-<br>
 
 ### T4: Hashing
 <details>
@@ -98,8 +94,6 @@ Little warning that these problems are **almost** sorted by difficulty. Hints ca
 then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]</code> and our $T$ looks like <code>{a: [0], b: [0, 1], c: [1], d: [0]}</code>
 </details>
 
-<br>
-
 ### T5: PQ
 <details>
     <summary><a href="https://open.kattis.com/problems/continuousmedian">Continuous Median</a></summary>
@@ -132,8 +126,6 @@ then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]<
     Have a max heap for the buy prices and min heap for sell prices, keep polling from both queues accordingly using a while loop!
 </details>
 
-<br>
-
 ### T6: UFDS
 <details>
     <summary><a href="https://open.kattis.com/problems/unionfind">Union-Find</a></summary>
@@ -160,8 +152,6 @@ then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]<
     Keep track of size, then answer the query accordingly
 </details>
 
-<br>
-
 ### T7: BST
 <details>
     <summary><a href="https://open.kattis.com/problems/continuousmedian">Continuous Median</a> (again!)</summary>
@@ -182,8 +172,6 @@ then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]<
     <summary><a href="https://open.kattis.com/problems/classrooms">Classrooms</a> (hard problem?)</summary>
     See <a href="https://en.m.wikipedia.org/wiki/Interval_scheduling#Unweighted"><b>interval scheduling on Wikipedia</b></a> for the official term for this problem but you use an AVL tree to store the compatible intervals so far!
 </details>
-
-<br>
 
 ### T8: Graph DS and Trav
 <details>
@@ -211,8 +199,6 @@ then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]<
     Interesting problem that uses toposort to count the number of paths from any vertex with indegree 0 to those with outdegree 0, then among those paths how many land on the squared vertices (if you're using Kahn's algorithm, accumulate the number of paths in reverse topological order)
 </details>
 
-<br>
-
 ### T9: MST
 <details>
     <summary><a href="https://open.kattis.com/problems/minspantree">Minimum Spanning Tree</a></summary>
@@ -238,8 +224,6 @@ then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]<
     <summary><a href="https://open.kattis.com/problems/gridmst">Grid MST</a> <b>(very hard, proceed with caution)</b></summary>
     Kruskal's but you need a way to reduce the graph using BFS since without it $O(N^2logN)$ is too big thus TLE, more details are omitted in this article
 </details>
-
-<br>
 
 ### T10: SSSP P1
 <details>
@@ -277,8 +261,6 @@ then our $S$ looks like <code>[{a: int, b: float, d: double}, {b: int, c: int}]<
     Interesting SP problem, even with negative cycles doesn't mean the shortest path to any vertex cannot be found since it may be outside the negative cycle itself<br><br>
     <b>How to tackle:</b> Run bellman ford and compare the $(V-1)$-th iteration with the next $k$ iterations (at most $V-1$ more iterations). If the value doesn't change, that's the SP already. Otherwise, the vertex is part of a negative cycle. You can use a while loop to keep track of which vertices has its value changed but not marked as part of negative cycle.
 </details>
-
-<br>
 
 ### T11: SSSP P2 + APSP
 <details>
