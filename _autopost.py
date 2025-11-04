@@ -23,7 +23,7 @@ posts = []
 for path, dirs, files in os.walk('markdown'):
     for file in files:
         if file.endswith('.md'):
-            markdown_content = open(os.path.join(path, file), encoding='utf-8').read().replace('../posts/media', 'media').replace('align*', 'align\*').replace('\\'*2, '\\'*3)
+            markdown_content = open(os.path.join(path, file), encoding='utf-8').read().replace('../posts/media', 'media').replace('align*', 'align\*').replace('\\'*2, '\\'*3).replace('\\left\\{', '\\left\\\\{').replace('\\right\\}', '\\right\\\\}')
             md2html_content = md2html(markdown_content)
             md_soup = BeautifulSoup(md2html_content, 'html.parser')
 
@@ -106,3 +106,4 @@ for date, title, date_text, html_fn, md_soup_p in sorted(posts, reverse=True):
 with open(os.path.join('posts', 'index.html'), 'w+') as f:
     f.write(soup.prettify())
     f.close()
+
