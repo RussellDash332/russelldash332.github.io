@@ -755,7 +755,7 @@ O\left(\sum_{i=1}^{\log n} 2^i \log 2^i \right) &= O\left(\sum_{i=1}^{\log n} i 
 &= O\left(n \log n \right).
 \end{align*}
 $$
-- Computing $RS^-1$ and reversing it takes **$O(n \log n)$ time**.
+- Computing $RS^{-1}$ and reversing it takes **$O(n \log n)$ time**.
 - Computing the remainder also takes **$O(n \log n)$ time** due to the multiplication $qQ$.
 
 Overall, the algorithm takes **$O(n \log n)$ time**, where $n$ is the degree of $P$.
