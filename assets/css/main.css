@@ -3360,3 +3360,9 @@ details {
 	border-radius: 5px;
 	background-color: #f9f9f9;
 }
+
+.aocgolf pre code {
+	white-space: pre-wrap;
+	overflow-x: visible;
+	word-break: break-word;
+}

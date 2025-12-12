@@ -1,0 +1,634 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<title>Advent of Code(golf) 2025</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+<link href="../assets/css/main.css" rel="stylesheet"/>
+<link href="../media/russell.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+            ],
+            throwOnError: false,
+            strict: false,
+        });
+    });
+    </script>
+</head>
+<body class="is-preload">
+<section id="header">
+<header>
+<a class="active" href="https://russelldash332.github.io/">
+<span class="image avatar"><img alt="" src="../media/profile.jpg"/></span>
+<h1 id="logo">Russell Saerang</h1>
+</a>
+<p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
+</header>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#advent-of-code-golf-2025">Advent of Code(golf) 2025</a></li><li><a href="#day-1-142-bytes" style="font-size: 0.95em; font-weight: 500;">Day 1 - 142 bytes</a></li><li><a href="#day-2-196-bytes" style="font-size: 0.95em; font-weight: 500;">Day 2 - 196 bytes</a></li><li><a href="#day-3-187-bytes" style="font-size: 0.95em; font-weight: 500;">Day 3 - 187 bytes</a></li><li><a href="#day-4-299-bytes" style="font-size: 0.95em; font-weight: 500;">Day 4 - 299 bytes</a></li><li><a href="#day-5-295-bytes" style="font-size: 0.95em; font-weight: 500;">Day 5 - 295 bytes</a></li><li><a href="#day-6-226-bytes" style="font-size: 0.95em; font-weight: 500;">Day 6 - 226 bytes</a></li><li><a href="#day-7-183-bytes" style="font-size: 0.95em; font-weight: 500;">Day 7 - 183 bytes</a></li><li><a href="#day-8-355-bytes" style="font-size: 0.95em; font-weight: 500;">Day 8 - 355 bytes</a></li><li><a href="#day-9-606-bytes" style="font-size: 0.95em; font-weight: 500;">Day 9 - 606 bytes</a></li><li><a href="#day-10-1569-bytes" style="font-size: 0.95em; font-weight: 500;">Day 10 - 1569 bytes</a></li><li><a href="#day-11-192-bytes" style="font-size: 0.95em; font-weight: 500;">Day 11 - 192 bytes</a></li><li><a href="#day-12-161-bytes" style="font-size: 0.95em; font-weight: 500;">Day 12 - 161 bytes</a></li></ul></nav>
+<footer>
+<ul class="icons">
+<li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
+<li><a class="icon brands fa-instagram" href="https://www.instagram.com/russellsaerang2702/" rel="noopener noreferrer" target="_blank"><span class="label">Instagram</span></a></li>
+<li><a class="icon brands fa-github" href="https://github.com/RussellDash332/" rel="noopener noreferrer" target="_blank"><span class="label">Github</span></a></li>
+<li><a class="icon brands fa-medium-m" href="https://medium.com/@russellsaerang" rel="noopener noreferrer" target="_blank"><span class="label">Medium</span></a></li>
+<li><a class="icon solid fa-envelope" href="mailto:russellsaerang@gmail.com"><span class="label">Email</span></a></li>
+</ul>
+</footer>
+</section>
+<div id="wrapper">
+<div id="main">
+<section id="post">
+<div class="image main" data-position="center">
+<img alt="" src="../media/banner.jpg"/>
+</div>
+<div class="container"><div class="post-container"><h2 id="advent-of-code-golf-2025">Advent of Code(golf) 2025</h2>
+<div class="date"><p>12 December 2025</p></div>
+<p>I have been doing Advent of Code (AOC) since 2021 and have completed all questions from 2015 as of writing this article. While the initial goal was to learn new languages (like Haskell and Rust), I ended up sticking to Python since 2023 and decided to take things up a notch: <strong>golf the solution to a single line of code</strong>. Once I managed to complete all 25 days (only 12 days starting this year) of problems, I would combine them into a single Python file and call it <strong><em>The Basilisk</em></strong>. (get it? big snake...)</p>
+<p>I thought this is a fun way of honing my Python understanding, not just that of data structures and algorithms. I feel that codegolfing a language exposes you to some hidden tricks on coding that language, which you'll see soon enough.</p>
+<p>To keep up with my monthly commitment of posting at least one write-up, I decided to document my basilisk for this year's AOC. Here's my current ruleset when it comes to creating the basilisk:</p>
+<ul>
+<li>Importing third-party libraries like <code>networkx</code> or <code>numpy</code> is strictly not allowed.</li>
+<li>You are allowed to use semicolons to separate lines, e.g. <code>a=1;b=2;print('Hello')</code>. After AOC 2023, I realize banning this doesn't make sense since I can just <em>walrus-operator</em> almost everything: <code>[a:=1,b:=2,print('Hello')]</code>.</li>
+<li>Importing built-in libraries is fine, like <code>re</code>, <code>datetime</code>.</li>
+<li>Do not use <code>exec</code> at all. That's lame, very very lame. Using <code>eval</code> is fine though.</li>
+<li>Inputs must come from <code>stdin</code>, and not by reading a file. Either using <code>import sys;sys.stdin</code> or <code>open(0)</code> should work all the time.</li>
+<li>Output must be in <strong>two</strong> lines (not one): <code>Part 1: &lt;answer1&gt;</code> and <code>Part 2: &lt;answer2&gt;</code>.</li>
+<li>This year, I'm okay with syntax warnings, so <code>[1for _ in range(8)]</code> instead of <code>[1 for _ in range(8)]</code> is fine - shouldn't matter much.</li>
+</ul>
+<p><br/>
+For reference, you can find the basilisks here: <a href="https://github.com/RussellDash332/advent-of-code/blob/main/aoc-2023/basilisk.py">AOC 2023</a>, <a href="https://github.com/RussellDash332/advent-of-code/blob/main/aoc-2024/basilisk.py">AOC 2024</a>, <a href="https://github.com/RussellDash332/advent-of-code/blob/main/aoc-2025/basilisk.py">AOC 2025</a>.</p>
+<h3 id="day-1-142-bytes">Day 1 - 142 bytes</h3>
+<div class="aocgolf">
+<pre><code class="language-python">p=50;q=[[p:=(p+2*(x&gt;'Q')-1)%100for _ in'.'*int(x[1:])]for x in open(0)];print('Part 1:',sum(r[-1]&lt;1for r in q),'\nPart 2:',sum(q,[]).count(0))
+</code></pre>
+</div>
+<p>What a great start for the year! I decided to store the end destination of every single step as a 2D list to answer part 1, and then flatten the list to 1D for part 2. E.g. <code>L20,R10</code> becomes <code>[[49,48,...,30],[31,32,...,40]]</code>, which will then become <code>[49,48,...,30,31,32,...,40]</code>.</p>
+<p>The bottleneck of the code speed is <code>sum(q,[]).count(0)</code>, which could've been much faster if I use <code>sum(r.count(0)for r in q)</code>. Note that <code>sum(q,[])</code> concatenates all the destinations into a single list, so that's why it takes a noticeable amount of time.</p>
+<p>Initially, to check whether it's left <code>L</code> or right <code>R</code>, I used <code>x[0]&gt;'Q'</code>, but using <code>x&gt;'Q'</code> is sufficient because <code>"L9999..." &lt; "Q" &lt; "R0000..."</code>. You will find this kind of string checking very common because <code>==</code> consumes more characters than <code>&lt;</code> or <code>.</code>. Checking for the first letter from each from a bunch of strings might require some workaround on what's the best boundary to use the strict inequalities.</p>
+<p>In programming problems, when it comes to grids, almost all the time one represent walls with the <code>#</code> character, empty spaces with dots <code>.</code>, and some objects within a cell with either an uppercase letter, an asterisk <code>*</code>, or the <code>@</code> sign. To check whether it's equal to a specific character or not, we can refer to the ordering of the ASCII characters, like <code>#*.@ABCD</code> in increasing order, and then we can conclude what's the boundary to use.</p>
+<blockquote>
+<p>For example, to check if a cell is a wall, instead of using <code>cell == '#'</code>, use <code>cell &lt; '*'</code>, assuming there's no other character lexicographically in between them.</p>
+</blockquote>
+<h3 id="day-2-196-bytes">Day 2 - 196 bytes</h3>
+<div class="aocgolf">
+<pre><code class="language-python">import re;v=[[*map(int,l.split('-'))]for l in input().split(',')];f=lambda t:sum(i for a,b in v for i in range(a,b+1)if re.match(rf'^(\d+)\1{t}$',str(i)));print('Part 1:',f(''),'\nPart 2:',f('+'))
+</code></pre>
+</div>
+<p>I had no issue with parsing the input into a list of pairs representing the intervals like <code>[[a1, b1], [a2, b2], ..., [an, bn]]</code>. Initially I was trying to loop for all pattern lengths and check if any one of them satisfies, e.g. given a string <code>s</code> check for all <code>k</code> if any of <code>s[:k]*(len(s)//k) == s</code> is true. But guess what, regex is indeed OP.</p>
+<p>For part 1, you want exactly one repeat, so you can use the regex <code>^(\d+)\1$</code>. Let's break it down.</p>
+<ul>
+<li><code>(\d+)</code> captures any nonzero number of digits</li>
+<li><code>\1</code> refers to the digits we captured earlier - capture group 1</li>
+<li><code>^</code> and <code>$</code> to signify that the pattern must occur at the beginning and the end of the string, meaning this has to be the entire thing and not just occuring as a substring</li>
+</ul>
+<p>For part 2, you simply change <code>\1</code> to <code>\1+</code> to include possibly more than just one repetition. Now, it boils down to how can we generalize the function so that part 1 and part 2 invocations have minor differences: just the <code>+</code> sign. Since <code>rf</code>-string works in Python, why not use it?</p>
+<h3 id="day-3-187-bytes">Day 3 - 187 bytes</h3>
+<div class="aocgolf">
+<pre><code class="language-python">from functools import*;f=cache(lambda x,n:max(f(y:=x//10,n),10*f(y,n-1)+x%10)if x*n else 0);v=[*map(int,open(0))];print('Part 1:',sum(f(x,2)for x in v),'\nPart 2:',sum(f(x,12)for x in v))
+</code></pre>
+</div>
+<p>My first thought when doing the question was using DP, but greedy solution using iteration works. Of course, codegolfing favours recursion, so using <code>functools.cache</code> was the right call.</p>
+<p>My DP initially stores <code>(idx=position_in_string, n=digits_left)</code>, and I realized that if you're working from the back instead of the front, the transition is just <code>10*dp(subproblem) + digit</code> instead of <code>10**... * digit + dp(subproblem)</code> which requires more characters. On top of that, working from the back means instead of storing the position in string and having to convert <code>string[position]</code> over and over to integer, you can work only around integers: store <code>(x=bank_digits, n=digits_left)</code> and truncate the last digit by going to <code>x//10</code> instead of subtracting the index to <code>idx-1</code>, but in return you can save characters by adding <code>x%10</code> instead of <code>int(s[idx])</code>.</p>
+<p>The base case is to return <code>0</code> if either <code>x == 0</code> (no more bank digits), or <code>n == 0</code> (selected enough digits). Checking for <code>x*n</code> as is means that in order for <code>x*n</code> to be evaluated as <code>True</code>, it has to be nonzero, meaning both must be nonzero. Therefore, the <code>if</code> clause is for the recursive case, and the <code>else</code> clause is the base case.</p>
+<h3 id="day-4-299-bytes">Day 4 - 299 bytes</h3>
+<div class="aocgolf">
+<pre><code class="language-python">R=range;r=len(m:=[*map(list,open(0))]);c=len(m[0])-1;P=[0];[[q:=len(M:=[(i,j)for i in R(r)for j in R(c)if'.'&lt;m[i][j]!=sum(r&gt;i+x&gt;-1&lt;j+y&lt;c!=m[i+x][j+y]&gt;'.'for x in R(-1,2)for y in R(-1,2))&lt;5]),[m[i].__setitem__(j,'.')for i,j in M],q and P.append(q)]for p in P];print('Part 1:',P[1],'\nPart 2:',sum(P))
+</code></pre>
+</div>
+<p>Quite early to show off how one can convert a <code>while</code> loop into just a bunch of list appendings.</p>
+<p>Let's start with <code>c=len(m[0])-1</code>. The <code>-1</code> might be subtle, but when you're reading with <code>open(0)</code>, the lines will include the newline character <code>\n</code> as well, thus the need for <code>-1</code>. Take note that the last line will not have this character, and therefore without the <code>-1</code>, an index error might be triggered upon touching the last line.</p>
+<p>Next, the <code>while</code> loop conversion. Initially, I had the following pseudocode.</p>
+<pre><code class="language-text">z = 0 to keep track of the number of processed @
+while true:
+    define M as the positions of all the @ that satisfies the constraint
+    bulk-update the original array based on M
+    z += len(M)
+    if this is the first iteration, output z for part 1
+    if M is empty, break the loop
+output z for part 2
+</code></pre>
+<p>The trick is to iterate through the list you're going to append to, like <code>[arr.append(something) for ... in arr]</code>, and the loop will eventually stop if you're not appending anymore.</p>
+<p>This trick will also solve the part 1 printing issue because I don't have to explicitly check whether <code>M</code> is empty in order to print (otherwise I will have 2 <code>print</code> invocations). I just need to store the number of <code>@</code>'s that gets removed every iteration in that array.</p>
+<p>For example, start with <code>P = [0]</code> and then iterate through <code>P</code>, and say that you end up with <code>[0, 3, 2, 3, 4]</code> and after the last <code>4</code>, you will get no more processed <code>@</code>'s. Then, part 1 is just <code>P[1]</code>, while part 2 will simply be <code>sum(P)</code>.</p>
+<p>Once I knew how to construct <code>P</code>, I simply add these two procedures before appending to <code>P</code> every iteration.</p>
+<ul>
+<li>Since <code>M:=[(i,j)for i in R(r)for j in R(c)if'.'&lt;m[i][j]!=sum(r&gt;i+x&gt;-1&lt;j+y&lt;c!=m[i+x][j+y]&gt;'.'for x in R(-1,2)for y in R(-1,2))&lt;5]</code> will store the position of the @'s to be removed at once, I can simply define the newly added element to <code>P</code> as <code>len(M)</code>.</li>
+<li>Bulk-updating requires <code>list.__setitem__</code> as shown in <code>m[i].__setitem__(j,'.')</code>, which is essentially <code>m[i][j] = '.'</code>.</li>
+</ul>
+<p>Note that <code>R&gt;r&gt;-1&lt;c&lt;C</code> is a common trick to check if <code>(r, c)</code> is a valid position in a $R \times C$ grid. As for why the sum of the <code>@</code>'s is 5, this is because looping through the $3 \times 3$ region will also include its own cell, which will definitely be a <code>@</code>, thus an extra.</p>
+<p>I had to experiment between using normal <code>range</code> without redefining it to <code>R</code>, or just use <code>range(-1,2)</code> as <code>R</code> and the other two <code>range</code>s will be unmodified, but the one you see above is the best option.</p>
+<h3 id="day-5-295-bytes">Day 5 - 295 bytes</h3>
+<div class="aocgolf">
+<pre><code class="language-python">S,M=str.split,[];A,B=S(open(0).read(),'\n\n');[M.append(M and(a:=M[-1])[1]&gt;=j[0]&lt;=j[1]&gt;=a[0]and[M.pop(),min(a[0],j[0]),max(a[1],j[1])][1:]or j)for j in sorted([*map(int,S(i,'-'))]for i in S(A))];print('Part 1:',sum(any(a&lt;=int(q)&lt;b+1for a,b in M)for q in S(B)),'\nPart 2:',sum(b-a+1for a,b in M))
+</code></pre>
+</div>
+<p>Surprisingly, I managed to make this shorter than Day 4's code. This is basically an interval merging problem. It's <a href="https://leetcode.com/problems/merge-intervals/">very well-known in LeetCode</a> but guess what, it was also tested in <a href="https://github.com/RussellDash332/golf/blob/main/merge_intervals.py">CS1010S practical exam</a>, which means I had a good golfed template of the interval merging.</p>
+<p>The <code>merge</code> helper function was missing in the latter, so let me put it here.</p>
+<pre><code class="language-python">def merge(a, b):
+    if a[1] &lt; b[0] or b[1] &lt; a[0]:
+        return False
+    else:
+        return (min(a[0], b[0]), max(a[1], b[1]))
+</code></pre>
+<p>Before I move on with the golfed code, let's show you the original <code>merge_intervals</code> function that I had.</p>
+<pre><code class="language-python">def merge_intervals(intervals):
+    r = []
+    for j in sorted(intervals):
+        if r:
+            k = merge(r[-1], j)
+            if k: r[-1] = k
+            else: r.append(j)
+        else:
+            r.append(j)
+    return r
+</code></pre>
+<p>Or, if without the <code>merge</code> function...</p>
+<pre><code class="language-python">def merge_intervals(intervals):
+    r = []
+    for j in sorted(intervals):
+        if r and r[-1][1] &gt;= j[0] and j[1] &gt;= r[-1][0]: r[-1] = (min(r[-1][0], j[0]), max(r[-1][1], j[1]))
+        else: r.append(j)
+    return r
+</code></pre>
+<p>And therefore, the semi-golfed <code>merge_intervals</code> without the pre-specified <code>merge</code> function.</p>
+<pre><code class="language-python">def merge_intervals(intervals):
+    h=lambda a,b:0if a[1]&lt;b[0]or b[1]&lt;a[0]else[min(a[0],b[0]),max(a[1],b[1])]
+    return [r:=[],[[r.pop(),r.append(k)]if r and(k:=h(r[-1],j))else r.append(j)for j in sorted(intervals)]][0]
+</code></pre>
+<p>Now, let's get back to the main problem. Reading the input requires to recognize the empty line in between and therefore using <code>open(0).read().split('\n\n')</code> will do the job just fine. The parsing afterwards becomes clear once you get the initial splitting to work.</p>
+<p>Next, dealing with the ranges <code>A</code> and the queries <code>B</code>. Using <code>.split</code> will work, but since I'm doing 4 string splits, using <code>S=str.split</code> will save me some characters. Note that <code>S(A), S(A,char)</code> is essentially <code>A.split(), A.split(char)</code>.</p>
+<p>The merged intervals will be stored in the variable <code>M</code> as a list of pairs <code>[[a1, b1], [a2, b2], ..., [an, bn]]</code>. Answering part 1 will require you checking for every query integer <code>q</code> in <code>B</code> if it lies in any of these intervals (binary search is not needed as the number of intervals is small), while answering part 2 is simply a linear pass on <code>M</code> itself.</p>
+<p>Using the golfed <code>merge_intervals</code> function as is, however, will be suboptimal, as this is only done once and therefore need not be done as a function, so I had to do a bunch of workarounds to end up with my final solution.</p>
+<p>Changing the lambda function <code>h</code> to be directly computed with computing <code>k:=h(r[-1],j)</code> was rather straightforward, but the real fun only comes when golfing the <code>[r.pop(),r.append(k)]if r and(k:=h(r[-1],j))else r.append(j)</code> part.</p>
+<p>First, as <code>h</code> is only called once we can unpack <code>h(r[-1],j)</code> so we have the following.</p>
+<pre><code class="language-python">[r.pop(),r.append(k)]if r and(k:=0if(a:=r[-1])&lt;j[0]or j[1]&lt;a[0]else[min(a[0],j[0]),max(a[1],j[1])])else r.append(j)
+</code></pre>
+<p>Then, we want to remove the double appends to become one, so can combine this by removing the walrus assignment to <code>k</code>.</p>
+<pre><code class="language-python">r.append(r and(j if(a:=r[-1])&lt;j[0]or j[1]&lt;a[0]else[r.pop(),min(a[0],j[0]),max(a[1],j[1])][1:])or j)
+</code></pre>
+<p>The reason why this works is the short-circuiting of Python boolean evaluations. The code above is in the form of <code>a and b or c</code>. This breakdown will consider the <em>truthy</em> (is not necessrily equal to <code>True</code> but converting it bool will result in <code>True</code>) and <em>falsey</em> (basically the opposite) values of <code>a</code>, <code>b</code>, and <code>c</code>.</p>
+<ul>
+<li>If <code>a</code> is falsey, then it will skip the evaluation of <code>b</code> and will return whatever the value of <code>c</code> is, whether it's truthy or falsey.</li>
+<li>If <code>a</code> is truthy, then it will evaluate <code>b</code>. If <code>b</code> is truthy as well, then it doesn't need to evaluate <code>c</code> and return <code>b</code>. Otherwise, it will return <code>c</code> regardless of the value of <code>c</code>.</li>
+</ul>
+<p>Therefore, it will return <code>b</code> <strong>if and only if</strong> <code>a</code> and <code>b</code> is truthy. In our code's case, we pop return <code>(j if ... [1:])</code> <strong>if and only if</strong> <code>r</code> is non-empty (since <code>(j if ... [1:])</code> is by default truthy) and return <code>j</code> otherwise.</p>
+<p><strong>This is not the final version yet</strong>. Notice that the standalone <code>j</code> appears twice, so if I invert the conditionals, I might end up with a shorter alternative with one less <code>j</code>, and in fact, I actually did!</p>
+<p>Notice that we need both <code>r</code> being non-empty and <code>(a:=r[-1])&lt;j[0]or j[1]&lt;a[0]</code> to be <strong><code>False</code></strong> in order to do two things: pop from <code>r</code> and return <code>min(a[0],j[0]),max(a[1],j[1])</code>, which I subsequently combined into a single statement <code>[r.pop(),min(a[0],j[0]),max(a[1],j[1])][1:]</code>. Next, what I did was inverting the <code>(a:=r[-1])&lt;j[0]or j[1]&lt;a[0]</code> condition to be <code>(a:=r[-1])&gt;=j[0]and j[1]&gt;=a[0]</code>, and then removing the <code>and</code> to become <code>(a:=r[-1])&gt;=j[0]&lt;=j[1]&gt;=a[0]</code> because <code>j[0]&lt;=j[1]</code> in any interval anyway. Now, I want <code>r</code> to be non-empty and this <em>new condition</em> to be <code>True</code> to return <code>min(a[0],j[0]),max(a[1],j[1])</code>, otherwise <code>j</code>.</p>
+<p>This is where I extended the short-circuit boolean pattern: <code>a and b and c or d</code>. Basically, you need <code>a and b and c</code> to be <code>True</code> to return <code>c</code>, but <code>d</code> otherwise. Since <code>c</code> is truthy in our context (the pair represented as a list of two elements), we just need to ensure <code>a</code> and <code>b</code> are truthy. This pattern matches the condition <strong>[non-empty <code>r</code>]</strong> and <strong>[new condition]</strong> having to be truthy, and so I came up with the finalized version.</p>
+<pre><code class="language-python"># version 1 for comparison, 115 bytes
+[r.pop(),r.append(k)]if r and(k:=0if(a:=r[-1])&lt;j[0]or j[1]&lt;a[0]else[min(a[0],j[0]),max(a[1],j[1])])else r.append(j)
+
+# version 2 for comparison, 99 bytes
+r.append(r and(j if(a:=r[-1])&lt;j[0]or a[1]&lt;j[0]else[r.pop(),min(a[0],j[0]),max(a[1],j[1])][1:])or j)
+
+# finalized version, 93 bytes
+r.append(r and(a:=r[-1])&gt;=j[0]&lt;=j[1]&gt;=a[0]and[r.pop(),min(a[0],j[0]),max(a[1],j[1])][1:]or j)
+
+# a: r
+# b: (a:=r[-1])&gt;=j[0]&lt;=j[1]&gt;=a[0]
+# c: [r.pop(),min(a[0],j[0]),max(a[1],j[1])][1:]
+# d: j
+</code></pre>
+<p>Yes, all of that to cut down 6 more characters, but it's significant for a codegolfer :)</p>
+<h3 id="day-6-226-bytes">Day 6 - 226 bytes</h3>
+<div class="aocgolf">
+<pre><code class="language-python">*X,P=open(0);P=P.split();A=[*zip(*map(str.split,X))];B=[''.join(x).strip()for x in zip(*X)];print('Part 1:',sum(eval(p.join(x))for x,p in zip(A,P)),'\nPart 2:',sum([eval(p.join(B[:(x:=B.index(''))])),B:=B[x+1:]][0]for p in P))
+</code></pre>
+</div>
+<p>Easy but tedious parsing problem. You start with an input like this (taken from the website's example input).</p>
+<pre><code>123 328  51 64 
+ 45 64  387 23 
+  6 98  215 314
+*   +   *   +  
+</code></pre>
+<p>Using <code>open(0)</code> is basically invoking a generator for the following iterable of strings.</p>
+<pre><code>[
+    '123 328  51 64 \n',
+    ' 45 64  387 23 \n',
+    '  6 98  215 314\n',
+    '*   +   *   +  '
+]
+</code></pre>
+<p>Therefore, doing <code>*X,P</code> will separate the last one into <code>P</code> and everything else into <code>X</code>. Splitting <code>P</code> will get you a clean list of operators <code>['*', '+', '*', '+']</code>.</p>
+<p>For part 1, I need to have a list of list of numbers read vertically like <code>[['123', '45', '6', '64'], ['328', '64', '98'], ...]</code> and keep the numbers as strings so I can simply join them with the operator signs as the delimiter. This is exactly what the list <code>A</code> is going to be. You start with processing the numbers row-by-row and then transpose them using <code>zip</code>. Once you get <code>A</code>, you can iterate through this list and the operators <code>P</code> at the same time. Using <code>zip</code> again, combine the numbers with the operators and calculate using <code>eval</code>, then sum all of the results.</p>
+<blockquote>
+<p>Note that <code>zip</code> takes <strong>multiple arguments</strong>, and not just one. So, if you want to transpose a 2D list, you have to unpack the list into individual arguments of <code>zip</code>. For example, <code>zip([1, 2, 3], [4, 5, 6])</code> is an iterable generator for <code>[(1, 4), (2, 5), (3, 6)]</code>. The length of each argument need not be the same, and the zip result will just have the length being the minimum of these lengths, like <code>zip([1, 2, 3], [4])</code> which will result in just <code>[(1, 4)]</code> if you convert the <code>zip</code> object into a list.</p>
+</blockquote>
+<p>As for part 2, the plan is to transpose the numbers beforehand and then see what we can do with it. By doing <code>B=[''.join(x).strip()for x in zip(*X)]</code>, I am essentially transposing <code>X</code> and do some adjustments to as follows.</p>
+<pre><code class="language-text">zip(*X)               -&gt; [('1', ' ', ' '), ('2', '4', '6'), ('3', '5', '6'), (' ', ' ', ' '), ('3', '6', '9'), ..., (' ', ' ', '4'), ('\n', '\n', '\n')]
+''.join(each element) -&gt; ['1  ', '24 ', '356', '  ', '369', '248', '8  ', '  ', ' 32', ..., '  4', '\n\n\n']
+trim whitespaces      -&gt; ['1',   '24',  '356', '',   '369', '248', '8',   '',   '32',  ..., '4',   '']
+</code></pre>
+<p>Initially, I wanted to find all the indices that contain <code>''</code> and then use this to get the respective slices of <code>B</code> (without modifying <code>B</code>), but I thought of a better idea: <strong>keep finding the first occurence of <code>''</code> with <code>.index</code>, and then slice <code>B</code> directly instead</strong>.</p>
+<p>In the example, we have the list <code>B</code> as follows.</p>
+<pre><code class="language-text">['1', '24', '356', '', '369', '248', '8', '', '32', ..., '4', '']
+</code></pre>
+<p>The first occurence of <code>''</code> is at index <code>3</code>, so we can slice <code>B[:3]</code> to get the numbers to combine, and then update remove the first <code>3 + 1 = 4</code> elements from <code>B</code> (because of the <code>''</code> being counted as one element). The list <code>B</code> is then updated to look like this.</p>
+<pre><code class="language-text">['369', '248', '8', '', '32', ..., '4', '']
+</code></pre>
+<p>This will go on until all operators have been processed, and there are exactly as many operators as the number of iterations this will take.</p>
+<p>To conclude, we can simply iterate through <code>P</code>, and for each operator <code>p</code>, we do these steps in one go.</p>
+<ul>
+<li>Find first occurence of <code>''</code> in <code>B</code>, say this is at index <code>x</code></li>
+<li>Join <code>B[:x]</code> with <code>p</code> as the delimiter to make the arithmetic expression</li>
+<li>Use <code>eval</code> to get the actual result</li>
+<li>Don't forget to update <code>B</code> to exclude the first <code>x+1</code> elements for the subsequent iterations</li>
+</ul>
+<p>Eventually, I got <code>[eval(p.join(B[:(x:=B.index(''))])),B:=B[x+1:]][0]</code> as desired.</p>
+<p>The bottleneck when doing part 2 is realizing you shouldn't trim the whitespaces too early from <code>X</code>. You can only do that once you have transposed the raw input.</p>
+<h3 id="day-7-183-bytes">Day 7 - 183 bytes</h3>
+<div class="aocgolf">
+<pre><code class="language-python">L,*M=open(0);Q={L.index('S'):1};print('Part 1:',sum([[T:={},sum([x:=r[k]&gt;'S',T:=T|{v:T.get(v,0)+Q[k]for v in(k-x,k+x)}][0]for k in Q),Q:=T][1]for r in M]),'\nPart 2:',sum(Q.values()))
+</code></pre>
+</div>
+<p>Credits to <a href="https://github.com/mug1wara26">mug1wara26</a> for the idea of not building the graph for topological sort and work directly on each row instead.</p>
+<p>The main idea here is to "build" the graph. You can use BFS for part 1 and then keep track of how many distinct <code>^</code>s that you encounter.</p>
+<p>For part 2, I had to think twice. Is this DP? Is this topological sort by building the DAG?</p>
+<p>Turns out, by assuming a few things (which is still true for all inputs I have encountered), one can allow some shortcuts:</p>
+<ul>
+<li>The <code>S</code> is always at the first row, meaning I can split <code>open(0)</code> to <code>L</code> (first row) and <code>M</code> (the rest) beforehand, and allow iterating through <code>M</code> without having to <code>M[0]</code> for the first row</li>
+<li>The <code>^</code>s will never be at the first or last columns, meaning if it's at column <code>k</code>, going to <code>k-1</code> or <code>k+1</code> will still put you in a valid column</li>
+<li>There are no two <code>^</code>s on top of each other, meaning if cell <code>(r, c)</code> is a <code>^</code>, instead of splitting to <code>(r, c-1)</code> and <code>(r, c+1)</code>, I can directly go to <code>(r+1, c-1)</code> and <code>(r+1, c+1)</code></li>
+<li>For the normal <code>.</code>s (or <code>S</code>), you still go from <code>(r, c)</code> to <code>(r+1, c)</code></li>
+<li>There is no <code>^</code> at the last row, meaning we can safely assume the answer is correct without any ambiguous splits when finished iterating through the last row</li>
+</ul>
+<p>Since both cases always shift you one row ahead, we can already see the resemblance of the implicit graph to a DAG. If we work on a row at a time, we can dynamically store the number of paths going through that column (as well as the number of <code>^</code>s encountered for part 1).</p>
+<p>Suppose we start with the example input (truncated to a few rows). Since the index of <code>S</code> on the first row is <code>7</code>, I can start my DP "table" with <code>{7: 1 path}</code>.</p>
+<pre><code class="language-text">0123456789 (column number for your reference)
+.......S....... 1st
+............... 2nd
+.......^....... 3rd
+............... 4th
+......^.^...... 5th
+............... 6th
+.....^.^.^..... 7th
+............... 8th
+</code></pre>
+<p>Next, when you propagate to 2<sup>nd</sup> and 3<sup>rd</sup> row, you will still have <code>{7: 1 path}</code>, but when you go to the fourth row, you will encounter a <code>^</code>, and so the table will be updated to <code>{6: 1 path, 8: 1 path}</code>, but you have also kept track of having encountered a single <code>^</code>.</p>
+<p>Same table is produced when going to the 5<sup>th</sup> row, but on the 6<sup>th</sup> row, you will have to split the one path from column 6 to columns 5 and 7, the one from column 8 to columns 7 and 9. Therefore, we have <code>{5: 1 path, 7: 2 paths, 9: 1 path}</code> and three <code>^</code>s encountered. These three <code>^</code>s will not be found anymore in the subsequent iterations, we can keep adding the numbers without having to check if they are distinct or not. (They will always be distinct!)</p>
+<p>This process goes on until the final row. In the end, we have kept track the number of <code>^</code>s encountered to answer part 1, and the table contains the number of paths going from <code>S</code> all the way down to the last row and the respective columns, which is why the answer to part 2 is just <code>sum(Q.values())</code>.</p>
+<p>Initially, I used <code>collections.Counter</code> to represent the number of paths that cross through each column for a given row, and then bulk update the counter every row processed. Below was my attempt on this version with 206 bytes.</p>
+<div class="aocgolf">
+<pre><code class="language-python">from collections import*;H=Counter;L,*M=open(0);Q=H([L.index('S')]);print('Part 1:',sum([[T:=H(),sum([x:=r[k]&gt;'S',T:=T+H({k-x:Q[k],k+x:Q[k]})][0]for k in Q),Q:=T][1]for r in M]),'\nPart 2:',sum(Q.values()))
+</code></pre>
+</div>
+<p>Using <code>dict.update</code> or <code>dict.__setitem__</code> is commonly used when updating a dictionary entry because you can't do a basic assignment without <code>exec</code> (which is not allowed), so something like <code>D[k]=v</code> won't happen. In exchange, you can do either <code>D.__setitem__(k,v)</code> (equivalently <code>dict.__setitem__(D, k,v)</code>) or <code>D.update({k:v})</code> (equivalently <code>dict.update(D,{k:v})</code>).</p>
+<p>However, the <code>update</code> on <code>Counter</code>s work differently: <strong>they add instead of replace</strong>. This means instead of doing <code>C.update({k:C[k]+v})</code> for some <code>Counter</code> object <code>C</code>, I just need <code>C.update({k:v})</code>.</p>
+<p>After using <code>update</code>, I realized that <strong>you can also add two <code>Counter</code>s</strong>, so instead of <code>C.update({k:v})</code> on every iteration, I can just <code>C:=C+Counter({k:v})</code>, and this might be shorter if you have assigned <code>Counter</code> to some one-letter variable like I did above.</p>
+<p>This discovery seems like it's to my advantage, until I realized <strong>I can combine the choices between going to <code>c</code> or <code>(c+1, c-1)</code> into a single dictionary</strong>. Note that if <code>x</code> represents whether the processed cell is a <code>^</code> or not (<code>1</code> for yes, <code>0</code> for no), we can represent the dictionary as <code>{k-x:v, k+x:v}</code> instead of <code>[{k:v},{k-1:v, 1:v}][x]</code>. This is where the normal dictionary version starts to become the shorter code.</p>
+<p>While using normal dictionaries requires you to use <code>T.get(v,0)</code> in case <code>v</code> is not present in the current "table", using <code>Counter</code> requires <code>from collections import Counter;H=Counter</code>. If you've had to use two or more <code>T.get(v,0)</code>s, the <code>Counter</code> version would've been shorter.</p>
+<p>The cherry on top would be the fact that you don't even need <code>T.update</code> for the normal dictionary method. Since the updatings are already one element of a list, you can use the <code>|</code> operator (in tandem with the walrus <code>:=</code> operator), which basically does bulk updating as well. For example,</p>
+<pre><code class="language-python">&gt;&gt;&gt; {'a': 3, 'b': 4} | {'a': 0, 'c': 5}
+{'a': 0, 'b': 4, 'c': 5}
+</code></pre>
+<h3 id="day-8-355-bytes">Day 8 - 355 bytes</h3>
+<div class="aocgolf">
+<pre><code class="language-python">R=range(len(P:=[[*map(int,l.split(','))]for l in open(0)]));T=z=[1&lt;&lt;i for i in R];Q=[[U:=T[a]|T[b],[T.__setitem__(u,U)for u in R if(1&lt;&lt;u)&amp;U],z:={*T},S:=P[a][0]*P[b][0]][2]for _,a,b in sorted((sum((a-b)**2for a,b in zip(P[i],P[j])),i,j)for i in R for j in range(i))if~-len(z)];*_,a,b,c=sorted(map(int.bit_count,Q[999]));print('Part 1:',a*b*c,'\nPart 2:',S)
+</code></pre>
+</div>
+<p>Originally, this is supposed to be a Kruskal's minimum spanning tree (MST) problem: you create the edge list by finding the all-pairs distance, sort these edges, and then use UFDS to connect the vertices until all vertices are connected. For part 1, you print the UFDS states in the 1000<sup>th</sup> iteration, while for part 2, you find the last edge that gets added into the MST.</p>
+<p>Golfing UFDS will definitely take a lot of characters, so one can resort to just linearly merging: suppose I want to merge <code>setA</code> with <code>setB</code>, then I will update the set that every element in <code>setA|setB</code> belongs to into the same <code>setA|setB</code>. This is definitely a suboptimal version of UFDS, but more intuitive and shorter to code.</p>
+<p>Alternatively, I could've used <code>heapq</code> to extract the smallest edges over and over because all points should be connected to each other early enough (in my case, about $5000$ iterations). You don't have to sort the entire edge list, but only build the heap in linear time and pop a few of them.</p>
+<p>Surprisingly, despite not using any priority queues or using the optimal way of merging the sets in UFDS, the code above still runs in only <strong>about 2-2.5 seconds</strong>!</p>
+<p>Previously, my variable <code>T</code> stores a mapping of <code>vertex_id: set_containing_vertex_id</code>, and ensure that for two vertices belonging to the same set, the mapped set must be the same object (same memory address). This is so that for part 1, when getting the product of top 3 sizes, I won't double-count the sets.</p>
+<p>For example, with only 4 elements. My "UFDS" can look something like this.</p>
+<pre><code class="language-python">T = [{0,1,3}, {0,1,3}, {2}, {0,1,3}]
+</code></pre>
+<p>The <code>{0,1,3}</code> in the example above are guaranteed to point to the same memory address, so <code>{*map(id, T)}</code> will have a length of <code>2</code>. Then, after merging 1 and 2, <code>T</code> will be updated to look as follows.</p>
+<pre><code class="language-python">T = [{0,1,2,3}, {0,1,2,3}, {0,1,2,3}, {0,1,2,3}]
+assert len({*map(*id, T)}) == 1
+</code></pre>
+<p>Part 2 is rather straightforward by cutting the iteration when there is only one distinct memory address (you can use <code>id(z)</code> to get the memory address of <code>z</code>), and then output the product of the $x$-coordinates accordingly.</p>
+<p>I thought of a better idea: <strong>store the sets using bitmasks</strong>! This means instead of storing <code>{a, b, c}</code>, I store <code>2**a + 2**b + 2**c</code>, and the <code>|</code> operation will still be relevant due to how the bit-OR operation works. Then, when doing the linear merging between <code>bitA</code> and <code>bitB</code>, I had to go through all vertices from <code>0</code> to <code>N-1</code>, but only work at the positions of the 1-bits of <code>bitA|bitB</code>. This is because you can't directly iterate through the position of the 1-bits without having to store this information somewhere else, which takes more characters.</p>
+<p>Using the same example above, the one with only 4 elements, my "UFDS" will now look something like this.</p>
+<pre><code class="language-python">T = [11, 11, 4, 11]
+assert len({*T}) == 2
+
+T = [15, 15, 15, 15] # after merging 1 and 2
+assert len({*T}) == 1
+</code></pre>
+<p>Now, I don't have to worry about the memory address -- <strong>their values can already be used as an identifier</strong>!</p>
+<p>The bitmask approach indeed shortens the code, even when you need to take more characters for the final step of part 1: using <code>int.bit_count</code> to find the size of the "set" by looking at the number of 1-bits. This is only available in Python 3.10 or later, which shouldn't be a big problem since we are already so ahead of Python 3.10.</p>
+<p>The next subtle-but-significant part is the reason why the code runs in only about 2-2.5 seconds despite the edge list being of length $C_2^{|V|} = C_2^{1000} = 499500$. Since I want to store the UFDS states inside <code>Q</code>, I need to store a copy of the list of sets like <code>{*T}</code> every iteration. I have to put that within the inner comprehension of the elements of <code>Q</code>, but at the same time I also want to stop "computing" if the length of this set is already equal to 1.</p>
+<p>If there's any linear computation on the <code>if</code> clause like <code>if len({*T})&gt;1</code>, this will be done in all $499500$ iterations, even when the true size of <code>T</code> is already 1 since the first few thousand iterations. As a result, this will make the code extremely slow, even beyond a minute of runtime. Instead, keeping the check at <code>len(z)</code> should be fine since it's a $O(1)$ operation.</p>
+<p>I observed that the graph gets fully-connected in only about $5000$ iterations (your inputs might have different termination points), meaning having suboptimal UFDS or not using priority queues should not matter because they will be dominated by the time taken to create the edge list and sort the whole list, which means I made the right call of using linear merging and just sorting the edge list as is, as long as I don't do unnecessary things beyond the first $5000$ iterations.</p>
+<p>One small thing remains in the handling of the value of <code>z</code> that I constantly assigned to <code>{*T}</code>. The first computation of <code>z:={*T}</code> happens after I check <code>~-len(z)</code> in the <code>if</code> clause, meaning I must already have an initial value, a dummy value, that is an iterable so that <code>len(z)</code> won't return an error. It suffices to assign <code>z</code> to any iterable defined earlier, like <code>T</code> or <code>P</code>.</p>
+<p>I didn't forget to experiment between using <code>R=range</code> or <code>R=range(N)</code>. Sometimes the occurences of <code>range</code> in the code can affect which method is to be used, whether that number is above or below the break-even point.</p>
+<h3 id="day-9-606-bytes">Day 9 - 606 bytes</h3>
+<div class="aocgolf">
+<pre><code class="language-python">R=range(len(P:=[[*map(int,l.split(','))]for l in open(0)]));D=abs;J=complex;C=lambda p:sum(I(*p,p[0]+1e6,p[1]+6e7,*P[i],*P[i-1])for i in R)%2or any(D(J(*P[i])-J(*p))+D(J(*p)-J(*P[i-1]))==D(J(*P[i])-J(*P[i-1]))for i in R);I=lambda a,b,c,d,e,f,g,h:((c-a)*(f-b)-(d-b)*(e-a))*((c-a)*(h-b)-(d-b)*(g-a))&lt;0&gt;((g-e)*(b-f)-(h-f)*(a-e))*((g-e)*(d-f)-(h-f)*(c-e));Z=sorted((~D(c-a)*-~D(d-b),a,b,c,d)for a,b in P for c,d in P);print('Part 1:',-Z[0][0],'\nPart 2:',next(-w for w,a,b,c,d in Z if[K:=[(a,b),(a,d),(c,d),(c,b)],z:=all(map(C,K)),[z:=z*~-I(*K[k],*K[k-1],*P[i],*P[i-1])for i in R for k in(0,1,2,3)if z],z][3]))
+</code></pre>
+</div>
+<p>Such a bad run today, with the code running in about 2-3 minutes. On top of having to golf ray tracing to check if a point is inside a polygon and check for any intersection between two segments, you have to deal with how slow this code will be if you didn't realize that the input assumes a particular shape (if you know, you know, *coughs in closed-mouth Pac-Man*). Therefore, I partially decided to not assume the shape of the input (meaning it should work on most rectilinear polygons).</p>
+<p>While the above code was not my historically shortest attempt, it strikes a very good balance between the runtime and the code length itself, the usage of <code>next</code> and <code>sorted</code> already hints how I really really needed to short-circuit most of the $O(n)$ checks.</p>
+<p>I think the golfed code can be divided to a few main parts.</p>
+<p>First, <strong>the ray casting algorithm in <code>C</code></strong>. Initially, I had a different algorithm to check if a point is in a polygon as shown <a href="https://github.com/RussellDash332/pytils/blob/main/compgeo_2d_point_in_polygon.py">here</a>. But, this version is more complex to code, so instead I reverted to the basic ray casting: create a sufficienly long ray emitting from the query point $p$, then check for all edges in the polygon if it intersects or not. To deal with the edge case of the point being within a polygon edge (because the usual ray casting will have false results), we check if the distance between the endpoints of an edge is equal to the sum of the distance between this point to each of the endpoints. This can be done by treating the points as complex numbers, and then using <code>abs</code>, we can easily get the modulus that acts as the vector norm.</p>
+<p>Next, <strong>the intersection check <code>I</code></strong>. I decided to not include the case when both segments coincide because that will incur some false results as well (consider the rectangle coinciding with the polygon). The initial code for this was found <a href="https://github.com/RussellDash332/pytils/blob/main/compgeo_2d_intersect.py">here</a>, but I'll put it below as well.</p>
+<pre><code class="language-python">def intersect_check(s1, s2):
+    (p1, p2), (p3, p4) = s1, s2; (x1, y1), (x2, y2), (x3, y3), (x4, y4) = p1, p2, p3, p4
+    c1 = (x2-x1)*(y3-y1)-(y2-y1)*(x3-x1); c2 = (x2-x1)*(y4-y1)-(y2-y1)*(x4-x1)
+    if (c1 &lt; -1e-9 and c2 &lt; -1e-9) or (c1 &gt; 1e-9 and c2 &gt; 1e-9): return 0
+    c1 = (x4-x3)*(y1-y3)-(y4-y3)*(x1-x3); c2 = (x4-x3)*(y2-y3)-(y4-y3)*(x2-x3)
+    if (c1 &lt; -1e-9 and c2 &lt; -1e-9) or (c1 &gt; 1e-9 and c2 &gt; 1e-9): return 0
+    return 1
+</code></pre>
+<p>Workarounds involve early variable unpacking and flipping the logic inside the code: ignoring the floating point error, I need <code>c1*c2</code> to be negative <strong>and</strong> the next <code>c1*c2</code> to also be negative in order for it to return 1.</p>
+<p>Finally, <strong>dealing with all-pairs <code>Z</code> somewhat optimally</strong>. Of course, you have to make use of the $O(n^2)$ pairs of points and see which one is the best, but does it make sense to run through all pairs and only then conclude the maximum? Why not sorting the areas first and return the area of the first feasible rectangle, because that's exactly what I did? The area of a rectangle given the corners $(a, b)$ and $(c, d)$ is supposed to be $(|c-a|+1)(|d-b|+1)$. As a fancy person I am, I'll use the <code>-~x == x+1</code> trick because that will save me two pairs of brackets, thus the <code>~D(c-a)*-~D(d-b)</code> part.</p>
+<p>I know <strong>this isn't fully generalizable</strong>, but given a rectangle defined by the corners, my logic would be: checking if all 4 vertices are within the polygon, and then check if any of the four segments has a single point of intersection with any of the polygon edges. As a matter of fact, this logic isn't enough for some U-shaped rectilinear polygons, or those with dents or holes, as well for those with two adjacent edges (e.g. <code>(13, 9)</code> to <code>(15, 9)</code> VS <code>(13, 10)</code> to <code>(17, 10)</code> are two edges being next to each other). #valianteffort ?</p>
+<p>Note that <code>next</code>, <code>all</code>, and <code>any</code> are short-circuited, meaning once the result is clear, it will return directly without computing the subsequent terms. That is why using <code>next(... for w,a,b,c,d in Z ...)</code> will stop computing on the next <code>w,a,b,c,d</code> term if we already found one that satisfies the constraint. The same goes for the use of <code>any</code> in <code>C</code> and <code>all</code> in <code>all(map(C,K))</code>.</p>
+<p>One more subtle difference worth mentioning is how I ended up with separating the <code>C</code> checks for <code>K</code> as shown in <code>z:=all(map(C,K))</code> with the <code>I</code> checks between each polygon edge and each rectangle segment defined in <code>K</code>. If I combined them, I would end up like this.</p>
+<pre><code class="language-python"># original version
+if[K:=[(a,b),(a,d),(c,d),(c,b)],z:=all(map(C,K)),[z:=z*~-I(*K[k],*K[k-1],*P[i],*P[i-1])for i in R for k in(0,1,2,3)if z],z][3]
+# what if...?
+if(K:=[(a,b),(a,d),(c,d),(c,b)])and all(C(K[k])*~-I(*K[k],*K[k-1],*P[i],*P[i-1])for i in R for k in(0,1,2,3))
+# or maybe...?
+if(K:=[(a,b),(a,d),(c,d),(c,b)])and all(~-I(*K[k],*K[k-1],*P[i],*P[i-1])for i in R for k in(0,1,2,3)if C(K[k]))
+</code></pre>
+<p>However, both version have serious issues.</p>
+<ul>
+<li>The "what-if" version is extremely slower because you will have to recompute <code>C(K[k])</code> over and over for every edge in the polygon (<code>for i in R</code>)</li>
+<li>The "or-maybe" version might give you false results if <code>C(K[k])</code> is <code>False</code>. While we won't have the issue <code>all([]) == True</code> (because at least 2 of the points will satisfy <code>C(K[k]) == True</code>), note that doing <code>if C(K[k])</code> actually ignores the possible <code>~-I(...)</code> calls being <code>False</code> at this stage. So, if my final list is (let's say) <code>[(True, True), (False, False), (True, True), (True, False)]</code> for the respective <code>k in (0,1,2,3)</code>, I should reject this entry because not all of them are <code>True</code>, but when <code>k == 1</code> and <code>k == 3</code>, if <code>C(K[k]) == False</code> it actually ignores the checking on <code>(False, False)</code> and <code>(True, False)</code>. Therefore, Python thinks you're only checking on <code>[(True, True), (True, True)]</code> and let this through.</li>
+</ul>
+<p>In the end, I decided to not assume less or more things and kept the state of the logic as is because look, it's time to do the Day 10 puzzle! (last seconds before disaster)</p>
+<h3 id="day-10-1569-bytes">Day 10 - 1569 bytes</h3>
+<div class="aocgolf">
+<pre><code class="language-python">g=lambda A:[P:=lambda r,s:[k:=1/D[r][s],[j!=s!=F(D[i],j,D[i][j]-D[r][j]*D[i][s]*k)for i in R(m+2)if i-r for j in R(N+2)],[F(D[r],i,D[r][i]*k)for i in R(N+2)],[F(D[i],s,D[i][s]*-k)for i in R(m+2)],F(D[r],s,k),t:=C[r],F(C,r,Y[s]),F(Y,s,t)],W:=lambda p:-1if-E&lt;D[m+p][s:=M((i for i in R(N+1)if p or~Y[i]),key=lambda x:(D[m+p][x],Y[x]))]else 0if(r:=M([i for i in R(m)if D[i][s]&gt;E]or[-1],key=lambda x:(D[x][-1]/D[x][s],C[x])))==-1else P(r,s)and W(p),m:=len(A),Y:=[*R(N),-1],C:=[*R(N,N+m)],D:=[*([*a[:-1],-1,a[-1]]for a in A),[1]*N+[0]*2,[*[0]*N,1,0]],X:=(I,0)if-E&gt;D[r:=M(R(m),key=lambda x:D[x][-1])][-1]and(P(r,N)and~W(1)or-E&gt;D[-1][-1])else[[~C[i]or P(i,M(R(N),key=lambda x:(D[i][x],Y[x])))for i in R(m)],(I,0)if~W(0)else[x:=[0]*N,[F(x,C[i],D[i][-1])for i in R(m)if C[i]&lt;N],(sum(x),x)][2]][1],x:=X[1],[T:=next(((i,int(x[i]))for i in R(N)if abs(x[i]-round(x[i]))&gt;E),(-1,0)),k:=T[0],v:=T[1],[F(s:=[0]*N+[v],k,1),F(t:=[0]*N+[~v],k,-1),M(g(A+[s]),g(A+[t]))][2]if~k else X[0]][3]if x else I][8];I=1e9;E=1/I;M=min;R=range;F=list.__setitem__;Z=sum([[L:=l.split(),n:=len(c:=eval(f'[{L[-1][1:-1]}]')),q:=[eval(x[:-1]+',)')for x in L[1:-1]],B:=[0]+[-1]*2**n,p:=[sum(1&lt;&lt;i for i in x)for x in q],Q:=[0],[0if~B[k:=u^v]else F(B,k,B[u]+1)!=Q.append(k)for u in Q for v in p],N:=len(p),A:=[-~N*[0]for _ in R(2*n+N)],[F(A[~i],i,-1)!=[F(A[e],i,1)!=F(A[e+n],i,-1)for e in q[i]]for i in R(N)]+[F(A[i],N,c[i])!=F(A[i+n],N,-c[i])for i in R(n)],complex(B[int(L[0][-2:0:-1].replace('#','1').replace('.','0'),2)],round(g(A)))][-1]for l in open(0)]);print('Part 1:',int(Z.real),'\nPart 2:',int(Z.imag))
+</code></pre>
+</div>
+<p>I did it again: <em>golfing a niche algorithm from scratch</em>.</p>
+<p>Past records worth flexing:</p>
+<ul>
+<li><a href="https://adventofcode.com/2023/day/24">2023 Day 24</a> - <a href="https://github.com/RussellDash332/advent-of-code/blob/main/aoc-2023/basilisk.py#L48">Gaussian elimination</a> with a bunch of elementary row operations</li>
+<li><a href="https://adventofcode.com/2023/day/25">2023 Day 25</a> - <a href="https://github.com/RussellDash332/advent-of-code/blob/main/aoc-2023/basilisk.py#L50">Maximum flow</a> using Dinic's algorithm</li>
+<li><a href="https://adventofcode.com/2024/day/23">2024 Day 23</a> - <a href="https://github.com/RussellDash332/advent-of-code/blob/main/aoc-2024/basilisk.py#L46">Maximum clique</a> using Bron Kerbosch's algorithm</li>
+</ul>
+<p>Anyways, back to the problem.</p>
+<p>Part 1 was an easy bitmask BFS where the state transition involves the bit-XOR operation. You parse the buttons as bitmasks, e.g. <code>(1, 3, 4)</code> becomes $2^1 + 2^3 + 2^4 = 26$. Pressing a button $v$ given the current state $u$ brings you to state $u \oplus v$. The answer would be the shortest path from 0 to $m$, where $m$ is parsed from the indicator light: <code>[.#.#]</code> means only light 1 and 3 is on, so this is state $2^1 + 2^3 = 10$.</p>
+<p>Part 2, simply summarizing, is an ILP problem. An <strong>integer linear programming</strong> problem, basically a bunch of inequalities and the constraint that the variables have to be an integer, then we want to minimize/maximize an objective function using the variables. A simple one would be like this.</p>
+<blockquote>
+<p>An apple costs 5 SGD, and an orange costs 3 SGD. You only have a budget of 80 SGD for the day. What's the maximum number of fruits that you can buy today?</p>
+</blockquote>
+<p>We can model the problem using two variables $x$ and $y$ for the number of apples and oranges bought.</p>
+<p>$$
+\begin{align*}
+5x+3y &amp;\le 80 \\
+x &amp;\ge 0 \\
+y &amp;\ge 0 \\
+\text{Maximize } f(x+y)
+\end{align*}
+$$</p>
+<p>Without the integer constraint, usually <a href="https://en.wikipedia.org/wiki/Simplex_algorithm">the Simplex algorithm</a> would be able to solve this by treating the constraints as edges of a polygon (or specificially a <em>polytope</em>). Otherwise, it would be hard to only consider lattices, or wouldn't it?</p>
+<p>Alternatively, if you consider using Gaussian elimination like you've learned back in linear algebra class, you might end up with a homogenous solution (because there's so many variables, but so few equations, allowing so many free variables), and this solution might have negative values (on top of it possibly not being an integer).</p>
+<p>While I've seen non-ILP solutions like continuing from the Gaussian elimination solution and do some complete search or DFS, I would like to <strong>instead extend my approach with the Simplex algorithm</strong>.</p>
+<p>The original Simplex algorithm can be found <a href="https://github.com/RussellDash332/pytils/blob/main/simplex_linear_programming.py">here</a>, but I'll put it here for accessibility. Yes, I have done it <strong>without using any external library</strong> because I needed this to solve some competitive programming problems on Kattis (<a href="https://open.kattis.com/problems/cheeseifyouplease">if you're interested</a>) which obviously doesn't allow external libraries like <code>numpy</code> or <code>scipy</code>, or even the infamous <code>z3</code>.</p>
+<pre><code class="language-python"># return values have been modified slightly to include the solution vector
+INF = float('inf'); EPS = 1e-5
+def simplex(A, C):
+    def pivot(r, s):
+        k = 1/D[r][s]
+        for i in range(m+2):
+            if i == r: continue
+            for j in range(n+2):
+                if j != s: D[i][j] -= D[r][j]*D[i][s]*k
+        for i in range(n+2): D[r][i] *= k
+        for i in range(m+2): D[i][s] *= -k
+        D[r][s] = k; B[r], N[s] = N[s], B[r]
+    def find(p):
+        while True:
+            if D[m+p][s:=min((i for i in range(n+1) if p or N[i] != -1), key=lambda x: (D[m+p][x], N[x]))] &gt; -EPS: return 1
+            if (r:=min((i for i in range(m) if D[i][s] &gt; EPS), key=lambda x: (D[x][-1]/D[x][s], B[x]), default=-1)) == -1: return 0
+            pivot(r, s)
+    m = len(A); n = len(A[0])-1; N = [*range(n), -1]; B = [*range(n, n+m)]; D = [*([*A[i], -1] for i in range(m)), C+[0]*2, [0]*(n+2)]
+    for i in range(m): D[i][-2], D[i][-1] = D[i][-1], D[i][-2]
+    D[-1][n] = 1; r = min(range(m), key=lambda x: D[x][-1])
+    if D[r][-1] &lt; -EPS and (pivot(r, n) or not find(1) or D[-1][-1] &lt; -EPS):
+        return -INF, None
+    for i in range(m): B[i] == -1 and pivot(i, min(range(n), key=lambda x: (D[i][x], N[x])))
+    if find(0):
+        x = [0]*n
+        for i in range(m):
+            if 0 &lt;= B[i] &lt; n: x[B[i]] = D[i][-1]
+        return sum(C[i]*x[i] for i in range(n)), x
+    else:
+        return -INF, None
+</code></pre>
+<p>Now, suppose using Simplex, we have found some objective value (minimized, because the problems wants to minimze the button presses), and the value of the solution $x$ that leads to this objective value (how many presses for each button). Note that $x$ might have non-integer values at this moment.</p>
+<p>Allow me to introduce you to the <strong>branch-and-bound</strong> algorithm. It makes use of the current objective value $v$ and the respective solution vector $x$, and then <strong>bound the first non-integer value</strong> in $x$, say $x_k = e$, by $\left \lfloor e \right \rfloor$, to work on two cases:</p>
+<ul>
+<li>re-run Simplex on the original constraints, plus add the constraint $x_k \le \left \lfloor e \right \rfloor$</li>
+<li>re-run Simplex on the original constraints, plus add the constraint $x_k &gt; \left \lfloor e \right \rfloor$, or equivalently $-x_k \le -\left \lfloor e \right \rfloor -1$</li>
+</ul>
+<p>Recurse on both new constraint lists, and update the best objective value found within each recursive call. Early termination include having no need to recurse if the current solution is infeasible, or if all values in the solution vector are already integers. A simple Python implementation would look like this.</p>
+<pre><code class="language-python">INF = float('inf'); EPS = 1e-5
+def f(A):
+    n = len(A[0])-1
+    bval = float('inf')
+    def branch(A):
+        nonlocal bval
+
+        val, x = simplex(A, [1]*n)
+        if val+EPS &gt;= bval or val == -INF:
+            return
+
+        # k = index of the first non-integer value
+        k, v = next(((i, int(e)) for i,e in enumerate(x) if abs(e-round(e))&gt;EPS), (-1, 0))
+        if k == -1:
+            if val+EPS &lt; bval: # found a better solution
+                bval = val
+        else:
+            s = [0]*n+[v]; s[k] = 1
+            branch(A+[s]) # &lt;= v
+            s = [0]*n+[~v]; s[k] = -1
+            branch(A+[s]) # &gt; v
+    branch(A)
+    return round(bval)
+</code></pre>
+<p>With this ILP solver in hand, we can proceed to combine all the puzzle pieces into one. The individual results from part 1 and part 2 are packed into a single complex number $p_1 + p_2i$, and then we simply sum them all into $Z$. The answer to part 1 is just $\Re(Z) = \sum p_1$ and the answer to part 2 is just $\Im(Z) = \sum p_2$.</p>
+<p>The golfed code is basically in this given structure. If you want to uncover more, start by matching the brackets accordingly and then decompose them line-by-line. I decided to pack the Simplex algorithm further in by ensuring there are less clashing variable names and assume that the objective value is indeed the sum function so <code>[1]*n</code> need not be used anymore. This is why you see almost every lowercase letter and uppercase letter being used as a variable name.</p>
+<pre><code class="language-text">g = lambda A:[
+    run simplex(A),
+    run branch and bound given A, the objective value, and the solution vector
+    return best solution
+][-1]
+
+define some one-letter shortcuts, like setting eps=1e-9 and inf=1e9 so we can have I=1e9;E=1/I
+
+Z=sum([
+    [
+        parse the indicator lights [#..#] -&gt; end_state
+        parse the button presses: keep one version using lists of integer tuples, another version using lists of bitmask integers
+        parse joltage requirements by dealing with the curly braces
+        setup augmented matrix A for the ILP constraints
+        p1 = BFS(0 to end_state)
+        p2 = round(g(A))
+        return complex(p1, p2)
+    ][-1]for l in open(0)
+])
+
+print('Part 1:',int(Z.real),'\nPart 2:',int(Z.imag))
+</code></pre>
+<p>Let's use the first line of the example input to visualize what we're dealing with here.</p>
+<pre><code>[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
+</code></pre>
+<ul>
+<li>The <code>[.##.]</code> is parsed into <code>end_state = 6</code>.</li>
+<li>The buttons are normally processed as <code>[[3], [1, 3], [2], [2, 3], [0, 2], [0, 1]]</code> for part 2, but for part 1 we use the bitmask version <code>[8, 10, 4, 12, 5, 3]</code>.</li>
+<li>Joltage requirements are simply parsed as <code>[3, 5, 4, 7]</code>.</li>
+<li>For part 1, starting state is <code>0</code>, and pressing the last two buttons is equivalently bringing you to state <code>0^5^3 == 6</code>, which is the end state (the minimum button presses is indeed $2$).</li>
+<li>
+<p>For part 2, the constraint matrix A is defined as shown below. Since we can't represent $\sum_i c_ix_i = C$ as is, we use both $\sum_i c_ix_i \le C$ and $\sum_i c_ix_i \ge C$ (or equivalently $\sum_i (-c_i)x_i \le -C$), where $x_i$ is the number of presses on button $i$ ($0$-indexed), and $c_i$ is either $0$ or $1$. The constraints $b_i$ are for button $i$, and $d_i$ is to specify that your solution $x_i$ cannot be negative. The $d_i$ constraints are in reversed order because I was using <code>A[~i]</code> instead of <code>A[2*num_buttons+i]</code>, which takes more characters. Once you run the branch-and-bound ILP on $A$, you'll get $10$ as the optimal solution (as shown in the puzzle as well). Therefore, we store $2+10i$ as our final result for this iteration.</p>
+<p>$$
+A =
+\begin{pmatrix}
+0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1 &amp; 3 \\
+0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 5 \\
+0 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 4 \\
+1 &amp; 1 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 7 \\
+0 &amp; 0 &amp; 0 &amp; 0 &amp; -1 &amp; -1 &amp; -3 \\
+0 &amp; -1 &amp; 0 &amp; 0 &amp; 0 &amp; -1 &amp; -5 \\
+0 &amp; 0 &amp; -1 &amp; -1 &amp; -1 &amp; 0 &amp; -4 \\
+-1 &amp; -1 &amp; 0 &amp; -1 &amp; 0 &amp; 0 &amp; -7 \\
+0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; -1 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 0 &amp; -1 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; -1 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; -1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; -1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+-1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0
+\end{pmatrix}
+\Rightarrow
+\begin{pmatrix}
+{b_0}^-: &amp; x_4 + x_5 \le 3 \\
+{b_1}^-: &amp; x_1 + x_5 \le 5 \\
+{b_2}^-: &amp; x_2 + x_3 + x_4 \le 4 \\
+{b_3}^-: &amp; x_0 + x_1 + x_3 \le 7 \\
+{b_0}^+: &amp; x_4 + x_5 \ge 3 \\
+{b_1}^+: &amp; x_1 + x_5 \ge 5 \\
+{b_2}^+: &amp; x_2 + x_3 + x_4 \ge 4 \\
+{b_3}^+: &amp; x_0 + x_1 + x_3 \ge 7 \\
+d_5: &amp; x_5 \ge 0 \\
+d_4: &amp; x_4 \ge 0 \\
+d_3: &amp; x_3 \ge 0 \\
+d_2: &amp; x_2 \ge 0 \\
+d_1: &amp; x_1 \ge 0 \\
+d_0: &amp; x_0 \ge 0
+\end{pmatrix}
+$$</p>
+</li>
+</ul>
+<p>I wouldn't bother you further with the very minor details, but the complex number trick and the usage of <code>list.__setitem__</code> because there's so many list assignments are the main takeaways, in my opinion.</p>
+<p>Surprisingly, the code runs fast enough to my liking, which is about 10 seconds because I removed some early terminations in the branch-and-bound algorithm.</p>
+<h3 id="day-11-192-bytes">Day 11 - 192 bytes</h3>
+<div class="aocgolf">
+<pre><code class="language-python">from functools import*;z=cache(lambda x,t,g={l[:3]:l[4:].split()for l in open(0)}:sum(z(v,t+(x in'dac fft'))for v in g[x])if x in g else t&gt;1);print('Part 1:',z('you',2),'\nPart 2:',z('svr',0))
+</code></pre>
+</div>
+<p>Finally, a well-deserved break, with both normal and golfed codes solving both parts in a blink of an eye!</p>
+<p>Credits to <a href="https://github.com/woojiahao">woojiahao</a> for the idea of using simple recursion instead of topological sort + DP and <a href="https://github.com/Salatmate">Salatmate</a> for the further refinement of the golf by removing the bitmask part.</p>
+<p>For part 1, knowing that the graph is directed and acyclic, we can run the following recursion.</p>
+<pre><code class="language-text">paths(node)
+    1 if (node=='out')
+    sum(paths(child) for child in graph[node]) otherwise
+</code></pre>
+<p>However, for part 2, you need to keep track of whether you have passed <code>dac</code> and <code>fft</code>, so something like this.</p>
+<pre><code class="language-text">paths(node, dac_passed, fft_passed)
+    (dac_passed and fft_passed) if (node=='out')
+    sum(paths(child, dac_passed | (node=='dac'), fft_passed | (node=='fft')) for child in graph[node]) otherwise
+</code></pre>
+<p>Instinctively, I would use a bitmask to compress both <code>dac_passed</code> and <code>fft_passed</code>, so something like</p>
+<pre><code class="language-text">paths(node, bitmask)
+    (bitmask==3) if (node=='out')
+    sum(paths(child, bitmask | (node=='dac') | 2*(node=='fft')) for child in graph[node]) otherwise
+</code></pre>
+<p>Can we combine parts 1 and 2? The answer is yes, because in part 1, you can "assume" that <code>dac</code> and <code>fft</code> have been visited. So, when you start from <code>you</code>, the bitmask has already been set to <code>3</code>, while on part 2 as you start from <code>svr</code> you have to set the initial bitmask to <code>0</code> because they are factually yet to be visited.</p>
+<p>Having taken care of the graph parsing, I ended up with this version (semicolons converted to newlines for readability).</p>
+<pre><code class="language-python"># Again, not the finalized version!
+z=cache(lambda x,t:t&gt;2if x=='out'else sum(z(v,t|(x=='dac')|2*(x=='fft'))for v in g[x]))
+g={k[:-1]:l for k,*l in map(str.split,open(0))}
+print('Part 1:',z('you',3),'\nPart 2:',z('svr',0))
+</code></pre>
+<p>Just as I was about to return to my <em>work</em> work, Salatmate pointed out a few things:</p>
+<ul>
+<li>If you have passed <code>dac</code> before, you will never go back to <code>dac</code>. Same thing for <code>fft</code>. This means, you can just use integer additions instead of bitmask: <code>x in 'dac' or x in 'fft'</code>, which then got shortened to <code>x in 'dac fft'</code>. The extra space is just in case of the vertices <code>acf</code> or <code>cff</code> being present.</li>
+<li><code>str.split</code> is not a must-use, you can use just <code>l</code> for a single line, and then use <code>l[:3]</code> and <code>l[4:]</code> to separate the <code>:</code> off.</li>
+<li><code>g</code> can be defined as a default parameter of the function <code>z</code>.</li>
+</ul>
+<p>And then I also pointed out that <code>g</code> has only one vertex with zero outdegree: <code>out</code>. This means, instead of <code>x=='out'</code>, we can flip the logic and use <code>x in g</code> for the recursive case. Combining all of these ideas results in the finalized code at the beginning.</p>
+<h3 id="day-12-161-bytes">Day 12 - 161 bytes</h3>
+<div class="aocgolf">
+<pre><code class="language-python">import re;O=[*open(0)][::-1];print('Part 1:',sum((K:=[*map(int,re.findall('\d+',i))])and K[0]*K[1]&gt;=9*sum(K[2:])for i in O[:O.index('\n')]),'\nPart 2: THE END!')
+</code></pre>
+</div>
+<blockquote>
+<p>Last day best day? (this question was written on Day 11)</p>
+</blockquote>
+<p>Somewhat true. It's naturally hard but it's such a troll question that it's beyond easy. Well played to Eric indeed.</p>
+<p>The input assumes that the presents are always a 3x3 grid, and there's only two cases for the packing of the presents:</p>
+<ul>
+<li>the total area of the presents' bounding boxes exceeds the region area by a large margin</li>
+<li>the presents can be packed within each individual 3x3 region</li>
+</ul>
+<p>That's it, there's nothing in between!</p>
+<p>Similar to Day 11, the golfed code will solve our input files, but not the example input itself, which is sometimes intended. Also, you don't have to even care to parse the presents -- just parse the regions directly! That's why I reverse the input lines, and then cut until the first occurence of the newline <code>\n</code>.</p>
+<p>Regex is shorter to parse all the numbers in the form <code>RxC: q1 q2 ... qn</code> because you can just use <code>re.findall</code>. Here's the comparison with the non-regex approach. Huge difference, innit?</p>
+<pre><code class="language-python"># regex
+import re;[*map(int,re.findall('\d+',i))]
+# non-regex
+[*map(int,i[:(t:=i.find(':'))].split('x')+i[t+1:].split())]
+</code></pre>
+<p>The fact that the presents can be packed within each individual 3x3 region means that I can simply check if <code>(K[0]//3)*(K[1]//3)&gt;=sum(K[2:])</code>, but apparently not having to divide the dimensions by 3 also works just fine: <code>K[0]*K[1]&gt;=9*sum(K[2:])</code>. This is because</p>
+<p>$$
+\begin{align*}
+\left\lfloor\frac{K[0]}{3}\right\rfloor\cdot\left\lfloor\frac{K[1]}{3}\right\rfloor &amp;\ge \sum K[2:] \\
+K[0] \cdot K[1] \ge 3 \left\lfloor\frac{K[0]}{3}\right\rfloor\cdot 3 \left\lfloor\frac{K[1]}{3}\right\rfloor &amp; \ge 9 \sum K[2:].
+\end{align*}
+$$</p>
+<p>You might realize that this is a one-sided implication, so we could falsely classify an exceeding-area case as feasible, like so.</p>
+<p>$$
+\begin{align*}
+\left\lfloor\frac{K[0]}{3}\right\rfloor\cdot\left\lfloor\frac{K[1]}{3}\right\rfloor &amp;&lt; \sum K[2:] \\
+K[0] \cdot K[1] \ge 3 \left\lfloor\frac{K[0]}{3}\right\rfloor\cdot 3 \left\lfloor\frac{K[1]}{3}\right\rfloor &amp; &lt; 9 \sum K[2:] \\
+\end{align*}
+$$</p>
+<p>It's logically inconclusive to determine whether $K[0] \cdot K[1] &lt; 9 \sum K[2:]$ or $K[0] \cdot K[1] \ge 9 \sum K[2:]$. However, Eric in his trolling era has made sure that the case</p>
+<p>$$
+3 \left\lfloor\frac{K[0]}{3}\right\rfloor\cdot 3 \left\lfloor\frac{K[1]}{3}\right\rfloor &lt; 9 \sum K[2:] \le K[0] \cdot K[1]
+$$</p>
+<p>will never happen! (check it yourself, the value $9 \sum K[2:] - K[0] \cdot K[1]$ in this case is always so big)</p>
+<p>Finally, to end all things off, we end part 2 for today by printing <code>THE END!</code>. See you in Advent of Code 2026 :)</p></div></div>
+</section>
+<section id="footer">
+<div class="container">
+<ul class="copyright">
+<li>© Russell Saerang 2025. All rights reserved.</li>
+<li>Design: <a href="http://html5up.net" rel="noopener noreferrer" target="_blank">HTML5 UP</a></li>
+<li>Illustration: <a href="http://linkedin.com" rel="noopener noreferrer" target="_blank">LinkedIn</a> and <a href="http://unsplash.com" rel="noopener noreferrer" target="_blank">Unsplash</a></li>
+</ul>
+</div>
+</section>
+</div>
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/jquery.scrollex.min.js"></script>
+<script src="../assets/js/jquery.scrolly.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
+<link href="../assets/css/highlight.min.css" rel="stylesheet"/>
+<script src="../assets/js/highlight.min.js"></script>
+<script>hljs.highlightAll(); hljs.addPlugin(
+        new CopyButtonPlugin({
+            autohide: false,
+            callback: (text, el) => console.log("Copied to clipboard", text),
+    }));
+</script>
+</div></body>
+</html>
