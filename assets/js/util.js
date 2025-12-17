@@ -585,3 +585,36 @@
 	};
 
 })(jQuery);
+
+(function () {
+	const root = document.documentElement;
+	const saved = localStorage.getItem("theme");
+	const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  
+	if (saved) root.dataset.theme = saved;
+	else if (prefersDark) root.dataset.theme = "dark";
+
+	const btn = document.createElement("button");
+	btn.id = "theme-toggle";
+	btn.setAttribute("aria-label", "Dark mode");
+	btn.innerHTML = `
+	  <div class="icon">
+		<div class="moon"></div>
+		<div class="sun"></div>
+	  </div>
+	`;
+  
+	btn.onclick = () => {
+	  const isDark = root.dataset.theme === "dark";
+	  root.dataset.theme = isDark ? "light" : "dark";
+	  localStorage.setItem("theme", root.dataset.theme);
+	};
+
+	if (document.body) {
+	  document.body.appendChild(btn);
+	} else {
+	  window.addEventListener("DOMContentLoaded", () => {
+		document.body.appendChild(btn);
+	  });
+	}
+})();
