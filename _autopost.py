@@ -53,17 +53,32 @@ for path, dirs, files in os.walk('markdown'):
             nav_ul = BeautifulSoup('<ul></ul>', 'html.parser').ul
             nav_ul.append(BeautifulSoup('<li><a class="active" href="index.html">Back to all write-ups</a></li>', 'html.parser'))
             nav_ul.append(md_soup.new_tag('br'))
+            
+            seen_anchors = {}
+
             for h in headers:
-                anchor = re.sub(r'[^a-zA-Z0-9]+', '-', h.text).strip('-').lower()
+                base_anchor = re.sub(r'[^a-zA-Z0-9]+', '-', h.text).strip('-').lower()
+                anchor = base_anchor
+                
+                if base_anchor in seen_anchors:
+                    seen_anchors[base_anchor] += 1
+                    anchor = f'{base_anchor}-{seen_anchors[base_anchor]}'
+                else:
+                    seen_anchors[base_anchor] = 0
+
                 h['id'] = anchor
+                
                 li = md_soup.new_tag('li')
                 a = md_soup.new_tag('a', href=f'#{anchor}')
                 a.string = tw.shorten(h.text, width=25, placeholder='...')
+                
                 if h.name == 'h3': a['style'] = 'font-size: 0.95em; font-weight: 500;'
                 elif h.name == 'h4': a['style'] = 'font-size: 0.85em; font-weight: 400;'
                 elif h.name == 'h5': a['style'] = 'font-size: 0.75em; font-weight: 300;'
+                
                 li.append(a)
                 nav_ul.append(li)
+            
             nav_tag = md_soup.new_tag('nav', id='nav')
             nav_tag.append(nav_ul)
 
@@ -106,4 +121,3 @@ for date, title, date_text, html_fn, md_soup_p in sorted(posts, reverse=True):
 with open(os.path.join('posts', 'index.html'), 'w+') as f:
     f.write(soup.prettify())
     f.close()
-
