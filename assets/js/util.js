@@ -611,10 +611,10 @@
 	};
 
 	if (document.body) {
-	  document.body.appendChild(btn);
+	  document.documentElement.appendChild(btn);
 	} else {
 	  window.addEventListener("DOMContentLoaded", () => {
-		document.body.appendChild(btn);
+		document.documentElement.appendChild(btn);
 	  });
 	}
 })();
