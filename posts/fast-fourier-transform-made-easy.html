@@ -33,7 +33,7 @@
 </a>
 <p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
 </header>
-<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#fast-fourier-transform-made-easy">Fast Fourier Transform...</a></li><li><a href="#motivation" style="font-size: 0.95em; font-weight: 500;">Motivation</a></li><li><a href="#fast-fourier-transform-fft" style="font-size: 0.95em; font-weight: 500;">Fast Fourier Transform...</a></li><li><a href="#representing-polynomials" style="font-size: 0.85em; font-weight: 400;">Representing polynomials</a></li><li><a href="#odd-and-even-functions" style="font-size: 0.85em; font-weight: 400;">Odd and even functions</a></li><li><a href="#using-the-roots-of-unity" style="font-size: 0.85em; font-weight: 400;">Using the roots of unity</a></li><li><a href="#the-fft-algorithm" style="font-size: 0.85em; font-weight: 400;">The FFT algorithm</a></li><li><a href="#inverse-fft-ifft" style="font-size: 0.85em; font-weight: 400;">Inverse FFT (IFFT)</a></li><li><a href="#python-code" style="font-size: 0.85em; font-weight: 400;">Python code</a></li><li><a href="#fft-and-3-sum" style="font-size: 0.85em; font-weight: 400;">FFT and 3-SUM</a></li><li><a href="#number-theoretic-transform-ntt" style="font-size: 0.95em; font-weight: 500;">Number Theoretic...</a></li><li><a href="#primitive-roots" style="font-size: 0.85em; font-weight: 400;">Primitive roots</a></li><li><a href="#the-algorithm" style="font-size: 0.85em; font-weight: 400;">The algorithm</a></li><li><a href="#python-code" style="font-size: 0.85em; font-weight: 400;">Python code</a></li><li><a href="#bonus-polynomial-division" style="font-size: 0.95em; font-weight: 500;">Bonus: Polynomial...</a></li><li><a href="#inversion-by-newton-iteration" style="font-size: 0.85em; font-weight: 400;">Inversion by Newton...</a></li><li><a href="#the-division-algorithm" style="font-size: 0.85em; font-weight: 400;">The division algorithm</a></li><li><a href="#python-code" style="font-size: 0.85em; font-weight: 400;">Python code</a></li></ul></nav>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#fast-fourier-transform-made-easy">Fast Fourier Transform...</a></li><li><a href="#motivation" style="font-size: 0.95em; font-weight: 500;">Motivation</a></li><li><a href="#fast-fourier-transform-fft" style="font-size: 0.95em; font-weight: 500;">Fast Fourier Transform...</a></li><li><a href="#representing-polynomials" style="font-size: 0.85em; font-weight: 400;">Representing polynomials</a></li><li><a href="#odd-and-even-functions" style="font-size: 0.85em; font-weight: 400;">Odd and even functions</a></li><li><a href="#using-the-roots-of-unity" style="font-size: 0.85em; font-weight: 400;">Using the roots of unity</a></li><li><a href="#the-fft-algorithm" style="font-size: 0.85em; font-weight: 400;">The FFT algorithm</a></li><li><a href="#inverse-fft-ifft" style="font-size: 0.85em; font-weight: 400;">Inverse FFT (IFFT)</a></li><li><a href="#python-code" style="font-size: 0.85em; font-weight: 400;">Python code</a></li><li><a href="#fft-and-3-sum" style="font-size: 0.85em; font-weight: 400;">FFT and 3-SUM</a></li><li><a href="#number-theoretic-transform-ntt" style="font-size: 0.95em; font-weight: 500;">Number Theoretic...</a></li><li><a href="#primitive-roots" style="font-size: 0.85em; font-weight: 400;">Primitive roots</a></li><li><a href="#the-algorithm" style="font-size: 0.85em; font-weight: 400;">The algorithm</a></li><li><a href="#python-code-1" style="font-size: 0.85em; font-weight: 400;">Python code</a></li><li><a href="#bonus-polynomial-division" style="font-size: 0.95em; font-weight: 500;">Bonus: Polynomial...</a></li><li><a href="#inversion-by-newton-iteration" style="font-size: 0.85em; font-weight: 400;">Inversion by Newton...</a></li><li><a href="#the-division-algorithm" style="font-size: 0.85em; font-weight: 400;">The division algorithm</a></li><li><a href="#python-code-2" style="font-size: 0.85em; font-weight: 400;">Python code</a></li></ul></nav>
 <footer>
 <ul class="icons">
 <li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
@@ -485,7 +485,7 @@ The only solutions to $$x^2 \equiv 1 \pmod p \rightarrow x^2-1 = (x+1)(x-1) \equ
 
 </div>
 </details>
-<h4 id="python-code">Python code</h4>
+<h4 id="python-code-1">Python code</h4>
 <p>Let's review the original FFT recursion.</p>
 <pre><code class="language-python">from math import *
 
@@ -657,7 +657,7 @@ $$</li>
 <li>Computing the remainder also takes <strong>$O(n \log n)$ time</strong> due to the multiplication $qQ$.</li>
 </ul>
 <p>Overall, the algorithm takes <strong>$O(n \log n)$ time</strong>, where $n$ is the degree of $P$.</p>
-<h4 id="python-code">Python code</h4>
+<h4 id="python-code-2">Python code</h4>
 <pre><code class="language-python"># Assume the function mult(u, v) has been defined earlier
 # Whether FFT or NTT, adjust the arithmetic operations accordingly
 # In this code, assume FFT is the one used
