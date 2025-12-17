@@ -3366,3 +3366,227 @@ details {
 	overflow-x: visible;
 	word-break: break-word;
 }
+
+:root {
+	--bg: #ffffff;
+	--fg: #1f2937;
+	--surface: #f9fafb;
+	--border: #e5e7eb;
+	--link: #2563eb;
+	--code-bg: #f3f4f6;
+}
+
+[data-theme="dark"] {
+	--bg: #0b1020;
+	--fg: #b2b4bc;
+	--surface: #111827;
+	--border: #1f2937;
+	--link: #60a5fa;
+	--link-hover: #e0ded7;
+	--code-bg: #020617;
+}
+
+html[data-theme="dark"],
+html[data-theme="dark"] body {
+	background: var(--bg) !important;
+	color: var(--fg) !important;
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5,
+html[data-theme="dark"] main,
+html[data-theme="dark"] article,
+html[data-theme="dark"] section,
+html[data-theme="dark"] aside,
+html[data-theme="dark"] nav {
+	background-color: var(--surface) !important;
+	color: var(--fg) !important;
+	box-shadow: none !important;
+	border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .container,
+html[data-theme="dark"] .content,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .boxed,
+html[data-theme="dark"] .box {
+	background-color: var(--surface) !important;
+	color: var(--fg) !important;
+}
+
+html[data-theme="dark"] h1:hover,
+html[data-theme="dark"] a:hover {
+	color: var(--link-hover) !important;
+}
+
+html[data-theme="dark"] a {
+	color: var(--link) !important;
+}
+
+html[data-theme="dark"] #titleBar .toggle:before,
+html[data-theme="dark"] pre,
+html[data-theme="dark"] code {
+	background: var(--code-bg) !important;
+}
+
+html[data-theme="dark"] hr {
+	border-color: var(--border);
+}
+
+html[data-theme="dark"] #header > nav ul li:hover {
+	background: #1c2741 !important;
+	color: var(--fg) !important;
+}
+
+html[data-theme="dark"] #header > nav ul li a.active {
+	background: #2a3a60 !important;
+	color: #fff !important;
+}
+
+#theme-toggle {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface) !important;
+    cursor: pointer;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,.25);
+    padding: 0;
+    margin: 0;
+}
+
+.icon {
+    /* Reset positioning to ensure no lingering 'left/top' values apply */
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sun, .moon {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    transition: transform .45s cubic-bezier(.4,0,.2,1),
+                opacity .3s ease;
+}
+
+.sun {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #facc15;
+    transform: scale(0);
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sun::before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #facc15;
+    border-radius: 2px;
+    box-shadow:
+        0 -14px #facc15,
+        0 14px #facc15,
+        14px 0 #facc15,
+        -14px 0 #facc15,
+        10px 10px #facc15,
+        -10px 10px #facc15,
+        10px -10px #facc15,
+        -10px -10px #facc15;
+}
+
+.moon {
+    width: 20px;
+    height: 20px;
+    background: var(--fg);
+    border-radius: 50%;
+}
+
+.moon::before {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: -2px;
+    left: 6px;
+    background: var(--surface);
+    border-radius: 50%;
+}
+
+html[data-theme="dark"] .moon {
+    transform: scale(0);
+    opacity: 0;
+}
+
+html[data-theme="dark"] .sun {
+    transform: scale(1);
+    opacity: 1;
+}
+
+html[data-theme="dark"] code,
+html[data-theme="dark"] .hljs {
+    color: #d4c9c9 !important;
+}
+
+html[data-theme="dark"] .hljs-keyword,
+html[data-theme="dark"] .hljs-selector-tag {
+    color: #569cd6 !important;
+}
+
+html[data-theme="dark"] .hljs-string,
+html[data-theme="dark"] .hljs-section,
+html[data-theme="dark"] .hljs-selector-class,
+html[data-theme="dark"] .hljs-template-variable,
+html[data-theme="dark"] .hljs-deletion {
+    color: #ce9178 !important;
+}
+
+html[data-theme="dark"] .hljs-comment,
+html[data-theme="dark"] .hljs-quote {
+    color: #6a9955 !important;
+}
+
+html[data-theme="dark"] .hljs-number,
+html[data-theme="dark"] .hljs-literal,
+html[data-theme="dark"] .hljs-symbol,
+html[data-theme="dark"] .hljs-bullet,
+html[data-theme="dark"] .hljs-attribute {
+    color: #b5cea8 !important;
+}
+
+html[data-theme="dark"] .hljs-name,
+html[data-theme="dark"] .hljs-tag,
+html[data-theme="dark"] .hljs-variable,
+html[data-theme="dark"] .hljs-template-tag,
+html[data-theme="dark"] .hljs-label {
+    color: #9cdcfe !important;
+}
+
+html[data-theme="dark"] .hljs-title,
+html[data-theme="dark"] .hljs-params,
+html[data-theme="dark"] .hljs-function {
+    color: #dcdcaa !important;
+}
