@@ -1,0 +1,337 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<title>Build a GeoGuessr Clone with Firebase Studio</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+<link href="../assets/css/main.css" rel="stylesheet"/>
+<link href="../media/russell.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+            ],
+            throwOnError: false,
+            strict: false,
+        });
+    });
+    </script>
+</head>
+<body class="is-preload">
+<section id="header">
+<header>
+<a class="active" href="https://russelldash332.github.io/">
+<span class="image avatar"><img alt="" src="../media/profile.jpg"/></span>
+<h1 id="logo">Russell Saerang</h1>
+</a>
+<p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
+</header>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#build-a-geoguessr-clone-with-firebase-studio">Build a GeoGuessr...</a></li><li><a href="#prologue-devfest" style="font-size: 0.95em; font-weight: 500;">Prologue: DevFest</a></li><li><a href="#coming-up-with-nusguessr" style="font-size: 0.95em; font-weight: 500;">Coming up with NUSGuessr</a></li><li><a href="#starting-prompts" style="font-size: 0.95em; font-weight: 500;">Starting Prompts</a></li><li><a href="#the-editor-mode" style="font-size: 0.95em; font-weight: 500;">The Editor Mode</a></li><li><a href="#continuous-improvements" style="font-size: 0.95em; font-weight: 500;">Continuous Improvements</a></li><li><a href="#setting-up-rounds" style="font-size: 0.85em; font-weight: 400;">Setting Up Rounds</a></li><li><a href="#landing-page" style="font-size: 0.85em; font-weight: 400;">Landing Page</a></li><li><a href="#the-score-function" style="font-size: 0.85em; font-weight: 400;">The Score Function</a></li><li><a href="#end-game-copyable" style="font-size: 0.85em; font-weight: 400;">End-game Copyable</a></li><li><a href="#favicon-and-gradient-header" style="font-size: 0.85em; font-weight: 400;">Favicon and Gradient...</a></li><li><a href="#daily-challenge" style="font-size: 0.85em; font-weight: 400;">Daily Challenge</a></li><li><a href="#the-stopwatch" style="font-size: 0.85em; font-weight: 400;">The Stopwatch</a></li><li><a href="#contributing-locations" style="font-size: 0.85em; font-weight: 400;">Contributing Locations</a></li><li><a href="#ux-testing" style="font-size: 0.85em; font-weight: 400;">UX Testing</a></li><li><a href="#data-storage-and-population" style="font-size: 0.85em; font-weight: 400;">Data Storage and...</a></li><li><a href="#main-takeaways" style="font-size: 0.95em; font-weight: 500;">Main Takeaways</a></li><li><a href="#the-app" style="font-size: 0.95em; font-weight: 500;">The App</a></li></ul></nav>
+<footer>
+<ul class="icons">
+<li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
+<li><a class="icon brands fa-instagram" href="https://www.instagram.com/russellsaerang2702/" rel="noopener noreferrer" target="_blank"><span class="label">Instagram</span></a></li>
+<li><a class="icon brands fa-github" href="https://github.com/RussellDash332/" rel="noopener noreferrer" target="_blank"><span class="label">Github</span></a></li>
+<li><a class="icon brands fa-medium-m" href="https://medium.com/@russellsaerang" rel="noopener noreferrer" target="_blank"><span class="label">Medium</span></a></li>
+<li><a class="icon solid fa-envelope" href="mailto:russellsaerang@gmail.com"><span class="label">Email</span></a></li>
+</ul>
+</footer>
+</section>
+<div id="wrapper">
+<div id="main">
+<section id="post">
+<div class="image main" data-position="center">
+<img alt="" src="../media/banner.jpg"/>
+</div>
+<div class="container"><div class="post-container"><h2 id="build-a-geoguessr-clone-with-firebase-studio">Build a GeoGuessr Clone with Firebase Studio</h2>
+<div class="date"><p>1 January 2026</p></div>
+<p>Happy new year, everyone!</p>
+<p>I'm kicking off the year by sticking to my monthly writing goal in this website. I think it's a good way of documenting the interesting things I encountered during my learning journey, or maybe just the technical side quests I've embarked on.</p>
+<h3 id="prologue-devfest">Prologue: DevFest</h3>
+<p>Last November, I attended the latest Google Devfest in Singapore and learned about the current development of Firebase Studio and how it can make app development very seamless. Below are some pictures of me attending the conference talks.</p>
+<figure style="text-align: center;">
+<img alt="devfest25" object-fit="contain" src="media/00devfest25.jpg" width="35%"/>
+<img alt="firebasestudio" object-fit="contain" src="media/01firebasestudio.jpg" width="35%"/>
+<figcaption><i>Me at DevFest SG 2025</i></figcaption>
+</figure>
+<p>The demo was really simple, yet it showed how powerful Firebase Studio is on making web app blueprints. While Firebase Studio might not produce a pixel-perfect final product, it excels at generating the core skeleton.</p>
+<h3 id="coming-up-with-nusguessr">Coming up with NUSGuessr</h3>
+<p>On a random weekend, I decided to try Firebase Studio on my own using this one idea I've been thinking about during my final year at NUS: build a webpage like GeoGuessr, but specifically for NUS, meaning the images are either buildings or roads around the NUS campus.</p>
+<p>Simple idea, right? I don't need to make it <em>exactly</em> like GeoGuessr, but at least the main concept of the game is there: given an image, be able to pinpoint a location, and then gives you a score based on the distance from the correct location.</p>
+<p>This one might be ideally thought out last, but I think is important to address earlier to avoid late-stage headaches: <strong>where do we host the app?</strong> As someone who is pretty picky on having paid web domains and API keys, I think GitHub Pages should do a pretty good job, which is indeed the webpage you are reading this article at. Other than making a clone of GeoGuessr that's specific for NUS, I also want to be able to host this as a game in my own GitHub page.</p>
+<h3 id="starting-prompts">Starting Prompts</h3>
+<p>I fired up a new workspace in Firebase Studio, and then came up with this rather simple prompt. Maybe I'll make a few tweaks along the way, and I'm not a prompt engineer per se, but you might be more interested on the Prototyper AI's first response.</p>
+<figure style="text-align: center;">
+<img alt="startingprompt" object-fit="contain" src="media/02startingprompt.png" width="90%"/>
+<figcaption><i>The prompt that started it all</i></figcaption>
+</figure>
+<p>While I didn't specify the tech stack to use, I knew I could've used something I understood like Python, Django, or Flask. But, I went along with what it chose: Typescript, React, Tailwind, CSS, you know the standard modern web stack. I didn't study these stacks specifically back in NUS since I wasn't majoring in computer science and I decided to study other things beyond my module.</p>
+<figure style="text-align: center;">
+<img alt="techstack" object-fit="contain" src="media/03techstack.png" width="90%"/>
+<figcaption><i>Cool things I never used before</i></figcaption>
+</figure>
+<p>And... just like that! It creates the <strong>ENTIRE</strong> directory structure, commits the change like there's some sort of version control, and then done... or is it?</p>
+<p>Well, the first cut had some errors once it is run, but then you can conveniently click "Fix Error" to launch another prompt to fix it.</p>
+<figure style="text-align: center;">
+<img alt="fixcode" object-fit="contain" src="media/04fixcode.png" width="90%"/>
+<figcaption><i>"Fix Error" automated prompt has got your back</i></figcaption>
+</figure>
+<p>From here, I realized that GeoGuessr used Google Maps, which requires an API key if you want to use it personally. I decided to move forward with OpenStreetMap since it doesn't require one.</p>
+<p>After a few presses of "Fix Error", which I didn't have to figure out why, it's really a working application that I can try in the Firebase preview itself.</p>
+<h3 id="the-editor-mode">The Editor Mode</h3>
+<p>You don't just type prompts and then try out the preview in Firebase Studio -- you also get to edit the codebase directly and watch the preview changes dynamically! To do this, simply click on the code logo on the top right corner of your page.</p>
+<figure style="text-align: center;">
+<img alt="codelogo" object-fit="contain" src="media/05codelogo.png" width="50%"/>
+<figcaption><i>This logo!</i></figcaption>
+</figure>
+<p>Once you do that, it opens a VSCode-like terminal on the same webpage, then you can proceed to prompt and edit concurrently as you go. You can even do CLI as there is a Linux terminal, too.</p>
+<figure style="text-align: center;">
+<img alt="editormode" object-fit="contain" src="media/06editormode.png" width="90%"/>
+<figcaption><i>"sorry for light mode..."</i></figcaption>
+</figure>
+<p>Knowing that Firebase Studio stores our app using a version control system, we indeed have the liberty to revert our codebase should Prototype gets worse and worse in executing our requirements, i.e. <em>in case anything goes south</em>. Simply head back to the preview mode instead of staying at the code mode, and then you can select which commit you want to revert back into.</p>
+<figure style="text-align: center;">
+<img alt="rollback" object-fit="contain" src="media/07rollback.png" width="40%"/>
+<figcaption><i>Rollback like a git reset</i></figcaption>
+</figure>
+<h3 id="continuous-improvements">Continuous Improvements</h3>
+<p>Coming up with the initial idea is quick, but one needs to ensure that the entire flow of the app works properly, hence the following sections. Let's see how Prototyper and I work in tandem to produce the final result.</p>
+<h4 id="setting-up-rounds">Setting Up Rounds</h4>
+<p>Normally, I would expect a game to have 5 or 10 questions or so-called <em>rounds</em>, where it picks random locations from your dataset (the RNG or the PRNG used was not of my concern yet). Every round, you will pinpoint a location on the map and then once you confirm your guess, the game will give you a score based on the distance from the correct location, simple as that.</p>
+<p>To make testing faster, I set the number of rounds to 5 and the interaction goes like this.</p>
+<ul>
+<li>
+<p>You'll be given an image and the map right away, you can zoom around the image to get more details of the image. The map always starts on the same view of NUS (fixed starting zoom level, fixed starting coordinates to display)</p>
+<p><img alt="roundstart" object-fit="contain" src="media/08roundstart.png" width="87%"/></p>
+</li>
+<li>
+<p>You pick a location on the map, you can also zoom in and out of the map or pan around it</p>
+<p><img alt="pinpoint" object-fit="contain" src="media/09pinpoint.png" width="67%"/></p>
+</li>
+<li>
+<p>Confirm your guess, and obtain your score! (yes, I eventually changed the pin colours because it's hard to tell the difference)</p>
+<p><img alt="confirmguess" object-fit="contain" src="media/10confirmguess.png" width="87%"/></p>
+</li>
+</ul>
+<h4 id="landing-page">Landing Page</h4>
+<p>Initially, once the app starts, you directly go to the first round. Having a landing page would be a crucial feature because people might not want to work on the puzzle right away.</p>
+<p>A simple prompt to Prototype would suffice for it to restructure your Typescript files, stating that you also need a confirmation alert when you click on the "Start Game" button.</p>
+<h4 id="the-score-function">The Score Function</h4>
+<p>Just like in GeoGuessr, we want to have a score function that takes in the distance between the guessed location and the actual location, and then gives something between 0 and 5000 points.</p>
+<p>Initially, I didn't specify what scoring method to use in my prompts, but it came up with the exponential decay approach.</p>
+<p>$$
+f(x) =
+\begin{cases}
+5000 &amp; \text{if } x \le 0.04 \\
+\left \lfloor 5000e^{-\frac{x}{\delta}}\right \rceil &amp; \text{otherwise}
+\end{cases}
+$$</p>
+<p>where $x$ is the distance in kilometers (so $x=0.04$ means 40 meters) and $\delta$ is the decay factor, initially set to $\delta=1$. The distance is computed using the Haversine formula, since it's the Earth and its coordinates we're talking about.</p>
+<p>While I have accounted for the small-distance case (would be cruel if selecting the opposite room would cost you so many points), there were some issues with this piecewise function.</p>
+<ul>
+<li>You still get quite some number of points when you select a different side of NUS. NUS has an approximately-3km radius, so even selecting something that's 1km away should punish you sufficiently heavily</li>
+<li>The piecewise function isn't continuous, no one will ever get somewhere around 4900 points because it jumps from 5000 to 4800 when $x=0.04$</li>
+</ul>
+<p>I simply told Prototyper to fix this issue by readjusting the decay factor and ensuring the piecewise function is continuous. Here's what it ended up with.</p>
+<p>$$
+f(x) =
+\begin{cases}
+5000 &amp; \text{if } x \le 0.04 \\
+\left \lfloor 5000e^{-\frac{x-0.04}{(\delta_1=1)}}\right \rceil &amp; \text{if } x \le 0.08 \\
+\left \lfloor f(0.08)e^{-\frac{x-0.08}{(\delta_2=0.5)}}\right \rceil &amp; \text{if } x \le 0.5 \\
+\left \lfloor f(0.5)e^{-\frac{x-0.5}{(\delta_3=0.2)}}\right \rceil &amp; \text{otherwise} \\
+\end{cases}
+$$</p>
+<p>Essentially, it punishes you even more on longer distances (since the decay factor is smaller) but also ensuring that all scores from 5000 all the way down to 0 are possible to reach.</p>
+<figure style="text-align: center;">
+<img alt="desmos" object-fit="contain" src="media/11desmos.jpg" width="80%"/>
+<figcaption><i>What the old (black) and new (red) scoring functions look like in Desmos</i></figcaption>
+</figure>
+<h4 id="end-game-copyable">End-game Copyable</h4>
+<p>Just like word games you see in New York Times (read: <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>), you would want to flex your results to your peers after solving their daily puzzle. Usually you'd show off your elapsed time to solve it, or how few mistakes you've made.</p>
+<p>Once the 5 rounds conclude, there's supposed to be a pop-up thanking you for playing the game and the score table is displayed as well. Prompting to make a copyable text out of it wasn't too hard, in fact it did the job flawlessly.</p>
+<figure style="text-align: center;">
+<img alt="copypasta" object-fit="contain" src="media/12copypasta.png" width="40%"/>
+</figure>
+<p>For example, the results in the image above would be copied into something like this.</p>
+<pre><code class="language-text">NUSGuessr Practice - Final Score: 24,667
+
+Round 1: Mochtar Riady Building (BIZ1) - 5,000 pts (11.2s)
+Round 2: The Deck - 5,000 pts (8.5s)
+Round 3: UTown Auditorium 2 - 5,000 pts (4.5s)
+Round 4: SDE4 - 4,880 pts (8.8s)
+Round 5: The Terrace - 4,787 pts (5.1s)
+
+Play here: https://russelldash332.github.io/NUSGuessr
+</code></pre>
+<h4 id="favicon-and-gradient-header">Favicon and Gradient Header</h4>
+<p>While the UI wasn't a big issue for me, why not make it a little bit original?</p>
+<p>As seen in the initial version, the header was just a randomly-shaped favicon with the green text "NUSGuessr" beside it. So, I decided to use Gemini to create my own favicon, and as for the text, make it a gradient blue-orange. The cherry on top would be the Prototyper being able to animate the gradient smoothly even after button presses using Tailwind, so there's no abrupt restart to the animated gradient.</p>
+<figure style="text-align: center;">
+<img alt="newheader" object-fit="contain" src="media/13newheader.png" width="30%"/>
+<figcaption><i>Ooooh shiny!</i></figcaption>
+</figure>
+<h4 id="daily-challenge">Daily Challenge</h4>
+<p>A "practice" round with just 5 questions isn't gonna cut it. How do I compete with the other users? This is where the concept of daily challenge comes!</p>
+<p>In the initial practice round, it's just 5 randomized questions that can be restarted when you exit the page or refresh it, and the abrupt restart doesn't matter, because it's just practice. The daily version uses a standardized set of <span title="why 5? double down for more fun!"><u>10 random questions for everyone</u></span>, but the RNG seed is determined by the clock (what day it is when the user attempted the puzzle).</p>
+<figure style="text-align: center;">
+<img alt="startdaily" object-fit="contain" src="media/14startdaily.png" width="40%"/>
+<img alt="exitmidway" object-fit="contain" src="media/15exitmidway.png" width="40%"/>
+<figcaption><i><i>Finally, a daily challenge! Our battle will be legendary!</i></i></figcaption>
+</figure>
+<p>Furthermore, when someone is in the progress of doing the daily challenge, if for any reason there's a connection issue, or the browser got quit by accident, it should be able to resume the progress. Then, compared to the copypasta you get at the end of a practice game, one shouldn't reveal the locations so others can also try it out without getting spoiled.</p>
+<p>Taking into account of these scenarios, the Prototype was fortunately able to handle it by using the local storage to store the current info, but also ensuring that the locations aren't spoiled anywhere within the local storage, network requests, etc.</p>
+<figure style="text-align: center;">
+<img alt="copydaily" object-fit="contain" src="media/16copydaily.png" width="40%"/>
+<img alt="copypractice" object-fit="contain" src="media/17copypractice.png" width="40%"/>
+<figcaption><i><i>Notice the subtle difference?</i></i></figcaption>
+</figure>
+<p>When you exit the game, notice the difference between doing the same thing in practice mode.</p>
+<figure style="text-align: center;">
+<img alt="quitdaily" object-fit="contain" src="media/18quitdaily.png" width="40%"/>
+<img alt="quitpractice" object-fit="contain" src="media/19quitpractice.png" width="40%"/>
+<figcaption><i>Good feature for the ragequitters</i></figcaption>
+</figure>
+<p>The landing page should be updated accordingly with this new addition. Since you only get to work on the daily challenge once a day, and you might revisit the page multiple times, the daily challenge section should store the information such as when was the last time you did the daily challenge or how long until you can do the upcoming daily challenge. One should also be able to copy today's results again in case one forgot to copy it previously.</p>
+<figure style="text-align: center;">
+<img alt="fewmorehours" object-fit="contain" src="media/20fewmorehours.png" width="70%"/>
+<figcaption><i>Guess I'll have to wait a few more hours...</i></figcaption>
+</figure>
+<h4 id="the-stopwatch">The Stopwatch</h4>
+<p>Despite the elapsed time not being part of the score calculation (yet? should I?), I thought it would be a nice metadata to have in the game and the endgame copypasta. This was also one of the features that took me several tries and rollbacks for the Prototyper to nail the behaviour.</p>
+<p>When a round starts, it will load the image and the map, and that's where the stopwatch starts counting. Still the easy part.</p>
+<figure style="text-align: center;">
+<img alt="stopwatchplay" object-fit="contain" src="media/21stopwatchplay.png" width="60%"/>
+<br/><img alt="stopwatchexit" object-fit="contain" src="media/22stopwatchexit.png" width="80%"/>
+<figcaption><i>In case you haven't noticed there's a clock there</i></figcaption>
+</figure>
+<p>The complex part is on <strong>the daily challenge</strong>: when someone zooms in the image, or quits/exits the page - whether to continue the timer or to stop it, or whether it will keep incrementing the time properly (I recalled one iteration where it exploded to 1000s within a blink of an eye). Explaining this very systematically to Prototyper helps it to understand what to do and what NOT to do.</p>
+<p>You can try the app yourself and see which behaviour of the stopwatch I ended up with ;)</p>
+<h4 id="contributing-locations">Contributing Locations</h4>
+<blockquote>
+<p>Credits to <a href="https://devpost.com/software/nusguessr">the people in Devpost</a> for the idea of this part. While I only found out about this after making the skeleton code, there were many differences in the features, e.g. the map used (OSM vs GMaps). As what they did was for a hackathon which only lasted for a day or two, I didn't know if genAI was involved as well or not.</p>
+</blockquote>
+<p>Of course, there are some locations that I might overlook to share in this app, so having other people to contribute is a great idea, provided there's a manual verification to ensure that this location deserves a spot.</p>
+<p>Adding the button on the landing page is easy, and Prototyper came up with some code all the way until the form structure. All I had to do was to set up a link to contain the form submissions.</p>
+<figure style="text-align: center;">
+<img alt="contributebutton" object-fit="contain" src="media/23contributebutton.png" width="20%"/>
+<br/><img alt="contributeform" object-fit="contain" src="media/24contributeform.png" width="70%"/>
+<figcaption><i>Yes, you can finally contribute, but send me something worthy of a feature, not just rock pictures!</i></figcaption>
+</figure>
+<p>Prototyper decided to use <a href="https://formspree.io/"><span title="(not sponsored, not endorsed, hint hint)"><u><strong>Formspree</strong></u></span></a> to store the submissions, which I can set up further on the Formspree website itself. Having been equipped with spam protection, the next step would be to link this to the app without exposing important credentials.</p>
+<p>The issue with this is that I've been doing the project as a static page, so hiding the Formspree URL link from the POST request is not feasible since it requires proxy to do so, but then it's not much of a concern since it's a small-scale app. The security of the data for the images was a higher priority to me.</p>
+<p>Note that every prompt can be specified to not change anything on your codebase, so I get to just ask some questions to Prototyper.</p>
+<figure style="text-align: center;">
+<img alt="proxyprompt" object-fit="contain" src="media/25proxyprompt.png" width="90%"/>
+</figure>
+<p>Design comes with a cost too, it's not just all the benefits!</p>
+<h4 id="ux-testing">UX Testing</h4>
+<p>This was by far the most time-consuming part, unless you couldn't care less about your app. While I've mentioned some simple examples within each of the previous parts, there were more miscellaneous UX issues that my friend Samuel and I discovered, so I thought making it a separate part would be nice.</p>
+<p>Let's start with the first one: <strong>the stopwatch</strong>. If I'm playing this on a region with poor network, it will take a while to render the image and/or the map completely. The time taken to load and render these should not be counted by the stopwatch, meaning only when <strong>BOTH are COMPLETELY rendered</strong>, then the stopwatch starts.</p>
+<figure style="text-align: center;">
+<img alt="stopwatchbefore" object-fit="contain" src="media/26stopwatchbefore.png" width="80%"/>
+<br/><img alt="stopwatchload" object-fit="contain" src="media/27stopwatchload.png" width="80%"/>
+<figcaption><i>How the stopwatch works: as the image is still loading, do not start the clock</i></figcaption>
+</figure>
+<p>Next up, <strong>selecting a location on the map</strong>. On phone, both the image and the map might not fit into the screen side-by-side, so one will be on top of the other. Since the image is on top, the image will be fully shown but the map only has the top part visible. Regardless, some users will directly click on a location on that visible region without scrolling completely to the map. However, once the user clicks, the blue pinpoint is placed on a completely different spot due to the autoscrolling behaviour that I have not specifically told Prototyper not to enable. A few extra prompts to resolve the issue was sufficient.</p>
+<figure style="text-align: center;">
+<img alt="visiblemap" object-fit="contain" src="media/28visiblemap.png" width="40%"/>
+<img alt="visiblemap" object-fit="contain" src="media/29visiblemap2.png" width="40%"/>
+<figcaption><i>Initially, the behaviour was like the right image: autoscroll to the map, retain relative position of the pinpoint to the screen, not the map. Now, it stays just like the left image</i></figcaption>
+</figure>
+<p>Another one is on <strong>zooming in the image</strong>. Due to the various aspect ratio of the images, it might not fit completely on the image preview, so one might resort to clicking on the image to zoom in. Here's what the zoom-in view looks like.</p>
+<figure style="text-align: center;">
+<img alt="zoomin" object-fit="contain" src="media/30zoomin.png" width="80%"/>
+<br/><img alt="zoomin" object-fit="contain" src="media/31zoomin2.png" width="80%"/>
+<figcaption><i>Thankfully the buttons stay! And you can't download the image either :)</i></figcaption>
+</figure>
+<blockquote>
+<p>Can we drag around the image? Am I able to zoom in/out further? What if I drag beyond the edge of the picture? What if I right-click on the image, can I save it or find funny hints on the image? Will the zoom in/out button stay on that one corner if I drag around?</p>
+</blockquote>
+<p>Many questions can come from just one click, and they are all reasonable questions - not too specific, yet important behaviours to consider. One point is to ensure that the image link isn't shown to the user by right clicking or by inspect element. Prototyper managed to handle these details, and now you shouldn't be able to do that while working on a question. The image link is also encoded via base64 so you can't find the source URL of the image anymore (or so I hope), even when you check the network manager on DevTools.</p>
+<blockquote>
+<p>It is worth noting that base64 is an obfuscation/encoding method, not an encryption, so it will be decodeable if one truly wants to try. Encryption methods exist but at a design complexity cost.</p>
+</blockquote>
+<figure style="text-align: center;">
+<img alt="base64devtools" object-fit="contain" src="media/32base64devtools.png" width="90%"/>
+<figcaption><i>The current sample data uses public URLs so the names will appear there, but once the images are localized, that's when we can do more security efforts</i></figcaption>
+</figure>
+<p>Last one worth the mention is <strong>the sticky header and footer</strong>. I envisioned the app to always show the header with the favicon and the text "NUSGuessr" while the footer always shows my name as the app author. The body moves freely as you scroll around here and there. However, after prompting other features, Prototyper tends to forget this one sticky constraint (no pun intended) and as I scrolled through the content, the header and/or footer gets scrolled away too.</p>
+<p>Eventually, I resorted to enforcing strict operational ground rules by stating "the one important ground rule to be adhered every prompt from now on". To ensure this method works, I teased Prototyper by making it recite the ground rule every few prompts, as shown below.</p>
+<figure style="text-align: center;">
+<img alt="recite" object-fit="contain" src="media/33recite.png" width="80%"/>
+<figcaption><i>angery drill instructor</i></figcaption>
+</figure>
+<h4 id="data-storage-and-population">Data Storage and Population</h4>
+<p>My final homework for the project as of writing this article. Despite the data not being final, the current data is an easier sample of it, so it's ready to be played anyways.</p>
+<p>You might be wondering, how does one store the data for the game, or how do we collect the data from your location contributions? This is where JSON comes to the rescue. Since there's not so many locations at the moment, storing the JSON in the codebase as is should be an alright design, as long as this is hidden in the GitHub repository I'm pushing to.</p>
+<p>JSON was indeed a simple, if not the simplest, method to store the data. I just need the ID (for easy lookup, perhaps), the location name, the coordinates of the location (latitude and longitude), and last but not least the image URL. A sample entry will look like this (source: <a href="https://github.com/RussellDash332/NUSGuessr/blob/main/src/lib/game-data.json.example">the example data</a>).</p>
+<pre><code class="language-python">{
+  "locations": [
+    {
+      "id": "pgp",
+      "name": "Prince George's Park Residences",
+      "coordinates": {
+        "lat": 1.291038,
+        "lng": 103.780830
+      },
+      "imageUrl": "https://www.me.com.sg/resources/ck/images/projects/2002_spaceframe/NUS%20PGP%202.jpg"
+    },
+    ...
+  ]
+}
+</code></pre>
+<p>So, how do we include this in our source code when running the app, hide it in GitHub repository, yet make it run on GitHub pages that runs from that same repository? This is where GitHub Actions come to the rescue.</p>
+<p>You can set up a workflow to create the data file just as you deploy the newest version of the app by storing it inside a <strong>repository secret</strong>. While you can read the exact guide on doing this on <a href="https://github.com/RussellDash332/NUSGuessr/blob/main/README.md">the repository's README</a>, it's worth noting that the workflow YAML file is also equally important to complete the process.</p>
+<figure style="text-align: center;">
+<img alt="yaml" object-fit="contain" src="media/34yaml.jpg" width="40%"/>
+</figure>
+<p><strong>How about contributed locations?</strong> Same thing, the app packages your submissions into JSON form and then sends it to Formspree as the message. That way, I can simply copy and paste the entry into the big JSON master data if it's good to be included.</p>
+<p><strong>Is this method scalable?</strong> Well, if it's for NUS with probably at most a few hundred locations, I don't see a problem. However, for larger areas (like let's say random spots in Singapore?), this might not the best approach.</p>
+<p>You might wonder why I questioned myself for the previous part...</p>
+<figure style="text-align: center;">
+<img alt="scalable" object-fit="contain" src="media/35scalable.png" width="90%"/>
+<figcaption><i>Other than Formspree, I want to keep it mostly within the page itself, so cloud solutions can wait</i></figcaption>
+</figure>
+<h3 id="main-takeaways">Main Takeaways</h3>
+<p>Playing around with Firebase Studio, or genAI in general is like having a <span title="it is unable to grant you physical wishes, yet..."><u>less-powerful</u></span> genie with so many capabilities, yet it needs specific instructions from you to make it work to the fullest. It's still your job as a human to consider the possible niche or complex scenarios that might occur on users, and only then the AI will be able to cater the product to those requirements. Currently, genAIs are pretty excellent on making blueprints or MVPs, but it will be unlikely to be the final version, and thus continuous development involving humans is still a crucial part of the whole process.</p>
+<p>Undoubtedly, other edge cases that might happen beyond my testing suite exist, but I hope this is already an extensive "diary" of the app's development.</p>
+<h3 id="the-app">The App</h3>
+<p>Why would I not end the article with a shameless promotion?</p>
+<p><a href="https://russelldash332.github.io/NUSGuessr">Head over and play, show yourself how much you know about the NUS surroundings!</a></p>
+<p>For the nerds, you can check the source code <a href="https://github.com/RussellDash332/NUSGuessr">here</a>.</p></div></div>
+</section>
+<section id="footer">
+<div class="container">
+<ul class="copyright">
+<li>© Russell Saerang 2026. All rights reserved.</li>
+<li>Design: <a href="http://html5up.net" rel="noopener noreferrer" target="_blank">HTML5 UP</a></li>
+<li>Illustration: <a href="http://linkedin.com" rel="noopener noreferrer" target="_blank">LinkedIn</a> and <a href="http://unsplash.com" rel="noopener noreferrer" target="_blank">Unsplash</a></li>
+</ul>
+</div>
+</section>
+</div>
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/jquery.scrollex.min.js"></script>
+<script src="../assets/js/jquery.scrolly.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
+<link href="../assets/css/highlight.min.css" rel="stylesheet"/>
+<script src="../assets/js/highlight.min.js"></script>
+<script>hljs.highlightAll(); hljs.addPlugin(
+        new CopyButtonPlugin({
+            autohide: false,
+            callback: (text, el) => console.log("Copied to clipboard", text),
+    }));
+</script>
+</div></body>
+</html>
