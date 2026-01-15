@@ -1,6 +1,8 @@
 # Telebot army is an absolute cinema
 6 August 2025
 
+[tag]: telegram-bot, telebot, python
+
 ## Preface: 2022
 It was the COVID era where everything was online, thus the rise of Telegram scammers trying to add random users to a particular set of scam and/or spam investment group chats. It was very disturbing for users who did not set up their privacy settings properly.
 

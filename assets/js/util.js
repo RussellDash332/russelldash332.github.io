@@ -618,3 +618,134 @@
 	  });
 	}
 })();
+
+window.addEventListener("DOMContentLoaded", () => {
+    const searchBar = document.getElementById("search-bar");
+    const resetBtn = document.getElementById("search-reset");
+    const articles = Array.from(document.querySelectorAll("#posts-container article"));
+    const paginationContainer = document.getElementById("pagination-controls");
+    const tagButtons = document.querySelectorAll(".tag-button");
+
+    if (!searchBar) return;
+
+    let currentPage = 1;
+    const postsPerPage = 5;
+
+    function filterPosts() {
+        const query = searchBar.value.toLowerCase().trim();
+        const queryWords = query.split(/\s+/).filter(w => w !== "");
+        const activeBtn = document.querySelector(".tag-button.active");
+        const activeCategory = activeBtn ? activeBtn.dataset.tag.toLowerCase() : "all";
+
+        if (resetBtn) resetBtn.style.display = query.length > 0 ? "block" : "none";
+
+        const filteredArticles = articles.filter(article => {
+            const titleText = article.querySelector("h4")?.innerText.toLowerCase() || "";
+            
+            const articleDiv = article.querySelector("div");
+            const paragraphs = articleDiv ? Array.from(articleDiv.querySelectorAll("p")) : [];
+            const innerContent = paragraphs.length > 1 ? paragraphs[1].innerText.toLowerCase() : "";
+            
+            const articleTagBtns = Array.from(article.querySelectorAll(".tag-label-btn"));
+            const articleTags = articleTagBtns.map(btn => btn.dataset.tag.toLowerCase());
+            
+            const searchableContent = `${titleText} ${innerContent} ${articleTags.join(" ")}`;
+
+            const matchesSearch = queryWords.length === 0 || queryWords.every(word => searchableContent.includes(word));
+            const matchesCategory = (activeCategory === "all" || articleTags.includes(activeCategory));
+
+            return matchesSearch && matchesCategory;
+        });
+
+        const totalPages = Math.ceil(filteredArticles.length / postsPerPage) || 1;
+        if (currentPage > totalPages) currentPage = 1;
+
+        articles.forEach(a => a.style.display = "none");
+        const start = (currentPage - 1) * postsPerPage;
+        filteredArticles.slice(start, start + postsPerPage).forEach(a => a.style.display = "");
+
+        renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+        if (!paginationContainer) return;
+        paginationContainer.innerHTML = "";
+
+        const addBtn = (label, target, disabled, isArrow = false) => {
+            const btn = document.createElement("button");
+            btn.innerHTML = label;
+            btn.className = `page-btn ${isArrow ? 'arrow' : ''} ${disabled ? 'disabled' : ''} ${target === currentPage && !isArrow ? 'active' : ''}`;
+            btn.onclick = () => { 
+                if (!disabled && label !== "...") { 
+                    currentPage = target; 
+                    filterPosts(); 
+                    const targetEl = document.getElementById("pagination-controls");
+                    if (targetEl) {
+                        targetEl.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }
+                } 
+            };
+            paginationContainer.appendChild(btn);
+        };
+
+        addBtn("Prev", currentPage - 1, currentPage === 1, true);
+
+        const range = [];
+        if (totalPages <= 5) {
+            for (let i = 1; i <= totalPages; i++) range.push(i);
+        } else {
+            range.push(1);
+            if (currentPage > 2) range.push("...");
+            if (currentPage !== 1 && currentPage !== totalPages) range.push(currentPage);
+            if (currentPage < totalPages - 1) range.push("...");
+            range.push(totalPages);
+        }
+
+        range.forEach(item => {
+            if (item === "...") {
+                addBtn("...", null, true);
+            } else {
+                addBtn(item, item, false);
+            }
+        });
+
+        addBtn("Next", currentPage + 1, currentPage === totalPages, true);
+    }
+
+    searchBar.addEventListener("input", () => {
+        currentPage = 1;
+        filterPosts();
+    });
+
+    if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+            searchBar.value = "";
+            currentPage = 1;
+            filterPosts();
+            searchBar.focus();
+        });
+    }
+
+    tagButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            tagButtons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentPage = 1;
+            filterPosts();
+        });
+    });
+
+    document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("tag-label-btn")) {
+            searchBar.value = e.target.dataset.tag.toLowerCase();
+            tagButtons.forEach(b => b.classList.toggle("active", b.dataset.tag === "all"));
+            currentPage = 1;
+            filterPosts();
+        }
+    });
+
+    filterPosts();
+});

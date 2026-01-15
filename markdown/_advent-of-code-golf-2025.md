@@ -1,6 +1,8 @@
 # Advent of Code(golf) 2025
 12 December 2025
 
+[tag]: advent-of-code, python, code-golf
+
 I have been doing Advent of Code (AOC) since 2021 and have completed all questions from 2015 as of writing this article. While the initial goal was to learn new languages (like Haskell and Rust), I ended up sticking to Python since 2023 and decided to take things up a notch: **golf the solution to a single line of code**. Once I managed to complete all 25 days (only 12 days starting this year) of problems, I would combine them into a single Python file and call it ***The Basilisk***. (get it? big snake...)
 
 I thought this is a fun way of honing my Python understanding, not just that of data structures and algorithms. I feel that codegolfing a language exposes you to some hidden tricks on coding that language, which you'll see soon enough.

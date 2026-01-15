@@ -1,6 +1,8 @@
 # Graph Realization Made Easy!
 3 November 2025
 
+[tag]: algorithms, data-structures, python, graphs, competitive-programming
+
 This article serves as a detailed breakdown of the code provided in [pytils](https://github.com/RussellDash332/pytils/blob/main/graph_realization.py).
 
 ## Degree Sequence

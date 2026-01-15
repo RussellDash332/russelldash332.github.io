@@ -1,6 +1,8 @@
 # Why Python recursion sucks for competitive programming
 1 July 2025
 
+[tag]: python, algorithms, data-structures, competitive-programming
+
 Having done several competitive programming (CP) problems in pure Python, it is safe to say that recursion is worse for most instances, especially for problems with tight memory or time limit.
 
 While it's simpler to implement and shorter to code, here are some reasons I can think of spontaneously on why Python recursion costs more than it benefits (as opposed to iteration, obviously).

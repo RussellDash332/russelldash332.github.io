@@ -1,6 +1,8 @@
 # Pareto Fronts Made Easy!
 22 July 2024
 
+[tag]: algorithms, data-structures, competitive-programming
+
 Suppose you have a set $S$ of $N$ different objects, each object having different scores for a particular set of metrics.
 
 Suppose we ask ourselves this question:

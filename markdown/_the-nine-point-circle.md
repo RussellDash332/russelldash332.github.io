@@ -1,6 +1,8 @@
 # The Nine-point Circle
 28 February 2024
 
+[tag]: math, geometry
+
 Let us start off with a simple triangle $\triangle ABC$. We draw the altitudes for each respective vertex, intersecting the corresponding sides at $H_A, H_B, H_C$. It is a well-known fact that these three altitudes will intersect at a single point, the orthocenter, denoted as $H$.
 
 <img src="../posts/media/npc01.jpg" alt="npc01" object-fit="contain" width="60%"/>

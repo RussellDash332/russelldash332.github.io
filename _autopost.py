@@ -1,5 +1,5 @@
 # Converts all Markdown files to a HTML blog!
-import re, os, markdown, datetime as dt, textwrap as tw
+import math, re, os, markdown, datetime as dt, textwrap as tw
 from bs4 import BeautifulSoup, NavigableString
 
 TW_WIDTH_LIMIT = 200
@@ -19,6 +19,7 @@ soup = BeautifulSoup(html_content, 'html.parser')
 posts_container = soup.find('div', id='posts-container')
 posts_container.clear()
 posts = []
+unique_tags = set()
 
 for path, dirs, files in os.walk('markdown'):
     for file in files:
@@ -26,6 +27,14 @@ for path, dirs, files in os.walk('markdown'):
             markdown_content = open(os.path.join(path, file), encoding='utf-8').read().replace('../posts/media', 'media').replace('align*', 'align\*').replace('\\'*2, '\\'*3).replace('\\left\\{', '\\left\\\\{').replace('\\right\\}', '\\right\\\\}')
             md2html_content = md2html(markdown_content)
             md_soup = BeautifulSoup(md2html_content, 'html.parser')
+
+            tags = []
+            tag_p = md_soup.find('p', string=re.compile(r'^\[tag\]:'))
+            if tag_p:
+                tag_raw = tag_p.text.replace('[tag]:', '').strip()
+                tags = [t.strip().lower() for t in tag_raw.split(',')]
+                for t in tags: unique_tags.add(t)
+                tag_p.decompose()
 
             for ul in md_soup.find_all('ul'):
                 nxt = ul.find_next_sibling()
@@ -78,12 +87,13 @@ for path, dirs, files in os.walk('markdown'):
                 
                 li.append(a)
                 nav_ul.append(li)
-            
+
             nav_tag = md_soup.new_tag('nav', id='nav')
             nav_tag.append(nav_ul)
 
             html_fn = 'posts/'+file[1:][:-3]+'.html'
-            posts.append((date, first_h1.text, first_p.text, html_fn.split('/')[-1], '\n'.join(p.text for p in md_soup.findAll('p')[1:])))
+            read_time = math.ceil(len(markdown_content.split()) / 225)
+            posts.append((date, first_h1.text, f'{first_p.text} • {read_time} minute{"s"*(read_time > 1)} read', html_fn.split('/')[-1], '\n'.join(p.text for p in md_soup.findAll('p')[1:]), tags))
 
             template_soup = BeautifulSoup(template_content, 'html.parser')
             template_title = template_soup.find('title')
@@ -97,7 +107,26 @@ for path, dirs, files in os.walk('markdown'):
             with open(html_fn, 'w+', encoding='utf-8') as f:
                 f.write(str(template_soup))
 
-for date, title, date_text, html_fn, md_soup_p in sorted(posts, reverse=True):
+old_filter_section = soup.find('div', id='controls')
+if old_filter_section:
+    old_filter_section.decompose()
+
+filter_section = soup.new_tag('div', id='controls')
+search_wrapper = soup.new_tag("div", attrs={"class": "search-wrapper"})
+search_input = soup.new_tag("input", id="search-bar", placeholder="Search articles...")
+reset_btn = soup.new_tag("span", id="search-reset", attrs={"role": "button"})
+reset_btn.string = "×"
+
+search_wrapper.append(search_input)
+search_wrapper.append(reset_btn)
+filter_section.append(search_wrapper)
+
+posts_container.insert_before(filter_section)
+
+pagination_container = soup.new_tag("div", id="pagination-controls")
+posts_container.insert_after(pagination_container)
+
+for date, title, date_text, html_fn, md_soup_p, tags in sorted(posts, reverse=True):
     if html_fn.startswith('_'): continue
     print([date_text, title, html_fn])
     summary = tw.shorten(md_soup_p, width=TW_WIDTH_LIMIT, placeholder='...')
@@ -114,6 +143,14 @@ for date, title, date_text, html_fn, md_soup_p in sorted(posts, reverse=True):
     new_h4.append(new_a)
     new_div.append(new_p)
     new_div.append(new_p2)
+
+    tag_div = soup.new_tag('div', attrs={'class': 'article-tags'})
+    for t in tags:
+        btn = soup.new_tag('button', attrs={'class': 'tag-label-btn', 'data-tag': t.strip().lower()})
+        btn.string = t.strip()
+        tag_div.append(btn)
+    new_div.append(tag_div)
+
     new_article.append(new_h4)
     new_article.append(new_div)
     posts_container.append(new_article)

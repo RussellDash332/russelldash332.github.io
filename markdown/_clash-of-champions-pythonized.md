@@ -1,6 +1,8 @@
 # Clash of Champions Season 2, Pythonized
 30 September 2025
 
+[tag]: python, backtracking
+
 It's been a month since the second season of Clash of Champions' final episode. While the games were entertaining and the questions were interesting to try out along, I decided to take things up a notch and decided to rest my mind from straining due to logic and code some Python instead.
 
 In this write-up, there are two games that I tried coding in Python and I thought are worth explaining: Viral Protocol and Logic Race.

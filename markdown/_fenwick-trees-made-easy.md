@@ -1,6 +1,8 @@
 # Fenwick Trees Made Easy!
 28 July 2024
 
+[tag]: algorithms, data-structures, competitive-programming
+
 Let's start with an array $A$ of size $N$, each entry is initially zero. Suppose that over time, I want to support these operations on the array:
 
 1. Add all indices of $A$ in range $[l, r]$ by an integer $x$, where $0 \le l \le r < N$

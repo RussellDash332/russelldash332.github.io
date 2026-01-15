@@ -1,6 +1,8 @@
 # Fast Fourier Transform Made Easy!
 2 December 2025
 
+[tag]: algorithms, math, python, competitive-programming
+
 ## Motivation
 
 It all started back in 2021 when I saw [this problem](https://open.kattis.com/problems/polymul1) on Kattis that asks you to multiply two polynomials. Given the constraints, directly multiplying them (like how people would in mathematics class) should be within the time limit. We can represent the polynomial $P(x) = a_0 + a_1x + a_2x^2 + \ldots + a_{n-1}x^{n-1}$ as a list of $n$ coefficients $[a_0, a_1, a_2, \ldots, a_{n-1}]$, and then a simple Python code like this should do the rest of the trick.

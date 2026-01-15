@@ -96,194 +96,343 @@
        <h2>
         Write-ups
        </h2>
-      </header>
-      <p>
-       I try to put some articles that might be useful for you. Stay tuned!
-      </p>
-      <div class="features">
-       <div id="posts-container">
-        <article>
-         <h4>
-          <a href="build-a-geoguessr-clone-with-firebase-studio.html">
-           Build a GeoGuessr Clone with Firebase Studio
-          </a>
-         </h4>
-         <div>
-          <p>
-           1 January 2026
-          </p>
-          <p>
-           Happy new year, everyone! I'm kicking off the year by sticking to my monthly writing goal in this website. I think it's a good way of documenting the interesting things I encountered during my...
-          </p>
+       <div class="features">
+        <div id="controls">
+         <div class="search-wrapper">
+          <input id="search-bar" placeholder="Search articles..."/>
+          <span id="search-reset" role="button">
+           ×
+          </span>
          </div>
-        </article>
-        <article>
-         <h4>
-          <a href="advent-of-code-golf-2025.html">
-           Advent of Code(golf) 2025
-          </a>
-         </h4>
-         <div>
-          <p>
-           12 December 2025
-          </p>
-          <p>
-           I have been doing Advent of Code (AOC) since 2021 and have completed all questions from 2015 as of writing this article. While the initial goal was to learn new languages (like Haskell and Rust), I...
-          </p>
-         </div>
-        </article>
-        <article>
-         <h4>
-          <a href="fast-fourier-transform-made-easy.html">
-           Fast Fourier Transform Made Easy!
-          </a>
-         </h4>
-         <div>
-          <p>
-           2 December 2025
-          </p>
-          <p>
-           It all started back in 2021 when I saw this problem on Kattis that asks you to multiply two polynomials. Given the constraints, directly multiplying them (like how people would in mathematics...
-          </p>
-         </div>
-        </article>
-        <article>
-         <h4>
-          <a href="graph-realization-made-easy.html">
-           Graph Realization Made Easy!
-          </a>
-         </h4>
-         <div>
-          <p>
-           3 November 2025
-          </p>
-          <p>
-           This article serves as a detailed breakdown of the code provided in pytils. The degree sequence of a graph is defined as a non-increasing sequence of the graph's vertex degrees, where the degree of...
-          </p>
-         </div>
-        </article>
-        <article>
-         <h4>
-          <a href="clash-of-champions-pythonized.html">
-           Clash of Champions Season 2, Pythonized
-          </a>
-         </h4>
-         <div>
-          <p>
-           30 September 2025
-          </p>
-          <p>
-           It's been a month since the second season of Clash of Champions' final episode. While the games were entertaining and the questions were interesting to try out along, I decided to take things up a...
-          </p>
-         </div>
-        </article>
-        <article>
-         <h4>
-          <a href="telebot-army-is-an-absolute-cinema.html">
-           Telebot army is an absolute cinema
-          </a>
-         </h4>
-         <div>
-          <p>
-           6 August 2025
-          </p>
-          <p>
-           It was the COVID era where everything was online, thus the rise of Telegram scammers trying to add random users to a particular set of scam and/or spam investment group chats. It was very...
-          </p>
-         </div>
-        </article>
-        <article>
-         <h4>
-          <a href="why-python-recursion-sucks.html">
-           Why Python recursion sucks for competitive programming
-          </a>
-         </h4>
-         <div>
-          <p>
-           1 July 2025
-          </p>
-          <p>
-           Having done several competitive programming (CP) problems in pure Python, it is safe to say that recursion is worse for most instances, especially for problems with tight memory or time limit....
-          </p>
-         </div>
-        </article>
-        <article>
-         <h4>
-          <a href="kattis-of-the-week.html">
-           Kattis of the Week
-          </a>
-         </h4>
-         <div>
-          <p>
-           4 September 2024
-          </p>
-          <p>
-           Since I am no longer teaching CS2040 (Data Structures and Algorithms) as an undergraduate teaching assistant in NUS, I thought it would be nice to dump some additional Kattis problems here...
-          </p>
-         </div>
-        </article>
-        <article>
-         <h4>
-          <a href="fenwick-trees-made-easy.html">
-           Fenwick Trees Made Easy!
-          </a>
-         </h4>
-         <div>
-          <p>
-           28 July 2024
-          </p>
-          <p>
-           Let's start with an array $A$ of size $N$, each entry is initially zero. Suppose that over time, I want to support these operations on the array: We can do this naively with a single for loop,...
-          </p>
-         </div>
-        </article>
-        <article>
-         <h4>
-          <a href="pareto-fronts-made-easy.html">
-           Pareto Fronts Made Easy!
-          </a>
-         </h4>
-         <div>
-          <p>
-           22 July 2024
-          </p>
-          <p>
-           Suppose you have a set $S$ of $N$ different objects, each object having different scores for a particular set of metrics. Suppose we ask ourselves this question: How does one select as many objects...
-          </p>
-         </div>
-        </article>
-        <article>
-         <h4>
-          <a href="the-nine-point-circle.html">
-           The Nine-point Circle
-          </a>
-         </h4>
-         <div>
-          <p>
-           28 February 2024
-          </p>
-          <p>
-           Let us start off with a simple triangle $\triangle ABC$. We draw the altitudes for each respective vertex, intersecting the corresponding sides at $H_A, H_B, H_C$. It is a well-known fact that...
-          </p>
-         </div>
-        </article>
-        <article>
-         <h4>
-          <a href="uni-interview-prep.html">
-           Uni Interview Prep
-          </a>
-         </h4>
-         <div>
-          <p>
-           14 January 2024
-          </p>
-          <p>
-           The original article was written in 23 June 2020 and was written mainly based on my own opinion. I will mainly discuss about NUS and NTU scholarships interviews. Other universities' may go the same...
-          </p>
-         </div>
-        </article>
+        </div>
+        <div id="posts-container">
+         <article>
+          <h4>
+           <a href="build-a-geoguessr-clone-with-firebase-studio.html">
+            Build a GeoGuessr Clone with Firebase Studio
+           </a>
+          </h4>
+          <div>
+           <p>
+            1 January 2026 • 18 minutes read
+           </p>
+           <p>
+            Happy new year, everyone! I'm kicking off the year by sticking to my monthly writing goal in this website. I think it's a good way of documenting the interesting things I encountered during my...
+           </p>
+           <div class="article-tags">
+            <button class="tag-label-btn" data-tag="ai">
+             ai
+            </button>
+            <button class="tag-label-btn" data-tag="llm">
+             llm
+            </button>
+            <button class="tag-label-btn" data-tag="webdev">
+             webdev
+            </button>
+           </div>
+          </div>
+         </article>
+         <article>
+          <h4>
+           <a href="advent-of-code-golf-2025.html">
+            Advent of Code(golf) 2025
+           </a>
+          </h4>
+          <div>
+           <p>
+            12 December 2025 • 40 minutes read
+           </p>
+           <p>
+            I have been doing Advent of Code (AOC) since 2021 and have completed all questions from 2015 as of writing this article. While the initial goal was to learn new languages (like Haskell and Rust), I...
+           </p>
+           <div class="article-tags">
+            <button class="tag-label-btn" data-tag="advent-of-code">
+             advent-of-code
+            </button>
+            <button class="tag-label-btn" data-tag="python">
+             python
+            </button>
+            <button class="tag-label-btn" data-tag="code-golf">
+             code-golf
+            </button>
+           </div>
+          </div>
+         </article>
+         <article>
+          <h4>
+           <a href="fast-fourier-transform-made-easy.html">
+            Fast Fourier Transform Made Easy!
+           </a>
+          </h4>
+          <div>
+           <p>
+            2 December 2025 • 30 minutes read
+           </p>
+           <p>
+            It all started back in 2021 when I saw this problem on Kattis that asks you to multiply two polynomials. Given the constraints, directly multiplying them (like how people would in mathematics...
+           </p>
+           <div class="article-tags">
+            <button class="tag-label-btn" data-tag="algorithms">
+             algorithms
+            </button>
+            <button class="tag-label-btn" data-tag="math">
+             math
+            </button>
+            <button class="tag-label-btn" data-tag="python">
+             python
+            </button>
+            <button class="tag-label-btn" data-tag="competitive-programming">
+             competitive-programming
+            </button>
+           </div>
+          </div>
+         </article>
+         <article>
+          <h4>
+           <a href="graph-realization-made-easy.html">
+            Graph Realization Made Easy!
+           </a>
+          </h4>
+          <div>
+           <p>
+            3 November 2025 • 27 minutes read
+           </p>
+           <p>
+            This article serves as a detailed breakdown of the code provided in pytils. The degree sequence of a graph is defined as a non-increasing sequence of the graph's vertex degrees, where the degree of...
+           </p>
+           <div class="article-tags">
+            <button class="tag-label-btn" data-tag="algorithms">
+             algorithms
+            </button>
+            <button class="tag-label-btn" data-tag="data-structures">
+             data-structures
+            </button>
+            <button class="tag-label-btn" data-tag="python">
+             python
+            </button>
+            <button class="tag-label-btn" data-tag="graphs">
+             graphs
+            </button>
+            <button class="tag-label-btn" data-tag="competitive-programming">
+             competitive-programming
+            </button>
+           </div>
+          </div>
+         </article>
+         <article>
+          <h4>
+           <a href="clash-of-champions-pythonized.html">
+            Clash of Champions Season 2, Pythonized
+           </a>
+          </h4>
+          <div>
+           <p>
+            30 September 2025 • 17 minutes read
+           </p>
+           <p>
+            It's been a month since the second season of Clash of Champions' final episode. While the games were entertaining and the questions were interesting to try out along, I decided to take things up a...
+           </p>
+           <div class="article-tags">
+            <button class="tag-label-btn" data-tag="python">
+             python
+            </button>
+            <button class="tag-label-btn" data-tag="backtracking">
+             backtracking
+            </button>
+           </div>
+          </div>
+         </article>
+         <article>
+          <h4>
+           <a href="telebot-army-is-an-absolute-cinema.html">
+            Telebot army is an absolute cinema
+           </a>
+          </h4>
+          <div>
+           <p>
+            6 August 2025 • 7 minutes read
+           </p>
+           <p>
+            It was the COVID era where everything was online, thus the rise of Telegram scammers trying to add random users to a particular set of scam and/or spam investment group chats. It was very...
+           </p>
+           <div class="article-tags">
+            <button class="tag-label-btn" data-tag="telegram-bot">
+             telegram-bot
+            </button>
+            <button class="tag-label-btn" data-tag="telebot">
+             telebot
+            </button>
+            <button class="tag-label-btn" data-tag="python">
+             python
+            </button>
+           </div>
+          </div>
+         </article>
+         <article>
+          <h4>
+           <a href="why-python-recursion-sucks.html">
+            Why Python recursion sucks for competitive programming
+           </a>
+          </h4>
+          <div>
+           <p>
+            1 July 2025 • 9 minutes read
+           </p>
+           <p>
+            Having done several competitive programming (CP) problems in pure Python, it is safe to say that recursion is worse for most instances, especially for problems with tight memory or time limit....
+           </p>
+           <div class="article-tags">
+            <button class="tag-label-btn" data-tag="python">
+             python
+            </button>
+            <button class="tag-label-btn" data-tag="algorithms">
+             algorithms
+            </button>
+            <button class="tag-label-btn" data-tag="data-structures">
+             data-structures
+            </button>
+            <button class="tag-label-btn" data-tag="competitive-programming">
+             competitive-programming
+            </button>
+           </div>
+          </div>
+         </article>
+         <article>
+          <h4>
+           <a href="kattis-of-the-week.html">
+            Kattis of the Week
+           </a>
+          </h4>
+          <div>
+           <p>
+            4 September 2024 • 11 minutes read
+           </p>
+           <p>
+            Since I am no longer teaching CS2040 (Data Structures and Algorithms) as an undergraduate teaching assistant in NUS, I thought it would be nice to dump some additional Kattis problems here...
+           </p>
+           <div class="article-tags">
+            <button class="tag-label-btn" data-tag="kattis">
+             kattis
+            </button>
+            <button class="tag-label-btn" data-tag="cs2040">
+             cs2040
+            </button>
+            <button class="tag-label-btn" data-tag="data-strutures">
+             data-strutures
+            </button>
+            <button class="tag-label-btn" data-tag="algorithms">
+             algorithms
+            </button>
+           </div>
+          </div>
+         </article>
+         <article>
+          <h4>
+           <a href="fenwick-trees-made-easy.html">
+            Fenwick Trees Made Easy!
+           </a>
+          </h4>
+          <div>
+           <p>
+            28 July 2024 • 7 minutes read
+           </p>
+           <p>
+            Let's start with an array $A$ of size $N$, each entry is initially zero. Suppose that over time, I want to support these operations on the array: We can do this naively with a single for loop,...
+           </p>
+           <div class="article-tags">
+            <button class="tag-label-btn" data-tag="algorithms">
+             algorithms
+            </button>
+            <button class="tag-label-btn" data-tag="data-structures">
+             data-structures
+            </button>
+            <button class="tag-label-btn" data-tag="competitive-programming">
+             competitive-programming
+            </button>
+           </div>
+          </div>
+         </article>
+         <article>
+          <h4>
+           <a href="pareto-fronts-made-easy.html">
+            Pareto Fronts Made Easy!
+           </a>
+          </h4>
+          <div>
+           <p>
+            22 July 2024 • 5 minutes read
+           </p>
+           <p>
+            Suppose you have a set $S$ of $N$ different objects, each object having different scores for a particular set of metrics. Suppose we ask ourselves this question: How does one select as many objects...
+           </p>
+           <div class="article-tags">
+            <button class="tag-label-btn" data-tag="algorithms">
+             algorithms
+            </button>
+            <button class="tag-label-btn" data-tag="data-structures">
+             data-structures
+            </button>
+            <button class="tag-label-btn" data-tag="competitive-programming">
+             competitive-programming
+            </button>
+           </div>
+          </div>
+         </article>
+         <article>
+          <h4>
+           <a href="the-nine-point-circle.html">
+            The Nine-point Circle
+           </a>
+          </h4>
+          <div>
+           <p>
+            28 February 2024 • 3 minutes read
+           </p>
+           <p>
+            Let us start off with a simple triangle $\triangle ABC$. We draw the altitudes for each respective vertex, intersecting the corresponding sides at $H_A, H_B, H_C$. It is a well-known fact that...
+           </p>
+           <div class="article-tags">
+            <button class="tag-label-btn" data-tag="math">
+             math
+            </button>
+            <button class="tag-label-btn" data-tag="geometry">
+             geometry
+            </button>
+           </div>
+          </div>
+         </article>
+         <article>
+          <h4>
+           <a href="uni-interview-prep.html">
+            Uni Interview Prep
+           </a>
+          </h4>
+          <div>
+           <p>
+            14 January 2024 • 10 minutes read
+           </p>
+           <p>
+            The original article was written in 23 June 2020 and was written mainly based on my own opinion. I will mainly discuss about NUS and NTU scholarships interviews. Other universities' may go the same...
+           </p>
+           <div class="article-tags">
+            <button class="tag-label-btn" data-tag="tips">
+             tips
+            </button>
+            <button class="tag-label-btn" data-tag="university">
+             university
+            </button>
+           </div>
+          </div>
+         </article>
+        </div>
+        <div id="pagination-controls">
+        </div>
+        <div id="pagination-controls">
+        </div>
+        <div id="pagination-controls">
+        </div>
        </div>
-      </div>
+      </header>
      </div>
     </section>
     <!-- Footer -->

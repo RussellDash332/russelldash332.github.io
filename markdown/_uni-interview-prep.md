@@ -1,6 +1,8 @@
 # Uni Interview Prep
 14 January 2024
 
+[tag]: tips, university
+
 > The original article was written in 23 June 2020 and was written mainly based on my own opinion.
 
 I will mainly discuss about NUS and NTU scholarships interviews. Other universities' may go the same way.

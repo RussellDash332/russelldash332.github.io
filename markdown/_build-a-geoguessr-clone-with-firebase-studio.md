@@ -1,6 +1,8 @@
 # Build a GeoGuessr Clone with Firebase Studio
 1 January 2026
 
+[tag]: ai, llm, webdev
+
 Happy new year, everyone!
 
 I'm kicking off the year by sticking to my monthly writing goal in this website. I think it's a good way of documenting the interesting things I encountered during my learning journey, or maybe just the technical side quests I've embarked on.
