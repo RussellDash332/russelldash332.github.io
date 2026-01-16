@@ -3792,11 +3792,11 @@ html[data-theme="dark"] .tag-label-btn:hover {
   align-items: center;
   gap: 8px;
   margin: 40px 0;
-  font-family: "Lato", sans-serif;
+  font-size: inherit;
 }
 
 .page-btn {
-  font-family: "Lato", sans-serif;
+  font-family: inherit;
   border: 0px;
   background: #efefef;
   color: var(--text-color, #333);
