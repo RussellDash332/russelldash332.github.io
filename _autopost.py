@@ -123,8 +123,10 @@ filter_section.append(search_wrapper)
 
 posts_container.insert_before(filter_section)
 
-pagination_container = soup.new_tag("div", id="pagination-controls")
-posts_container.insert_after(pagination_container)
+pagination_section = soup.find('div', id='pagination-controls')
+if not pagination_section:
+    pagination_container = soup.new_tag("div", id="pagination-controls")
+    posts_container.insert_after(pagination_container)
 
 for date, title, date_text, html_fn, md_soup_p, tags in sorted(posts, reverse=True):
     if html_fn.startswith('_'): continue

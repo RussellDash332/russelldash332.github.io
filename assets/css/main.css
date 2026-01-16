@@ -3756,7 +3756,8 @@ html[data-theme="dark"] #search-bar {
 
 .tag-label-btn {
   background: var(--tag-bg, #f0f0f0);
-  font-family: "Lato", sans-serif;
+  font-family: inherit;
+  font-size: inherit;
   color: var(--tag-text, #444);
   border: none;
   padding: 3px 10px;

@@ -651,7 +651,11 @@ window.addEventListener("DOMContentLoaded", () => {
             
             const searchableContent = `${titleText} ${innerContent} ${articleTags.join(" ")}`;
 
-            const matchesSearch = queryWords.length === 0 || queryWords.every(word => searchableContent.includes(word));
+            const matchesSearch = queryWords.length === 0 || queryWords.every(word => {
+                const regex = new RegExp(`\\b${word}\\b`, 'i');
+                return regex.test(searchableContent);
+            });
+            
             const matchesCategory = (activeCategory === "all" || articleTags.includes(activeCategory));
 
             return matchesSearch && matchesCategory;
