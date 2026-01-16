@@ -3797,6 +3797,7 @@ html[data-theme="dark"] .tag-label-btn:hover {
 
 .page-btn {
   font-family: inherit;
+  font-size: inherit;
   border: 0px;
   background: #efefef;
   color: var(--text-color, #333);
