@@ -544,7 +544,7 @@ def mult(p1, p2):
     values = [ntt1[i]*ntt2[i]%M for i in range(n)]
     tmp = ntt(values, True)
     inv_n = pow(n, -1, M)
-    return [ntt[i]*inv_n%M for i in range(m)]
+    return [tmp[i]*inv_n%M for i in range(m)]
 
 def ntt(p, inv):
     n = len(p)
