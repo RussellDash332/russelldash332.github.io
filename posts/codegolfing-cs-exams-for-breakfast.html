@@ -1,0 +1,356 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<title>Codegolfing CS Exams for Breakfast</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+<link href="../assets/css/main.css" rel="stylesheet"/>
+<link href="../media/russell.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+            ],
+            throwOnError: false,
+            strict: false,
+        });
+    });
+    </script>
+</head>
+<body class="is-preload">
+<section id="header">
+<header>
+<a class="active" href="https://russelldash332.github.io/">
+<span class="image avatar"><img alt="" src="../media/profile.jpg"/></span>
+<h1 id="logo">Russell Saerang</h1>
+</a>
+<p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
+</header>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#codegolfing-cs-exams-for-breakfast">Codegolfing CS Exams...</a></li><li><a href="#question-1" style="font-size: 0.95em; font-weight: 500;">Question 1</a></li><li><a href="#question-2a" style="font-size: 0.95em; font-weight: 500;">Question 2A</a></li><li><a href="#question-2b" style="font-size: 0.95em; font-weight: 500;">Question 2B</a></li><li><a href="#question-3" style="font-size: 0.95em; font-weight: 500;">Question 3</a></li></ul></nav>
+<footer>
+<ul class="icons">
+<li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
+<li><a class="icon brands fa-instagram" href="https://www.instagram.com/russellsaerang2702/" rel="noopener noreferrer" target="_blank"><span class="label">Instagram</span></a></li>
+<li><a class="icon brands fa-github" href="https://github.com/RussellDash332/" rel="noopener noreferrer" target="_blank"><span class="label">Github</span></a></li>
+<li><a class="icon brands fa-medium-m" href="https://medium.com/@russellsaerang" rel="noopener noreferrer" target="_blank"><span class="label">Medium</span></a></li>
+<li><a class="icon solid fa-envelope" href="mailto:russellsaerang@gmail.com"><span class="label">Email</span></a></li>
+</ul>
+</footer>
+</section>
+<div id="wrapper">
+<div id="main">
+<section id="post">
+<div class="image main" data-position="center">
+<img alt="" src="../media/banner.jpg"/>
+</div>
+<div class="container"><div class="post-container"><h2 id="codegolfing-cs-exams-for-breakfast">Codegolfing CS Exams for Breakfast</h2>
+<div class="date"><p>1 February 2026</p></div>
+
+<p>Let's just say this is an old habit that dies hard and therefore worth another write-up.</p>
+<p>As of the moment of writing, NUS CS1010A (then CS1010S) practical exams always come in 4 questions of the following format:</p>
+<ol>
+<li><strong>Question 1</strong>: Recursion or iteration - no O(1) closed-form formula allowed, you need to use either recursion, iteration, or mix of both</li>
+<li><strong>Question 2A</strong>: Working with CSV files to answer a query that can be solved in a linear pass, e.g. how many entries satisfy a given criteria</li>
+<li><strong>Question 2B</strong>: Working with CSV files to provide a top-K list of some metric, e.g. top 5 average grouped by a specific column</li>
+<li><strong>Question 3</strong>: Object-oriented programming - design one or more classes to simulate stuff</li>
+</ol>
+<blockquote>
+<p>The current CS1010S might have a different question format by now, but the same strategies that I'll be explaining also apply.</p>
+</blockquote>
+<p>And every time, I will always to try to solve these questions with as few characters as possible, on top of minimizing the number of lines of code used. Isn't that a nice side quest?</p>
+<p>For this month's write-up, I will cover different codegolfing strategies for each question, which you might have not known before.</p>
+<h3 id="question-1">Question 1</h3>
+<p>It is almost always better to use recursion when golfing this kind of question. Let's use the vanilla Fibonacci as an example.</p>
+<pre><code class="language-python">def fib(n):
+    if n &lt; 2: return 1
+    return fib(n-1)+fib(n-2)
+</code></pre>
+<p>We then convert into a lambda function like such. Note that lambda functions are always shorter than functions defined with <code>def</code>.</p>
+<pre><code class="language-python">fib=lambda n:1 if n&lt;2 else fib(n-1)+fib(n-2)
+</code></pre>
+<p>We can remove the spaces before <code>if</code>/<code>and</code>/<code>or</code>/<code>else</code> if the previous thing is a number, like <code>0.1if</code>, but <strong>not after</strong>, like <code>else 1.3</code>. However, you can remove the space after if the following is a dash, bracket, or tilde, such as <code>else-1.2</code>, <code>if(x+1)**.5</code> and <code>or~3</code>. Note that this may trigger syntax warnings when run locally with Python 3.11 and above.</p>
+<pre><code class="language-python">fib=lambda n:1if n&lt;2else fib(n-1)+fib(n-2)
+</code></pre>
+<p>Finally, we can save a few characters yet again by renaming the function to something else, yet still maintaining the name of the original function to define.</p>
+<pre><code class="language-python">fib=f=lambda n:1if n&lt;2else f(n-1)+f(n-2)
+</code></pre>
+<p>Note that using lists won't work because Python will have to compute all the entries of the list beforehand.</p>
+<pre><code class="language-python">fib=f=lambda n:[f(n-1)+f(n-2),1][n&lt;2] # doesn't work!
+</code></pre>
+<p>Another one is the use of the <code>~</code> symbol on integers, which means bit inversion, but also equivalently <code>~x == -x-1</code>. You can play around with this like the following three examples to redefine <code>x-1</code> and <code>x+1</code> and save some brackets.</p>
+<pre><code class="language-python">x=sum(i for i in range(n))
+x=n*(n-1)//2
+x=n*~-n//2
+
+x=(n-1)*a+(n+1)*b
+x=~-n*a+-~n*b
+
+from math import*;x=ceil(a/b)
+x=(a+b-1)//b
+x=~-a//b+1
+</code></pre>
+<h3 id="question-2a">Question 2A</h3>
+<p>Normally, you would do something like this (or you would be taught as such). Note that the function <code>read_csv</code> has been defined for you: takes in a CSV filename, and then converts it into <strong>a list of list of strings</strong> of the corresponding content.</p>
+<pre><code class="language-python">def find_something(csv_filename, group):
+    r = read_csv(csv_filename)[1:] # trim header row
+    ans = 0
+    for row in r:
+        if row[3] == group and int(row[4]) &gt; ...:
+            ans += int(row[5])
+    return ans
+</code></pre>
+<p>You can combine the entire <code>for</code> loop and the conditional checks as a aggregate comprehension.</p>
+<div class="aocgolf">
+<pre><code class="language-python">def find_something(csv_filename, group):
+    return sum(int(row[5]) for row in read_csv(csv_filename)[1:] if row[3]==group and int(row[4])&gt;...)
+</code></pre>
+</div>
+<p>Almost everytime, multiple boolean checks can be combined into one, especially when the value types are different. Another example when all of them are numbers is <code>a&gt;1&lt;b</code> to check for both <code>a</code> and <code>b</code> being larger than 1.</p>
+<div class="aocgolf">
+<pre><code class="language-python">def find_something(f,g):
+    return sum(int(r[5]) for r in read_csv(f)[1:] if r[3]==g!=int(r[4])&gt;...)
+</code></pre>
+</div>
+<p>Finally, we can cut down the unnecessary spaces and convert this into a one-line lambda function. There are two alternatives for what I think is the shortest code for this example.</p>
+<div class="aocgolf">
+<pre><code class="language-python">find_something=lambda f,g:sum(int(r[5])for r in read_csv(f)[1:]if r[3]==g!=int(r[4])&gt;...)
+find_something=lambda f,g:sum(int(r[5])*(r[3]==g!=int(r[4])&gt;...)for r in read_csv(f)[1:])
+find_something=lambda f,g:sum(int(u)*(s==g!=int(t)&gt;...)for p,q,r,s,t,u in read_csv(f)[1:])
+</code></pre>
+</div>
+<p>The third one involves the sequence unpacking strategy, though it makes the code longer for this example, but for fewer columns it should be the better approach.</p>
+<h3 id="question-2b">Question 2B</h3>
+<p>Top k! Using the same CSV file, we will have to usually aggregate the data into a grouped data structure, and then do some sorting with it. The code will usually go something like this.</p>
+<pre><code class="language-python">def top_k_stuff(csv_filename, group, k):
+    r = read_csv(csv_filename)[1:] # trim header row
+    grouped = {}
+    for row in r:
+        if row[3] == group:
+            key = row[2]
+            if key not in grouped: grouped[key] = []
+            grouped[key].append(float(row[5]))
+
+    # suppose I want to top K average (rounded to 2dp) among these groups, from highest to lowest
+    for key in grouped:
+        grouped[key] = round(sum(grouped[key])/len(grouped[key]), 2)
+
+    # convert into sorted list
+    sorted_group = sorted(grouped.items(), key=lambda x: x[1], reverse=True)
+
+    # resolve for ties or big k
+    if k &gt;= len(sorted_group):
+        return sorted_group
+    idx = k
+    while idx &lt; len(sorted_group) and sorted_group[idx][1] == sorted_group[k][1]: idx += 1
+    return sorted_group[:idx]
+</code></pre>
+<p>Alright... where do we start? Maybe by shortening the aggregation to the <code>grouped</code> dictionary?</p>
+<pre><code class="language-python">def top_k_stuff(f, g, k):
+    grouped = {}
+    for row in read_csv(f)[1:]:
+        if row[3] == g:
+            grouped.update({row[2]:grouped.get(row[2],[])+[float(row[5])]})
+    ...
+</code></pre>
+<p>Let's use <code>dict.setdefault</code> and change <code>float</code> to <code>eval</code> to save 1 character, maybe add in sequence unpacking as well, if the first few columns or the last few columns aren't used, you can use the <code>*args</code> operator.</p>
+<pre><code class="language-python">def top_k_stuff(f, g, k):
+    grouped = {}
+    for *_,r,s,_,u,*_ in read_csv(f)[1:]:
+        if s==g:
+            grouped.setdefault(r,[]).append(eval(u))
+    ...
+</code></pre>
+<p>And now, use the walrus operator to combine the entire part into a single line of code. You can remove the <code>[1:]</code> slicing if the conditional check doesn't involve having to convert the header column into a number.</p>
+<div class="aocgolf">
+<pre><code class="language-python">def top_k_stuff(f, g, k):
+    # alternatively
+    [grouped:={},[s!=g or grouped.setdefault(r,[]).append(eval(u))for*_,r,s,_,u,*_ in read_csv(f)]]
+    # let's use this instead!
+    [grouped:={},[grouped.setdefault(r,[]).append(eval(u))for*_,r,s,_,u,*_ in read_csv(f)if s==g]]
+    ...
+</code></pre>
+</div>
+<p>The next part is to convert the dictionary into the sorted average values as required. Notice how I used <code>y,v</code> instead of <code>for k,v in grouped.items()</code> because it will clash with the vaue <code>k</code> provided in the function signature. The items stored in <code>sorted_group</code> will be slightly altered but will be reverted back on the next part, and this is because using <code>key=lambda</code> takes more character most of the time.</p>
+<div class="aocgolf">
+<pre><code class="language-python"># before
+def top_k_stuff(f, g, k):
+    ...
+    for key in grouped:
+        grouped[key] = round(sum(grouped[key])/len(grouped[key]), 2)
+    sorted_group = sorted(grouped.items(), key=lambda x: x[1], reverse=True) # (k1, v1), (k2, v2)
+    ...
+
+# after
+def top_k_stuff(f, g, k):
+    ...
+    sorted_group = sorted((-round(sum(v)/len(v),2),y)for y,v in grouped.items()) # (-v1, k1), (-v2, k2)
+    ...
+</code></pre>
+</div>
+<p>Finally, dealing with the top-k, the ties, and the big k cases. Note that slicing to index <code>k</code> regardless of how big it is will not cause an error, so the idea is to slice to that index, and the last element in this list is either the last element, or the $k$-th element. Then, we do a linear pass to compare every other value with this "last" element.</p>
+<p>Due to the previous part changing the format of what's stored in <code>sorted_group</code>, we have to address that too.</p>
+<div class="aocgolf">
+<pre><code class="language-python"># before
+def top_k_stuff(f, g, k):
+    ...
+    if k &gt;= len(sorted_group):
+        return sorted_group
+    idx = k
+    while idx &lt; len(sorted_group) and sorted_group[idx][1] == sorted_group[k][1]: idx += 1
+    return sorted_group[:idx]
+
+# after
+def top_k_stuff(f, g, k):
+    ...
+    return [(b,-a)for a,b in sorted_group if a&lt;=sorted_group[:k][-1][0]]
+</code></pre>
+</div>
+<p>Remember that <code>sorted_group</code> stores a list of $[(-v_1,k_1),(-v_2,k_2),\cdots]$, so <code>sorted_group[:k][-1][0]</code> will be the <strong>negative</strong> of the threshold average, which is why the inequality sign is <code>&lt;=</code> instead of <code>&gt;=</code>.</p>
+<p>Combining all three parts will leave us with a much shorter code.</p>
+<div class="aocgolf">
+<pre><code class="language-python">def top_k_stuff(f, g, k):
+    [grouped:={},[grouped.setdefault(r,[]).append(eval(u))for*_,r,s,_,u,*_ in read_csv(f)if s==g]]
+    sorted_group = sorted((-round(sum(v)/len(v),2),y)for y,v in grouped.items())
+    return [(b,-a)for a,b in sorted_group if a&lt;=sorted_group[:k][-1][0]]
+</code></pre>
+</div>
+<p>We can combine all of these things into a single list, and then we can convert it into a lambda function. The index 3 in the end is there because after combining, the list to return is the fourth element.</p>
+<div class="aocgolf">
+<pre><code class="language-python"># separated into one element per line for readability
+def top_k_stuff(f, g, k):
+    return[G:={},
+           [G.setdefault(r,[]).append(eval(u))for*_,r,s,_,u,*_ in read_csv(f)if s==g],
+           S:=sorted((-round(sum(v)/len(v),2),y)for y,v in grouped.items()),
+           [(b,-a)for a,b in S if a&lt;=S[:k][-1][0]]
+    ][3]
+
+# final version
+top_k_stuff=lambda f,g,k:[G:={},[G.setdefault(r,[]).append(eval(u))for*_,r,s,_,u,*_ in read_csv(f)if s==g],S:=sorted((-round(sum(v)/len(v),2),y)for y,v in grouped.items()),[(b,-a)for a,b in S if a&lt;=S[:k][-1][0]]][3]
+</code></pre>
+</div>
+<h3 id="question-3">Question 3</h3>
+<p>My favorite question to explore the shortest alternative on.</p>
+<p>While this question will never be done with just a single line of code due to the declaration(s) of the class(es), I find converting the methods into lambda functions interesting yet sacrilegious. Anyways, had to do what I have to do.</p>
+<p>Suppose we have a simple class definition like this.</p>
+<pre><code class="language-python">class Code:
+    def __init__(self, name):
+        self.name = name
+        self.golfed = False
+    def get_name(self):
+        return self.name
+    def is_golfed(self):
+        return self.golfed
+    def golf(self):
+        if self.is_golfed():
+            return f'{self.get_name()} has been golfed'
+        else:
+            self.golfed = True
+            return f'Time to shorten {self.get_name()}'
+</code></pre>
+<p>Starting easy, we shorten all the variable names.</p>
+<pre><code class="language-python">class Code:
+    def __init__(s,n):
+        s.n=n
+        s.g=False
+    def get_name(s):
+        return s.n
+    def is_golfed(s):
+        return s.g
+    def golf(s):
+        if s.is_golfed():
+            return f'{s.get_name()} has been golfed'
+        else:
+            s.g = True
+            return f'Time to shorten {s.get_name()}'
+</code></pre>
+<p>Convert all getter functions into lambda functions stored as the class attributes.</p>
+<div class="aocgolf">
+<pre><code class="language-python">class Code:
+    def __init__(s,n):s.n=n;s.g=False;s.get_name=lambda:s.n;s.is_golfed=lambda:s.g
+    def golf(s):
+        if s.is_golfed():
+            return f'{s.get_name()} has been golfed'
+        else:
+            s.g = True
+            return f'Time to shorten {s.get_name()}'
+</code></pre>
+</div>
+<p>Golfing the <code>golf</code> function is the last piece of the puzzle, and we need to set an attribute's value into something else in that function. To do this, there are three ways to do so:</p>
+<ul>
+<li>Leaving it as is, if it happens to be shorter.</li>
+<li>Using <code>setattr</code> built-in function.</li>
+</ul>
+<div class="aocgolf">
+<pre><code class="language-python">    class Code:
+    def __init__(s,n):s.n=n;s.g=False;s.get_name=lambda:s.n;s.is_golfed=lambda:s.g
+    def golf(s):
+        if s.is_golfed():
+            return f'{s.get_name()} has been golfed'
+        else:
+            setattr(s,'g',True);return f'Time to shorten {s.get_name()}'
+</code></pre>
+</div>
+<ul>
+<li>Changing how the attribute is stored, for example: a list. Some setter functions might be affected, so you need to watch out for those, too.</li>
+</ul>
+<div class="aocgolf">
+<pre><code class="language-python">class Code:
+    def __init__(s,n):s.n=n;s.g=[];s.get_name=lambda:s.n;s.is_golfed=lambda:bool(s.g)
+    def golf(s):
+        if s.is_golfed():
+            return f'{s.get_name()} has been golfed'
+        else:
+            s.g.append(1);return f'Time to shorten {s.get_name()}'
+</code></pre>
+</div>
+<p>Assuming we use the latter approach, we can now combine it into a single list, or even convert it into a lambda function and therefore an attribute.</p>
+<div class="aocgolf">
+<pre><code class="language-python">class Code:
+    def __init__(s,n):s.n=n;s.g=[];s.get_name=lambda:s.n;s.is_golfed=lambda:bool(s.g)
+    def golf(s):
+        return s.get_name()+' has been golfed'if s.is_golfed()else s.g.append(1)or'Time to shorten '+s.get_name()
+
+# final version
+class Code:
+ def __init__(s,n):s.n=n;s.g=[];s.get_name=lambda:s.n;s.is_golfed=lambda:bool(s.g);s.golf=lambda:s.get_name()+' has been golfed'if s.is_golfed()else s.g.append(1)or'Time to shorten '+s.get_name()
+</code></pre>
+</div>
+<p>And there we have it, the entire class in just <strong>two</strong> lines of code! I think this is just the very basic idea of golfing OOP, but certain approaches need to be experimented because they are not always the best alternative, which is why it's hard to nail it within only a few attempts.</p>
+<blockquote>
+<p>You can find the list of my attempts to golf all of the past CS1010A/S questions <a href="https://github.com/RussellDash332/golf">here</a>.</p>
+</blockquote></div></div>
+</section>
+<section id="footer">
+<div class="container">
+<ul class="copyright">
+<li>© Russell Saerang 2025. All rights reserved.</li>
+<li>Design: <a href="http://html5up.net" rel="noopener noreferrer" target="_blank">HTML5 UP</a></li>
+<li>Illustration: <a href="http://linkedin.com" rel="noopener noreferrer" target="_blank">LinkedIn</a> and <a href="http://unsplash.com" rel="noopener noreferrer" target="_blank">Unsplash</a></li>
+</ul>
+</div>
+</section>
+</div>
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/jquery.scrollex.min.js"></script>
+<script src="../assets/js/jquery.scrolly.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
+<link href="../assets/css/highlight.min.css" rel="stylesheet"/>
+<script src="../assets/js/highlight.min.js"></script>
+<script>hljs.highlightAll(); hljs.addPlugin(
+        new CopyButtonPlugin({
+            autohide: false,
+            callback: (text, el) => console.log("Copied to clipboard", text),
+    }));
+</script>
+</div></body>
+</html>
