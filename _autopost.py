@@ -25,7 +25,7 @@ for path, dirs, files in os.walk('markdown'):
     for file in files:
         if file.endswith('.md'):
             markdown_content = open(os.path.join(path, file), encoding='utf-8').read().replace('../posts/media', 'media').replace('align*', 'align\*').replace('\\'*2, '\\'*3).replace('\\left\\{', '\\left\\\\{').replace('\\right\\}', '\\right\\\\}')
-            md2html_content = md2html(markdown_content)
+            md2html_content = md2html(markdown_content).replace('align\*', 'align*')
             md_soup = BeautifulSoup(md2html_content, 'html.parser')
 
             tags = []
