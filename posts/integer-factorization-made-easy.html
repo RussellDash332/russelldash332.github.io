@@ -94,7 +94,7 @@ a contradiction to our earlier assumption that there isn't a factor $x$ such tha
 <p>Think about it this way: if we want to factorize $n$, then intuitively from what we've known so far, we can just iterate for all prime numbers up to the "current value" $n$, and then keep dividing until $n$ is equal to $1$. But, does checking for primality in every number we iterate an effective way?</p>
 <p>Using the $O(\sqrt{n})$ checker we had previously, and then iterating for each number up to $n$ will take $O(n^\frac{3}{2})$ time, which is extremely expensive.</p>
 <p>If we can somehow precompute the list of all primes effectively, checking <code>is_prime</code> can be done in $O(1)$ by member checking, and therefore future <code>factorize</code> queries can be done in just $O(n)$ time. This is where the sieve of Eratosthenes comes in.</p>
-<p>Here's the ELI5 of how the sieve works: arrange the first $n$ numbers on a table initially all marked as prime, and iterate from $i = 2, 3, \ldots n$: if $i$ is marked, keep $i$ marked as prime and unmark all the following multiples of $i$ as they are not prime. In the end, you will have all the prime numbers up to $n$.</p>
+<p><strong>Here's the ELI5 of how the sieve works</strong>: arrange the first $n$ numbers on a table initially all marked as prime, and iterate from $i = 2, 3, \ldots n$: if $i$ is marked, keep $i$ marked as prime and unmark all the following multiples of $i$, as they are not prime. In the end, you will have all the prime numbers up to $n$.</p>
 <p>Let's see how the sieve works for $n = 67$.</p>
 <ul>
 <li>

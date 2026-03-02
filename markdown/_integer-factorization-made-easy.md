@@ -64,7 +64,7 @@ Using the $O(\sqrt{n})$ checker we had previously, and then iterating for each n
 
 If we can somehow precompute the list of all primes effectively, checking `is_prime` can be done in $O(1)$ by member checking, and therefore future `factorize` queries can be done in just $O(n)$ time. This is where the sieve of Eratosthenes comes in.
 
-Here's the ELI5 of how the sieve works: arrange the first $n$ numbers on a table initially all marked as prime, and iterate from $i = 2, 3, \ldots n$: if $i$ is marked, keep $i$ marked as prime and unmark all the following multiples of $i$ as they are not prime. In the end, you will have all the prime numbers up to $n$.
+**Here's the ELI5 of how the sieve works**: arrange the first $n$ numbers on a table initially all marked as prime, and iterate from $i = 2, 3, \ldots n$: if $i$ is marked, keep $i$ marked as prime and unmark all the following multiples of $i$, as they are not prime. In the end, you will have all the prime numbers up to $n$.
 
 Let's see how the sieve works for $n = 67$.
 
