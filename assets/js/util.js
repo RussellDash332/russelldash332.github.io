@@ -651,9 +651,10 @@ window.addEventListener("DOMContentLoaded", () => {
             
             const searchableContent = `${titleText} ${innerContent} ${articleTags.join(" ")}`;
 
+            // RELAXED MATCHING: 
+            // Removed \b boundaries to allow partial word matching (e.g., "fenwi" matches "fenwick")
             const matchesSearch = queryWords.length === 0 || queryWords.every(word => {
-                const regex = new RegExp(`\\b${word}\\b`, 'i');
-                return regex.test(searchableContent);
+                return searchableContent.includes(word);
             });
             
             const matchesCategory = (activeCategory === "all" || articleTags.includes(activeCategory));
