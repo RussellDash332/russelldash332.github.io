@@ -754,3 +754,157 @@ window.addEventListener("DOMContentLoaded", () => {
 
     filterPosts();
 });
+
+window.addEventListener("DOMContentLoaded", () => {
+    const modal = document.createElement("dialog");
+    modal.id = "global-image-modal";
+    modal.style.cssText = "border:none; background:transparent; padding:0; width:100vw; height:100vh; max-width:100vw; max-height:100vh; outline:none; overflow:hidden; box-sizing:border-box;";
+    
+    const wrapper = document.createElement("div");
+    wrapper.style.cssText = "display:flex; align-items:center; justify-content:center; width:100%; height:100%; box-sizing:border-box; overflow:hidden; position:relative;";
+
+    const modalImg = document.createElement("img");
+    modalImg.id = "global-modal-img";
+    modalImg.style.cssText = "display:block; max-width:95vw; max-height:95vh; object-fit:contain; border-radius:4px; cursor:grab; user-select:none; -webkit-user-drag:none; transform-origin: 0px 0px; position:absolute;";
+    
+    wrapper.appendChild(modalImg);
+    modal.appendChild(wrapper);
+    document.body.appendChild(modal);
+
+    let currentScale = 1;
+    let isDragging = false;
+    let startX, startY;
+    let translateX = 0, translateY = 0;
+    let initialWidth = 0, initialHeight = 0;
+
+    const clampTranslations = (x, y) => {
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const scaledWidth = initialWidth * currentScale;
+        const scaledHeight = initialHeight * currentScale;
+
+        let minX, maxX, minY, maxY;
+
+        if (scaledWidth <= wrapperRect.width) {
+            minX = (wrapperRect.width - scaledWidth) / 2;
+            maxX = minX;
+        } else {
+            minX = wrapperRect.width - scaledWidth;
+            maxX = 0;
+        }
+
+        if (scaledHeight <= wrapperRect.height) {
+            minY = (wrapperRect.height - scaledHeight) / 2;
+            maxY = minY;
+        } else {
+            minY = wrapperRect.height - scaledHeight;
+            maxY = 0;
+        }
+
+        return {
+            x: Math.max(minX, Math.min(x, maxX)),
+            y: Math.max(minY, Math.min(y, maxY))
+        };
+    };
+
+    const updateTransform = () => {
+        modalImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
+    };
+
+    const resetZoom = () => {
+        currentScale = 1;
+        modalImg.style.transform = "none";
+        modalImg.style.left = "auto";
+        modalImg.style.top = "auto";
+        translateX = 0;
+        translateY = 0;
+        setTimeout(() => {
+            const rect = modalImg.getBoundingClientRect();
+            const wrapperRect = wrapper.getBoundingClientRect();
+            initialWidth = rect.width;
+            initialHeight = rect.height;
+            translateX = rect.left - wrapperRect.left;
+            translateY = rect.top - wrapperRect.top;
+            modalImg.style.left = "0px";
+            modalImg.style.top = "0px";
+            updateTransform();
+        }, 0);
+    };
+
+    document.addEventListener("click", (e) => {
+        if (e.target.tagName === "IMG" && !e.target.closest("#global-image-modal")) {
+            modalImg.src = e.target.src;
+            modalImg.alt = e.target.alt;
+            resetZoom();
+            modal.showModal();
+            document.body.style.overflow = "hidden"; 
+        }
+    });
+
+    modalImg.addEventListener("click", (e) => {
+        e.stopPropagation();
+    });
+
+    modal.addEventListener("click", () => {
+        modal.close();
+        document.body.style.overflow = ""; 
+    });
+
+    modal.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const mouseX = e.clientX - wrapperRect.left;
+        const mouseY = e.clientY - wrapperRect.top;
+
+        const imageX = (mouseX - translateX) / currentScale;
+        const imageY = (mouseY - translateY) / currentScale;
+
+        const zoomIntensity = 0.1;
+        
+        if (e.deltaY < 0) {
+            currentScale += zoomIntensity;
+        } else {
+            currentScale -= zoomIntensity;
+        }
+        currentScale = Math.max(1, Math.min(currentScale, 6));
+
+        let targetX = mouseX - imageX * currentScale;
+        let targetY = mouseY - imageY * currentScale;
+
+        const clamped = clampTranslations(targetX, targetY);
+        translateX = clamped.x;
+        translateY = clamped.y;
+
+        updateTransform();
+    }, { passive: false });
+
+    modalImg.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        modalImg.style.cursor = "grabbing";
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+    });
+
+    window.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        let targetX = e.clientX - startX;
+        let targetY = e.clientY - startY;
+
+        const clamped = clampTranslations(targetX, targetY);
+        translateX = clamped.x;
+        translateY = clamped.y;
+
+        updateTransform();
+    });
+
+    window.addEventListener("mouseup", () => {
+        if (isDragging) {
+            isDragging = false;
+            modalImg.style.cursor = "grab";
+        }
+    });
+
+    modal.addEventListener("cancel", () => {
+        document.body.style.overflow = "";
+    });
+});

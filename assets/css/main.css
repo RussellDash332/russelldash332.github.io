@@ -3882,3 +3882,16 @@ html[data-theme="dark"] input:-ms-input-placeholder {
   color: #333 !important;
   opacity: 0.5;
 }
+
+img {
+  cursor: zoom-in;
+}
+
+#global-image-modal {
+  background-color: transparent;
+}
+
+#global-image-modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(6px);
+}
