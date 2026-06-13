@@ -215,7 +215,7 @@ for _ in range(Q):
 sys.stdout.write('\n'.join(ZZ))
 ```
 
-The overall complexity should be $O((N+Q) \log N)$ since the time it takes to set up the segment tree is $O(N \log N)$ and then $O(Q \log N)$ to deal with the $Q$ operations, just with a constant factor due to sorting of two arrays of length 4 over and over. I did a sneaky 67 there :)
+The overall complexity should be $O((N+Q) \log N)$ since the time it takes to set up the segment tree is $O(N \log N)$ and then $O(Q \log N)$ to deal with the $Q$ operations, just with a high constant factor due to sorting of two arrays of length 4 over and over. I did a sneaky 67 there :)
 
 Alternatively, you can just use a treap... (Benedict, if you're reading this, send help)
 
@@ -368,7 +368,7 @@ Turns out, what I was missing is the need for **divide-and-conquer**! You can st
 
 If $N$ if odd, we can agree that we can simply apply the transition $S_{N} = S_{N-1} + N^P \cdot E^N$. However, the fun part comes when $N$ is even, say $N = 2k$.
 
-Note that using the binomial theorem,
+Note that using the binomial theorem and the magic of sigma notations,
 
 $$
 \begin{align*}

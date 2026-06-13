@@ -221,7 +221,7 @@ for _ in range(Q):
         else: ZZ.append('TIDAK')
 sys.stdout.write('\n'.join(ZZ))
 </code></pre>
-<p>The overall complexity should be $O((N+Q) \log N)$ since the time it takes to set up the segment tree is $O(N \log N)$ and then $O(Q \log N)$ to deal with the $Q$ operations, just with a constant factor due to sorting of two arrays of length 4 over and over. I did a sneaky 67 there :)</p>
+<p>The overall complexity should be $O((N+Q) \log N)$ since the time it takes to set up the segment tree is $O(N \log N)$ and then $O(Q \log N)$ to deal with the $Q$ operations, just with a high constant factor due to sorting of two arrays of length 4 over and over. I did a sneaky 67 there :)</p>
 <p>Alternatively, you can just use a treap... (Benedict, if you're reading this, send help)</p>
 <h3 id="semifinal-problem-d">Semifinal: Problem D</h3>
 <p>The abridged problem statement is this. You can also find the official problem statement in <a href="https://codeforces.com/gym/106530/problem/D">this Codeforces mirror contest</a>.</p>
@@ -341,7 +341,7 @@ print(sum(Z)*pow(2, -1, MOD)%MOD)
 <p>During the livestream, I was thinking of using <a href="https://en.wikipedia.org/wiki/Faulhaber%27s_formula">Faulhaber's formula</a> to resolve the power sum, but I realize it's not enough as I still have $N$ terms decomposed in a different way, so clearly I can't just bash a freaky formula to end this once and for all. Another problem is that I cannot use inverse modulo since $M$ is not always a prime number!</p>
 <p>Turns out, what I was missing is the need for <strong>divide-and-conquer</strong>! You can start by denoting the sum as $S_N$, so what I have to do express $S_N$ in terms of something like $S_{\frac{N}{2}}$, and we can resolve the issue when $N$ is odd pretty easily.</p>
 <p>If $N$ if odd, we can agree that we can simply apply the transition $S_{N} = S_{N-1} + N^P \cdot E^N$. However, the fun part comes when $N$ is even, say $N = 2k$.</p>
-<p>Note that using the binomial theorem,</p>
+<p>Note that using the binomial theorem and the magic of sigma notations,</p>
 <p>$$
 \begin{align*}
 S_{2k} &amp;= (1^P \cdot E^1 + 2^P \cdot E^2 + \cdots + k^P \cdot E^k) + ((1+k)^P \cdot E^{1+k} + (2+k)^P \cdot E^{2+k} + \cdots + (k+k)^P \cdot E^{k+k}) \\
