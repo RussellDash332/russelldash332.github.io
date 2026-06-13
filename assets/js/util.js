@@ -777,6 +777,13 @@ window.addEventListener("DOMContentLoaded", () => {
     let translateX = 0, translateY = 0;
     let initialWidth = 0, initialHeight = 0;
 
+    // Mobile touch tracking states
+    let touchStartDist = 0;
+    let touchStartScale = 1;
+    let touchStartMidX = 0, touchStartMidY = 0;
+    let touchStartTranslateX = 0, touchStartTranslateY = 0;
+    let isTouchDragging = false;
+
     const clampTranslations = (x, y) => {
         const wrapperRect = wrapper.getBoundingClientRect();
         const scaledWidth = initialWidth * currentScale;
@@ -878,6 +885,7 @@ window.addEventListener("DOMContentLoaded", () => {
         updateTransform();
     }, { passive: false });
 
+    // Desktop Mouse Drag Handling
     modalImg.addEventListener("mousedown", (e) => {
         isDragging = true;
         modalImg.style.cursor = "grabbing";
@@ -901,6 +909,80 @@ window.addEventListener("DOMContentLoaded", () => {
         if (isDragging) {
             isDragging = false;
             modalImg.style.cursor = "grab";
+        }
+    });
+
+    // Mobile Touch Handling (Pan & Pinch-to-Zoom)
+    modalImg.addEventListener("touchstart", (e) => {
+        if (e.touches.length === 1) {
+            isTouchDragging = true;
+            startX = e.touches[0].clientX - translateX;
+            startY = e.touches[0].clientY - translateY;
+        } else if (e.touches.length === 2) {
+            isTouchDragging = false;
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            touchStartDist = Math.hypot(dx, dy);
+            touchStartScale = currentScale;
+
+            const wrapperRect = wrapper.getBoundingClientRect();
+            touchStartMidX = ((e.touches[0].clientX + e.touches[1].clientX) / 2) - wrapperRect.left;
+            touchStartMidY = ((e.touches[0].clientY + e.touches[1].clientY) / 2) - wrapperRect.top;
+            touchStartTranslateX = translateX;
+            touchStartTranslateY = translateY;
+        }
+    }, { passive: true });
+
+    modalImg.addEventListener("touchmove", (e) => {
+        if (e.touches.length === 1 && isTouchDragging) {
+            let targetX = e.touches[0].clientX - startX;
+            let targetY = e.touches[0].clientY - startY;
+
+            const clamped = clampTranslations(targetX, targetY);
+            translateX = clamped.x;
+            translateY = clamped.y;
+            updateTransform();
+        } else if (e.touches.length === 2) {
+            e.preventDefault(); // Inhibits native window elastic scrolling/zooming
+
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            const dist = Math.hypot(dx, dy);
+
+            let factor = dist / touchStartDist;
+            currentScale = touchStartScale * factor;
+            currentScale = Math.max(1, Math.min(currentScale, 6));
+
+            const imageX = (touchStartMidX - touchStartTranslateX) / touchStartScale;
+            const imageY = (touchStartMidY - touchStartTranslateY) / touchStartScale;
+
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const currentMidX = ((e.touches[0].clientX + e.touches[1].clientX) / 2) - wrapperRect.left;
+            const currentMidY = ((e.touches[0].clientY + e.touches[1].clientY) / 2) - wrapperRect.top;
+
+            let targetX = currentMidX - imageX * currentScale;
+            let targetY = currentMidY - imageY * currentScale;
+
+            const clamped = clampTranslations(targetX, targetY);
+            translateX = clamped.x;
+            translateY = clamped.y;
+            updateTransform();
+        }
+    }, { passive: false });
+
+    window.addEventListener("touchend", (e) => {
+        isTouchDragging = false;
+        if (e.touches.length === 1) {
+            isTouchDragging = true;
+            startX = e.touches[0].clientX - translateX;
+            startY = e.touches[0].clientY - translateY;
+        }
+    }, { passive: true });
+
+    // Handle Orientation Flip & Browser Resizes Fluidly
+    window.addEventListener("resize", () => {
+        if (modal.open) {
+            resetZoom();
         }
     });
 
