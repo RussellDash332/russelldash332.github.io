@@ -1,0 +1,338 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<title>Lobotomizing my dynamic segment tree</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+<link href="../assets/css/main.css" rel="stylesheet"/>
+<link href="../media/russell.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+            ],
+            throwOnError: false,
+            strict: false,
+        });
+    });
+    </script>
+</head>
+<body class="is-preload">
+<section id="header">
+<header>
+<a class="active" href="https://russelldash332.github.io/">
+<span class="image avatar"><img alt="" src="../media/profile.jpg"/></span>
+<h1 id="logo">Russell Saerang</h1>
+</a>
+<p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
+</header>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#lobotomizing-my-dynamic-segment-tree">Lobotomizing my...</a></li><li><a href="#removing-oop" style="font-size: 0.95em; font-weight: 500;">Removing OOP</a></li><li><a href="#removing-recursion" style="font-size: 0.95em; font-weight: 500;">Removing recursion</a></li><li><a href="#handling-binary-functions" style="font-size: 0.95em; font-weight: 500;">Handling binary functions</a></li></ul></nav>
+<footer>
+<ul class="icons">
+<li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
+<li><a class="icon brands fa-instagram" href="https://www.instagram.com/russellsaerang2702/" rel="noopener noreferrer" target="_blank"><span class="label">Instagram</span></a></li>
+<li><a class="icon brands fa-github" href="https://github.com/RussellDash332/" rel="noopener noreferrer" target="_blank"><span class="label">Github</span></a></li>
+<li><a class="icon brands fa-medium-m" href="https://medium.com/@russellsaerang" rel="noopener noreferrer" target="_blank"><span class="label">Medium</span></a></li>
+<li><a class="icon solid fa-envelope" href="mailto:russellsaerang@gmail.com"><span class="label">Email</span></a></li>
+</ul>
+</footer>
+</section>
+<div id="wrapper">
+<div id="main">
+<section id="post">
+<div class="image main" data-position="center">
+<img alt="" src="../media/banner.jpg"/>
+</div>
+<div class="container"><div class="post-container"><h2 id="lobotomizing-my-dynamic-segment-tree">Lobotomizing my dynamic segment tree</h2>
+<div class="date"><p>1 July 2026</p></div>
+
+<p>Following my "hiccup" in CAT2026's preliminary round batch 2 while solving problem D, I've come to realize that my Python dynamic segment tree was still very suboptimal. Understandably, the original intention of coding that was to come up with a simple extension of the normal segment tree where you still have to use an pre-configured array of size some multiple of $N$, that's lame.</p>
+<pre><code class="language-python">class Node:
+    def __init__(s, l, r):
+        s.l = l; s.r = r; s.lc = s.rc = None; s.s = s.z = 0
+    def push(s):
+        if s.l == s.r: return
+        mi = (s.l+s.r)//2
+        if not s.lc: s.lc = Node(s.l, mi); s.rc = Node(mi+1, s.r)
+        s.lc.s += s.z*(mi-s.l+1); s.lc.z += s.z; s.rc.s += s.z*(s.r-mi); s.rc.z += s.z; s.z = 0
+    def add(s, lq, rq, v):
+        if s.l &gt; rq or s.r &lt; lq: return
+        if s.l &gt;= lq and s.r &lt;= rq: s.s += v*(s.r-s.l+1); s.z += v; return
+        s.push(); s.lc.add(lq, rq, v); s.rc.add(lq, rq, v); s.s = s.lc.s+s.rc.s
+    def get(s, lq, rq):
+        if s.l &gt; rq or s.r &lt; lq: return 0
+        if s.l &gt;= lq and s.r &lt;= rq: return s.s
+        s.push(); return s.lc.get(lq, rq)+s.rc.get(lq, rq)
+</code></pre>
+<p>Moreover, as shown above, this dynamic segment tree only works for range add and range sum operations, which is why this implementation is still very limited. There were some Kattis problems where my solution makes use of this dynamic segment tree, but the binary function being completely replaced manually.</p>
+<p><a href="https://open.kattis.com/problems/fibonaccigjof">Fibonacci Gjöf</a>, where you treat each segment as a $2 \times 2$ matrix. Update by range-multiply every value in range by a matrix, and query the matrix sum on an interval.</p>
+<pre><code class="language-python">def madd(x, y):
+    return (x[0]+y[0])%M, (x[1]+y[1])%M, (x[2]+y[2])%M, (x[3]+y[3])%M
+
+def mmul(x, y):
+    return (x[0]*y[0]+x[1]*y[2])%M, (x[0]*y[1]+x[1]*y[3])%M, (x[2]*y[0]+x[3]*y[2])%M, (x[2]*y[1]+x[3]*y[3])%M
+
+class Node:
+    def __init__(s, l, r):
+        s.l = l; s.r = r; s.lc = s.rc = None; s.s = s.z = 1, 0, 0, 1
+    def push(s):
+        if s.l == s.r: return
+        mi = (s.l+s.r)//2
+        if not s.lc: s.lc = Node(s.l, mi); s.rc = Node(mi+1, s.r)
+        s.lc.s = mmul(s.lc.s, s.z); s.lc.z = mmul(s.lc.z, s.z); s.rc.s = mmul(s.rc.s, s.z); s.rc.z = mmul(s.rc.z, s.z); s.z = 1, 0, 0, 1
+    def add(s, lq, rq, v):
+        if s.l &gt; rq or s.r &lt; lq: return
+        if s.l &gt;= lq and s.r &lt;= rq: s.s = mmul(s.s, v); s.z = mmul(s.z, v); return
+        s.push(); s.lc.add(lq, rq, v); s.rc.add(lq, rq, v); s.s = madd(s.lc.s, s.rc.s)
+    def get(s, lq, rq):
+        if s.l &gt; rq or s.r &lt; lq: return 0, 0, 0, 0
+        if s.l &gt;= lq and s.r &lt;= rq: return s.s
+        s.push(); return madd(s.lc.get(lq, rq), s.rc.get(lq, rq))
+</code></pre>
+<p><a href="https://open.kattis.com/problems/queryonarray">Another Query on Array Problem</a>, which stores each segment as a vector of 4 integers to keep track of some power sum. Some variables are not defined here because that's not related to the current topic.</p>
+<pre><code class="language-python">def make(lm1, r, v):
+    return (v[0]*(r-lm1)%M, v[1]*(A[r]-A[lm1])%M, v[2]*(B[r]-B[lm1])%M, v[3]*(C[r]-C[lm1])%M)
+
+def vadd(v1, v2):
+    v1[0] = (v1[0]+v2[0])%M; v1[1] = (v1[1]+v2[1])%M; v1[2] = (v1[2]+v2[2])%M; v1[3] = (v1[3]+v2[3])%M
+
+class Node:
+    def __init__(s, l, r):
+        s.l = l; s.r = r; s.lc = s.rc = None; s.s = [0]*4; s.z = [0]*4
+    def push(s):
+        if s.l == s.r: return
+        mi = (s.l+s.r)//2
+        if not s.lc: s.lc = Node(s.l, mi); s.rc = Node(mi+1, s.r)
+        vadd(s.lc.s, make(s.l-1, mi, s.z)); vadd(s.lc.z, s.z)
+        vadd(s.rc.s, make(mi, s.r, s.z)); vadd(s.rc.z, s.z)
+        s.z[0] = s.z[1] = s.z[2] = s.z[3] = 0
+    def add(s, lq, rq, v):
+        if s.l &gt; rq or s.r &lt; lq: return
+        if s.l &gt;= lq and s.r &lt;= rq: vadd(s.s, make(s.l-1, s.r, v)); vadd(s.z, v); return
+        s.push(); s.lc.add(lq, rq, v); s.rc.add(lq, rq, v)
+        s.s[0] = s.s[1] = s.s[2] = s.s[3] = 0
+        vadd(s.s, s.lc.s); vadd(s.s, s.rc.s)
+    def get(s, lq, rq, t):
+        if s.l &gt; rq or s.r &lt; lq: return
+        if s.l &gt;= lq and s.r &lt;= rq: return vadd(t, s.s)
+        s.push(); s.lc.get(lq, rq, t); s.rc.get(lq, rq, t)
+</code></pre>
+<p><a href="https://open.kattis.com/problems/japaneselottery">Japanese Lottery</a>, where you treat each segment as a permutation of the first $N$ positive integers. Both update and query use permutation functions. Weirdest one so far.</p>
+<pre><code class="language-python">class Node:
+    def __init__(s, l, r, w):
+        s.l = l; s.r = r; s.lc = s.rc = None; s.s = [*range(w)]
+    def push(s):
+        if s.l == s.r: return
+        if not s.lc: s.lc = Node(s.l, mi:=(s.l+s.r)//2, w); s.rc = Node(mi+1, s.r, w)
+    def add(s, p, v):
+        if s.l == s.r == p: s.s[v[0]], s.s[v[1]] = s.s[v[1]], s.s[v[0]]; return
+        s.push(); s.lc.add(p, v) if p &lt;= (s.l+s.r)//2 else s.rc.add(p, v); s.s = [s.rc.s[i] for i in s.lc.s]
+    def get(s, lq, rq):
+        if s.l &gt; rq or s.r &lt; lq: return 0
+        if s.l &gt;= lq and s.r &lt;= rq: return s.s
+        s.push(); rr = s.rc.get(lq, rq); return [rr[i] for i in s.lc.get(lq, rq)]
+</code></pre>
+<p>After seeing the three examples above, one can see that there isn't any general pattern to specify the binary function and/or the lazy propagation handling.</p>
+<p>In this article, I will try to optimize the original dynamic segment tree code that I've had for years, and refactor until I feel like it. You can also find out the finalized result <a href="https://github.com/RussellDash332/pytils/blob/main/segment_tree_dynamic.py">here</a> if you're too lazy to read.</p>
+<h3 id="removing-oop">Removing OOP</h3>
+<p>To do so, we can store the left values, right values, the pointer to left/right child, sum value, and lazy value; all on separate arrays. Instead of passing the object, we pass the index referring to the segment in the array. My current code assumes the use of just a single segment tree, so if you happens to have more segment trees, you have to reset the arrays or share the contents cleverly.</p>
+<pre><code class="language-python">L = []; R = []; LC = []; RC = []; S = []; Z = []
+
+def create(l, r):
+    L.append(l); R.append(r); LC.append(-1); RC.append(-1); S.append(0); Z.append(0)
+    return len(L)-1
+
+def push(i):
+    l = L[i]; r = R[i]
+    if l == r: return
+    mi = (l+r)&gt;&gt;1
+    if LC[i] &lt; 0: LC[i] = create(l, mi); RC[i] = create(mi+1, r)
+    lc = LC[i]; rc = RC[i]; z = Z[i]
+    S[lc] += z*(mi-l+1); S[rc] += z*(r-mi)  # propagate sums
+    Z[lc] += z; Z[rc] += z; Z[i] = 0        # propagate lazy values
+
+def add(lq, rq, v, i=0):
+    l = L[i]; r = R[i]
+    if l &gt; rq or r &lt; lq: return
+    if l &gt;= lq and r &lt;= rq: S[i] += v*(r-l+1); Z[i] += v; return
+    push(i)
+    add(lq, rq, v, lc:=LC[i]); add(lq, rq, v, rc:=RC[i])
+    S[i] = S[lc]+S[rc]
+
+def get(lq, rq, i=0):
+    l = L[i]; r = R[i]
+    if l &gt; rq or r &lt; lq: return 0
+    if l &gt;= lq and r &lt;= rq: return S[i]
+    push(i)
+    return get(lq, rq, LC[i])+get(lq, rq, RC[i])
+
+# example
+T = create(0, 10**9) # should return 0
+add(10, 200, -60)
+add(100, 300, 67)
+print(get(9, 12))    # -180
+print(get(190, 201)) # 144
+print(get(140, 140)) # 7
+print(get(0, 10**9)) # 2007
+</code></pre>
+<h3 id="removing-recursion">Removing recursion</h3>
+<p>This is very doable, based on what I mentioned in my <a href="https://russelldash332.github.io/posts/why-python-recursion-sucks.html">previous article</a> long time ago. The challenge is on how to separate the preprocessing and the postprocessing part (if any).</p>
+<pre><code class="language-python">def add(lq, rq, v, i=0):
+    stk = [(i, 0)]
+    while stk:
+        i, b = stk.pop()
+        if b&gt;0:
+            S[i] = S[LC[i]]+S[RC[i]] # combine
+        else:
+            l = L[i]; r = R[i]
+            if l &gt; rq or r &lt; lq: continue
+            if l &gt;= lq and r &lt;= rq:
+                S[i] += v*(r-l+1)
+                Z[i] += v
+                continue
+            push(i)
+            stk.append((i, 1)); stk.append((LC[i], 0)); stk.append((RC[i], 0)) # recursion branch
+
+def get(lq, rq, i=0):
+    stk = [(i, 0)]; tmp = []
+    while stk:
+        i, b = stk.pop()
+        if b&gt;0:
+            tmp.append(tmp.pop()+tmp.pop())
+        else:
+            l = L[i]; r = R[i]
+            if l &gt; rq or r &lt; lq: tmp.append(0); continue
+            if l &gt;= lq and r &lt;= rq: tmp.append(S[i]); continue
+            push(i)
+            stk.append((i, 1)); stk.append((LC[i], 0)); stk.append((RC[i], 0)) # recursion branch
+    return tmp[0]
+</code></pre>
+<p>Since we're adding <code>(LC[i], 0)</code> first then <code>(RC[i], 0)</code> into the stack <code>stk</code>, the value <code>(RC[i], 0)</code> will be handled earlier and its corresponding result is therefore added into <code>tmp</code> earlier. Thus, when doing <code>tmp.pop()+tmp.pop()</code>, the first term is actually the one from <code>(LC[i], 0)</code>.</p>
+<h3 id="handling-binary-functions">Handling binary functions</h3>
+<p>Probably the most challenging part. Given the aforementioned Kattis problems above, how can I incorporate the two recent changes to tackle this constraint?</p>
+<p>Maybe, we'll start with a combiner function, that takes in two values (ideally from a segment's two children), and returns the value of combining both values.</p>
+<pre><code class="language-python">def combine(a, b):
+    return a+b # for range sum
+</code></pre>
+<p>Next, an accumulator. You need an initial value, and once you have obtained the combined value, you have to accumulate this to that initial value until it becomes the final result. Alternatively, you can have three separate accumulators to handle the propagations of $S_{lc}$, $S_{rc}$, and $Z$, but I personally think this is not an urgent requirement.</p>
+<pre><code class="language-python">INITIAL_VALUE = 0
+def accumulate(a, b):
+    return a+b # for range sum
+</code></pre>
+<p>I will now rename <code>add</code> to <code>update</code>, so bringing back the <code>create</code> and <code>push</code> functions, we'll have something like this.</p>
+<pre><code class="language-python">L = []; R = []; LC = []; RC = []; S = []; Z = []
+
+# to be modified
+def combine(a, b):
+    return a+b
+
+# to be modified
+INITIAL_VALUE = 0
+def accumulate(a, b):
+    return a+b
+
+def create(l, r):
+    L.append(l); R.append(r); LC.append(-1); RC.append(-1); S.append(INITIAL_VALUE); Z.append(INITIAL_VALUE)
+    return len(L)-1
+
+def push(i):
+    l = L[i]; r = R[i]
+    if l == r: return
+    mi = (l+r)&gt;&gt;1
+    if LC[i] &lt; 0: LC[i] = create(l, mi); RC[i] = create(mi+1, r)
+    lc = LC[i]; rc = RC[i]; z = Z[i]
+    # to be modified
+    S[lc] = accumulate(S[lc], z*(mi-l+1)); S[rc] = accumulate(S[rc], z*(r-mi))
+    Z[lc] = accumulate(Z[lc], z); Z[rc] = accumulate(Z[rc], z)
+    Z[i] = INITIAL_VALUE
+
+def update(lq, rq, v, i=0):
+    stk = [(i, 0)]
+    while stk:
+        i, b = stk.pop()
+        if b&gt;0: S[i] = combine(S[LC[i]], S[RC[i]])
+        else:
+            l = L[i]; r = R[i]
+            if l &gt; rq or r &lt; lq: continue
+            if l &gt;= lq and r &lt;= rq:
+                # to be modified
+                S[i] = accumulate(S[i], v*(r-l+1)); Z[i] = accumulate(Z[i], v)
+                continue
+            push(i); stk.append((i, 1)); stk.append((LC[i], 0)); stk.append((RC[i], 0))
+
+def get(lq, rq, i=0):
+    stk = [(i, 0)]; tmp = []
+    while stk:
+        i, b = stk.pop()
+        if b&gt;0: tmp.append(combine(tmp.pop(), tmp.pop()))
+        else:
+            l = L[i]; r = R[i]
+            if l &gt; rq or r &lt; lq: tmp.append(INITIAL_VALUE); continue
+            if l &gt;= lq and r &lt;= rq: tmp.append(S[i]); continue
+            push(i); stk.append((i, 1)); stk.append((LC[i], 0)); stk.append((RC[i], 0))
+    return tmp[0]
+
+# example
+T = create(0, 10**9) # should return 0
+update(10, 200, -60)
+update(100, 300, 67)
+print(get(9, 12))    # -180
+print(get(190, 201)) # 144
+print(get(140, 140)) # 7
+print(get(0, 10**9)) # 2007
+</code></pre>
+<p>I think this should be enough, let's see how can we modify this template for the three aforementioned Kattis problems.</p>
+<ul>
+<li>
+<p><a href="https://open.kattis.com/problems/fibonaccigjof">Fibonacci Gjöf</a></p>
+<p>Keep the original definition of <code>madd</code> and <code>mmul</code>. The combiner is <code>madd</code>, the accumulator is <code>mmul</code> with the same value passed for both <code>S</code> and <code>Z</code> arrays (as opposed to range sum which needs to be differentiated). The initial value is simply the tuple <code>(0, 0, 0, 0)</code>.</p>
+</li>
+<li>
+<p><a href="https://open.kattis.com/problems/queryonarray">Another Query on Array Problem</a></p>
+<p>The <code>vadd</code> function in my example is a void function, but I can make it return a tuple/list to represent the vector, and then use this as the combiner. The accumulator is also <code>vadd</code>. The initial value can be kept at <code>[0]*4</code>. Similar to the original range sum, you might need to modify what to pass on <code>vadd</code> at the <code>push</code> function.</p>
+</li>
+<li>
+<p><a href="https://open.kattis.com/problems/japaneselottery">Japanese Lottery</a></p>
+<p>Initial value will be <code>[*range(w)]</code>, where <code>w</code> is already given in the input. The accumulator will be something like <code>accumulate(s, v) -&gt; swap s[v[0]] and s[v[1]]</code>, and the combiner will be the permutation function <code>combine(p, q) -&gt; [q[i] for i in p]</code>. The handling of <code>lq</code> and <code>rq</code> in the <code>update</code> function is slightly different, but that shouldn't be a big deal.</p>
+</li>
+<li>
+<p><strong>BONUS:</strong> <a href="https://codeforces.com/gym/106515/problem/D">CAT2026's Isomorphic Operations</a>, also available at <a href="https://russelldash332.github.io/posts/cat-2026-favorite-problems.html#preliminary-batch-2-problem-d">my article last month</a></p>
+<p>Initial value for an interval $[L, R]$ is <code>(0, 0, 0, 0, R-L+1)</code> to store $h_A, h_B, h_C, h_D$, and the length of this segment. The lazy array $Z$ is mainly used to lazily store the value of $n_\text{shift}$. The accumulator will rotate the four hash values based on the value of $n_\text{shift}$, while the combiner function will combine the hash of the two smaller strings, making use of the string lengths in order to offset the prime power of the first string.</p>
+</li>
+</ul>
+<p>Yep, I'm committing this change to <a href="https://github.com/RussellDash332/pytils/blob/main/segment_tree_dynamic.py">pytils</a>...</p></div></div>
+</section>
+<section id="footer">
+<div class="container">
+<ul class="copyright">
+<li>© Russell Saerang 2026. All rights reserved.</li>
+<li>Design: <a href="http://html5up.net" rel="noopener noreferrer" target="_blank">HTML5 UP</a></li>
+<li>Illustration: <a href="http://linkedin.com" rel="noopener noreferrer" target="_blank">LinkedIn</a> and <a href="http://unsplash.com" rel="noopener noreferrer" target="_blank">Unsplash</a></li>
+</ul>
+</div>
+</section>
+</div>
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/jquery.scrollex.min.js"></script>
+<script src="../assets/js/jquery.scrolly.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
+<link href="../assets/css/highlight.min.css" rel="stylesheet"/>
+<script src="../assets/js/highlight.min.js"></script>
+<script>hljs.highlightAll(); hljs.addPlugin(
+        new CopyButtonPlugin({
+            autohide: false,
+            callback: (text, el) => console.log("Copied to clipboard", text),
+    }));
+</script>
+</div></body>
+</html>
