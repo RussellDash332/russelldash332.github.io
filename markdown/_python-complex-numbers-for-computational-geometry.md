@@ -286,4 +286,4 @@ def chull(pts):
 
 ---
 
-That is all for now, I hope you have at least slightly more idea of how complex numbers work in Python, especially when it comes to computational geometry!
+That is all for now! There are possibly other applications that involve more `cmath` like the usage of `cmath.phase` instead of using `math.atan` or `math.atan2`, but I hope you have at least slightly more idea of how complex numbers work in Python, especially when it comes to computational geometry!
