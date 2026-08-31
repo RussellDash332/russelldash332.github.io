@@ -1,0 +1,263 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<title>Python complex numbers for computational geometry</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+<link href="../assets/css/main.css" rel="stylesheet"/>
+<link href="../media/russell.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+            ],
+            throwOnError: false,
+            strict: false,
+        });
+    });
+    </script>
+</head>
+<body class="is-preload">
+<section id="header">
+<header>
+<a class="active" href="https://russelldash332.github.io/">
+<span class="image avatar"><img alt="" src="../media/profile.jpg"/></span>
+<h1 id="logo">Russell Saerang</h1>
+</a>
+<p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
+</header>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#python-complex-numbers-for-computational-geometry">Python complex numbers...</a></li><li><a href="#motivation" style="font-size: 0.95em; font-weight: 500;">Motivation</a></li><li><a href="#the-norm" style="font-size: 0.95em; font-weight: 500;">The Norm</a></li><li><a href="#dot-product" style="font-size: 0.95em; font-weight: 500;">Dot Product</a></li><li><a href="#cross-product" style="font-size: 0.95em; font-weight: 500;">Cross Product</a></li><li><a href="#rotation" style="font-size: 0.95em; font-weight: 500;">Rotation</a></li><li><a href="#projection" style="font-size: 0.95em; font-weight: 500;">Projection</a></li><li><a href="#line-intersection" style="font-size: 0.95em; font-weight: 500;">Line Intersection</a></li><li><a href="#polygon-area" style="font-size: 0.95em; font-weight: 500;">Polygon Area</a></li><li><a href="#circle-tangents" style="font-size: 0.95em; font-weight: 500;">Circle Tangents</a></li><li><a href="#circle-circle-intersection" style="font-size: 0.95em; font-weight: 500;">Circle-circle...</a></li><li><a href="#circumcenter" style="font-size: 0.95em; font-weight: 500;">Circumcenter</a></li><li><a href="#collinearity" style="font-size: 0.95em; font-weight: 500;">Collinearity</a></li><li><a href="#convex-hull" style="font-size: 0.95em; font-weight: 500;">Convex Hull</a></li></ul></nav>
+<footer>
+<ul class="icons">
+<li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
+<li><a class="icon brands fa-instagram" href="https://www.instagram.com/russellsaerang2702/" rel="noopener noreferrer" target="_blank"><span class="label">Instagram</span></a></li>
+<li><a class="icon brands fa-github" href="https://github.com/RussellDash332/" rel="noopener noreferrer" target="_blank"><span class="label">Github</span></a></li>
+<li><a class="icon brands fa-medium-m" href="https://medium.com/@russellsaerang" rel="noopener noreferrer" target="_blank"><span class="label">Medium</span></a></li>
+<li><a class="icon solid fa-envelope" href="mailto:russellsaerang@gmail.com"><span class="label">Email</span></a></li>
+</ul>
+</footer>
+</section>
+<div id="wrapper">
+<div id="main">
+<section id="post">
+<div class="image main" data-position="center">
+<img alt="" src="../media/banner.jpg"/>
+</div>
+<div class="container"><div class="post-container"><h2 id="python-complex-numbers-for-computational-geometry">Python complex numbers for computational geometry</h2>
+<div class="date"><p>31 August 2026</p></div>
+
+<p>Sorry that I had to write this closer to the end of the month! I have been busy grinding Kattis and my actual irl work stuff, but the storm is starting to settle down and I can finally sit down and writing this peacefully.</p>
+<p>This month's topic will be friendlier than usual, as we go through some applications of complex numbers especially when it comes to solving <strong>computational geometry</strong> problems, which people consider as a big pain to deal with due to precision issues. However, this write-up with focus more on the simplicity of the implementation rather than the precision of the result, so bear with me on that one.</p>
+<h3 id="motivation">Motivation</h3>
+<p>Most computational geometry problems will require us to represent points in either a 2D or 3D Cartesian coordinate, and most people will be either use tuples, lists, or OOP. I wonder if I can appreciate the complex number approach even more after writing this.</p>
+<p>Suppose you're reading $N$ the number of points to parse, and then the description of points in the next $N$ lines, represented by 2 space-separated integers <code>x y</code>.</p>
+<pre><code class="language-python"># either this way
+N = int(input())
+points = []
+for _ in range(N):
+    x, y = map(int, input().split())
+    points.append((x, y))
+print(points)
+
+# or using OOP!
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    def __str__(self):
+        return f'({self.x}, {self.y})'
+N = int(input())
+points = []
+for _ in range(N):
+    x, y = map(int, input().split())
+    points.append(Point(x, y))
+print(points)
+</code></pre>
+<p>I guess the difference isn't much for now, since we're only reading the points! Now let's consider a few operations using these kind of complex numbers.</p>
+<pre><code class="language-python">N = int(input())
+points = []
+for _ in range(N):
+    x, y = map(int, input().split())
+    points.append(complex(x, y)) # or x+y*1j
+print(points)
+</code></pre>
+<h3 id="the-norm">The Norm</h3>
+<p>Instead of doing <code>(p[0]**2 + p[1]**2)**.5</code>, we can just to <code>abs(p)</code> since <code>abs</code> on complex numbers will simply return its modulus. E.g. <code>abs(3+4j) == 5</code>.</p>
+<h3 id="dot-product">Dot Product</h3>
+<p>Given two vectors $\vec{a}$ and $\vec{b}$, the dot product is basically $a_xb_x + a_yb_y$. If we represent the two vectors as complex numbers instead, say $a+bi$ and $c+di$, we want to obtain $ac+bd$, but notice that</p>
+<p>$$(a-bi)(c+di) = (ac+bd)+(ad-bc)i$$</p>
+<p>so we can simply just take the real part of the product!</p>
+<p>In Python, to obtain the conjugate of a complex number, we can simply use the <code>.conjugate()</code> method, as for getting the real/imaginary part we simply use <code>.real</code> and <code>.imag</code> respectively.</p>
+<pre><code class="language-python">def dot(a, b):
+    return (a.conjugate() * b).real
+</code></pre>
+<h3 id="cross-product">Cross Product</h3>
+<p>Given two vectors $\vec{a}$ and $\vec{b}$, the dot product is basically $a_xb_y - a_yb_x$. Using a similar idea as the previous part, we want the $ad-bc$ from $a+bi$ and $c+di$, which is what we already had as the imaginary part of the previous product.</p>
+<pre><code class="language-python">def cross(a, b):
+    return (a.conjugate() * b).imag
+</code></pre>
+<h3 id="rotation">Rotation</h3>
+<p>Rotation by multiples of $\frac{\pi}{2}$ radians counterclockwise since you want to convert $(x, y) \rightarrow (y, -x) \rightarrow (-x, -y) \rightarrow (-y, x) \rightarrow (x, y)$. This is basically multiplying the original complex number by $i$ per rotation.</p>
+<pre><code class="language-python">def rot90(x):
+    return x * 1j
+</code></pre>
+<p>What about general angles?</p>
+<p>Suppose we want to rotate a point $(x, y)$ by a specific angle $\theta$ against the origin, the point will then become $(x\cos\theta-y\sin\theta, y\cos\theta+x\sin\theta)$.</p>
+<p>Representing this point as a complex number would mean we will end up with</p>
+<p>$$(x\cos\theta-y\sin\theta) + i \cdot (y\cos\theta+x\sin\theta) = (x+yi)(\cos\theta+i\cdot\sin\theta)$$</p>
+<p>After a bit of rearranging, notice how it's just a product between the original "point" $x+yi$ with a fixed complex number. That fixed complex number is indeed $e^{i\theta} = \cos\theta + i \cdot \sin\theta$.</p>
+<p>We can make use a Python library called <code>cmath</code> that handles operations on complex numbers where the same on <code>math</code> might not be able to. With this idea in mind, we can make use of <code>cmath.exp</code> because we need to multiply the original $x+yi$ with $e^{i\theta}$.</p>
+<pre><code class="language-python">from cmath import *
+def rot(p, a):
+    return p * exp(a * 1j)
+</code></pre>
+<p>If the base of the rotation is not the origin, we can add a single extra step to handle the offset :)</p>
+<pre><code class="language-python">from cmath import *
+def rot(p, a, c):
+    return c + (p-c) * exp(a * 1j)
+</code></pre>
+<p>Alternatively, you can also use <code>cmath.rect</code> to replace <code>cmath.exp</code>, but I personally prefer using <code>exp</code> because this is widely applicable for Fast Fourier transform as well, though this particular topic is not in scope of this article. In other words, one can rewrite <code>exp(a * 1j)</code> as <code>rect(1, a)</code>. I thought this is important to put down here, as future possible usage of <code>rect</code> will be replaced by <code>exp</code>.</p>
+<h3 id="projection">Projection</h3>
+<p>The current task is projecting a point $P$ onto the line $AB$. Let's define $\vec{AB} = B-A, \vec{AP} = P-A$. Finding the vector projection of $\vec{AP}$ onto $\vec{AB}$ simply requires the dot formula.</p>
+<p>$$\text{proj}_{\vec{AB}}\vec{AP} = \frac{\vec{AP} \cdot \vec{AB}}{\vec{AB} \cdot \vec{AB}}\vec{AB}$$</p>
+<p>But this is equivalently the same as</p>
+<p>$$\frac{(p_x - a_x)(b_x - a_x) + (p_y - a_y)(b_y - a_y)}{(b_x - a_x)^2 + (b_y - a_y)^2}(B-A)$$</p>
+<p>Note that</p>
+<p>$$
+\begin{align*}
+\frac{P-A}{B-A} &amp;= \frac{(p_x - a_x) + (p_y - a_y)i}{(b_x - a_x) + (b_y - a_y)i}\\
+&amp;= \frac{[(p_x - a_x) + (p_y - a_y)i][(b_x - a_x) - (b_y - a_y)i]}{(b_x - a_x)^2 + (b_y - a_y)^2}\\
+&amp;= \frac{(p_x - a_x)(b_x - a_x) + (p_y - a_y)(b_y - a_y)}{(b_x - a_x)^2 + (b_y - a_y)^2} + i \cdot \frac{-(p_x - a_x)(b_y - a_y) + (p_y - a_y)(b_x - a_x)}{(b_x - a_x)^2 + (b_y - a_y)^2}
+\end{align*}
+$$</p>
+<p>Therefore, we can conclude that the projection is simply $\text{proj}_{\vec{AB}}\vec{AP} = \text{Re}(\frac{P-A}{B-A})(B-A)$.</p>
+<p>Also, the projected point is simply $P_{\text{proj}} = A + \text{proj}_{\vec{AB}}\vec{AP}$.</p>
+<pre><code class="language-python">def proj(p, a, b):
+    return a + ((p-a)/(b-a)).real * (b-a)
+</code></pre>
+<p>This is, of course, assuming $A \neq B$.</p>
+<h3 id="line-intersection">Line Intersection</h3>
+<p>Assuming non-degenerate cases, implementing line intersection of $AB$ and $CD$ can be done in just two lines of code (or less if golfed).</p>
+<pre><code class="language-python">def intersect(a, b, c, d):
+    t = cross(c-a, d-c) / cross(b-a, d-c)
+    return a + t * (b-a)
+</code></pre>
+<p>Any point $P(t)$ along line $AB$ can be written as $P(t) = a+t(b-a)$. Next, in order for this same point to lie on $CD$, we must have $P(t)-c$ to be parallel with $d-c$.</p>
+<p>Since two lines are parallel iff their cross product is 0, we have $$(P(t)-c) \times (d-c) = 0$$</p>
+<p>Subsituting back $P(t)$ in terms of $a$ and $b$, we have $$(a+t(b-a)-c) \times (d-c) = ((a-c) + t(b-a)) \times (d-c) = 0$$</p>
+<p>We can further decompose this cross product into $$(a-c) \times (d-c) + t \cdot ((b-a) \times (d-c))$$, so solving the zero of this term is equivalent to moving one of the term to the other side, so something like this.</p>
+<p>$$t \cdot ((b-a) \times (d-c)) = - (a-c) \times (d-c) = (c-a) \times (d-c)$$</p>
+<p>Thus the quotient $t = \frac{(c-a) \times (d-c)}{(b-a) \times (d-c)}$ as per given code.</p>
+<h3 id="polygon-area">Polygon Area</h3>
+<p>Remember the shoelace theorem to compute a polygon's area? Well, this is basically just spamming <code>cross</code> over and over.</p>
+<pre><code class="language-python">def area(P):
+    return abs(sum(cross(P[i], P[i-1]) for i in range(len(P)))) / 2
+</code></pre>
+<p>I decided to use <code>P[i-1]</code> instead of <code>P[(i+1)%len(P)]</code> because it's shorter, and a flipped sign doesn't matter here since we will apply <code>abs</code> in the end.</p>
+<h3 id="circle-tangents">Circle Tangents</h3>
+<p>Given a point $p$, a circle with radius $r$ centered at $c$, what are the point(s) of tangency of the circle from $P$, if any?</p>
+<pre><code class="language-python">from cmath import *
+def tangent(p, c, r):
+    v = p - c
+    d = abs(v)
+    if d &lt; r: return [] # inside the circle
+    theta = acos(r / d) # find the angle adjacent to the radius and the line
+    unit = v / d * r
+    return [c + unit * exp(theta * 1j), c + unit * exp(-theta * 1j)]
+</code></pre>
+<p>Basically we connect $p$ and $c$, and find out the angle it makes against the tangent line, then we simply figure out the tangent point by adding the vector from $c$.</p>
+<h3 id="circle-circle-intersection">Circle-circle Intersection</h3>
+<pre><code class="language-python">from cmath import *
+def intersect_circle(c1, r1, c2, r2):
+    d = abs(c2 - c1)
+    if d &gt; r1 + r2 or d &lt; abs(r1 - r2) or d == 0: return [] # well-known condition
+    theta = acos((r1**2 + d**2 - r2**2) / (2 * r1 * d))
+    base = (c2 - c1) / d * r1
+    return [c1 + base * exp(theta * 1j), c1 + base * exp(-theta * 1j)]
+</code></pre>
+<p>The idea is very similar to the tangent point formula, but this time we're making good use of the law of cosine to compute <code>theta</code>.</p>
+<p>$$\cos\theta = \frac{r_1^2+d^2-r_2^2}{2r_1d}$$</p>
+<h3 id="circumcenter">Circumcenter</h3>
+<pre><code class="language-python">def circumcenter(a, b, c):
+    v1, v2 = b - a, c - a
+    return a + 1j * (v1 * abs(v2)**2 - v2 * abs(v1)**2) / (2 * cross(v1, v2))
+</code></pre>
+<p>The idea here is to first shift all three points such that $a$ is at the origin $(0, 0)$, so now the other two points are at $v_1 = b-a$ and $v_2 = c-a$.</p>
+<p>Next, we want to find a point $x$ such that $|x|^2 = |x-v_1|^2 = |x-v_2|^2$. Using the formula $d \cdot \text{conjugate}(d) = |d|^2$, we have</p>
+<p>$$
+\begin{align*}
+x \cdot \text{conjugate}(x) &amp;= (x-v_1) \cdot \text{conjugate}(x-v_1)\\
+&amp;= x \cdot \text{conjugate}(x) - x \cdot \text{conjugate}(v_1) - v_1 \cdot \text{conjugate}(x) + v_1 \cdot \text{conjugate}(v_1)\\
+x \cdot \text{conjugate}(v_1) + v_1 \cdot \text{conjugate}(x) &amp;= |v_1|^2
+\end{align*}
+$$</p>
+<p>Similarly,</p>
+<p>$$x \cdot \text{conjugate}(v_2) + v_2 \cdot \text{conjugate}(x) = |v_2|^2$$</p>
+<p>Eliminating $\text{conjugate}(x)$ by multiplying both equations by their respective proper coefficients, and we get</p>
+<p>$$x \cdot \text{conjugate}(v_1) \cdot v_2 - x \cdot \text{conjugate}(v_2) \cdot v_1 = v_2|v_1|^2 - v_1|v_2|^2$$</p>
+<p>Finally, we have</p>
+<p>$$x = \frac{v_2|v_1|^2 - v_1|v_2|^2}{v_2 \text{conjugate}(v_1) - v_1 \text{conjugate}(v_2)}$$</p>
+<p>This next part's a bit derived by reverse engineering, but note that</p>
+<p>$$\text{cross}(v_1, v_2) = \frac{v_2 \text{conjugate}(v_1) - v_1 \text{conjugate}(v_2)}{2i}$$</p>
+<p>Therefore, we can substitute the denominator accordingly as such.</p>
+<p>$$x = \frac{v_2|v_1|^2 - v_1|v_2|^2}{2i \cdot \text{cross}(v_1, v_2)} = -\frac{v_2|v_1|^2 - v_1|v_2|^2}{2 \cdot \text{cross}(v_1, v_2)}i = \frac{v_1|v_2|^2 - v_2|v_1|^2}{2 \cdot \text{cross}(v_1, v_2)}i$$</p>
+<p>The last step is to bring back the original offset of $a$ and we've obtained the result.</p>
+<h3 id="collinearity">Collinearity</h3>
+<p>Before that, we need an extra function <code>ccw</code> that checks if three points $a, b, c$ are forming a counter-clockwise turn, a clockwise turn, or a straight line.</p>
+<pre><code class="language-python">def ccw(a, b, c):
+    return cross(b-a, c-a)
+</code></pre>
+<p>If the return value is positive (i.e. $&gt;0$) then the three points are forming a counter-clockwise turn. Clockwise turn if negative and a straight line if 0.</p>
+<p>Therefore, to check if three points are collinear, we simply check if <code>ccw(a, b, c) == 0</code>.</p>
+<h3 id="convex-hull">Convex Hull</h3>
+<p>Now, we can extend the previous idea to perform the Graham scan when forming the top and lower part of the convex hull, which is the minimum polygon that contains all the points in the original polygon.</p>
+<p>In this technique, we repeatedly remove the previously added points that don't make a counter-clockwise turn with the current point of interest. This is because the convex polygon is a convex hull and will eventually consist of points that make a counter-clockwise turn with their adjacents.</p>
+<pre><code class="language-python">def chull(pts):
+    if len(pts) &lt; 3: return pts
+    pts, n = sorted(pts, key=lambda x: (x.real, x.imag)), len(pts) # sort points by their original (x, y) coordinates
+    upper, lower = pts[:2], pts[-1:-3:-1]
+    for i in range(2, n):
+        while len(upper) &gt; 1 and ccw(upper[-2], upper[-1], pts[i]) &lt;= 0: upper.pop()
+        upper.append(pts[i])
+    for i in range(n-2, -1, -1):
+        while len(lower) &gt; 1 and ccw(lower[-2], lower[-1], pts[i]) &lt;= 0: lower.pop()
+        lower.append(pts[i])
+    return upper[:-1] + lower[:-1]
+</code></pre>
+<hr/>
+<p>That is all for now, I hope you have at least slightly more idea of how complex numbers work in Python, especially when it comes to computational geometry!</p></div></div>
+</section>
+<section id="footer">
+<div class="container">
+<ul class="copyright">
+<li>© Russell Saerang 2026. All rights reserved.</li>
+<li>Design: <a href="http://html5up.net" rel="noopener noreferrer" target="_blank">HTML5 UP</a></li>
+<li>Illustration: <a href="http://linkedin.com" rel="noopener noreferrer" target="_blank">LinkedIn</a> and <a href="http://unsplash.com" rel="noopener noreferrer" target="_blank">Unsplash</a></li>
+</ul>
+</div>
+</section>
+</div>
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/jquery.scrollex.min.js"></script>
+<script src="../assets/js/jquery.scrolly.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
+<link href="../assets/css/highlight.min.css" rel="stylesheet"/>
+<script src="../assets/js/highlight.min.js"></script>
+<script>hljs.highlightAll(); hljs.addPlugin(
+        new CopyButtonPlugin({
+            autohide: false,
+            callback: (text, el) => console.log("Copied to clipboard", text),
+    }));
+</script>
+</div></body>
+</html>
