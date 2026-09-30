@@ -13,7 +13,7 @@ Then, the second part:
  
 Surprisingly, we came up with different solutions, and I thought I'd share what came across our minds that day.
 
-Before we begin, credits to Devandhira Wijaya and Nicholas Minardi for bringing this topic again, days after the house party, so I finally have something nice to share for the month.
+Before we begin, credits to Devandhira Wijaya and Nicholas Minardi for bringing this topic again, days after the house party, so I finally have something nice to share for the month. Also shoutout to Gerard Sayson for coming up with the problem in the first place!
 
 > I might not use any sigma notation anywhere in this article just because.
 
