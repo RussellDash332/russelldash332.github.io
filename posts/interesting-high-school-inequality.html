@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<title>Interesting High School Inequality</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+<link href="../assets/css/main.css" rel="stylesheet"/>
+<link href="../media/russell.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+            ],
+            throwOnError: false,
+            strict: false,
+        });
+    });
+    </script>
+</head>
+<body class="is-preload">
+<section id="header">
+<header>
+<a class="active" href="https://russelldash332.github.io/">
+<span class="image avatar"><img alt="" src="../media/profile.jpg"/></span>
+<h1 id="logo">Russell Saerang</h1>
+</a>
+<p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
+</header>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#interesting-high-school-inequality">Interesting High...</a></li><li><a href="#prologue" style="font-size: 0.95em; font-weight: 500;">Prologue</a></li><li><a href="#integer-version" style="font-size: 0.95em; font-weight: 500;">Integer version</a></li><li><a href="#generalization-to-real-numbers" style="font-size: 0.95em; font-weight: 500;">Generalization to real...</a></li><li><a href="#alternate-proof" style="font-size: 0.95em; font-weight: 500;">Alternate proof</a></li><li><a href="#the-one-shot" style="font-size: 0.95em; font-weight: 500;">The one-shot</a></li></ul></nav>
+<footer>
+<ul class="icons">
+<li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
+<li><a class="icon brands fa-instagram" href="https://www.instagram.com/russellsaerang2702/" rel="noopener noreferrer" target="_blank"><span class="label">Instagram</span></a></li>
+<li><a class="icon brands fa-github" href="https://github.com/RussellDash332/" rel="noopener noreferrer" target="_blank"><span class="label">Github</span></a></li>
+<li><a class="icon brands fa-medium-m" href="https://medium.com/@russellsaerang" rel="noopener noreferrer" target="_blank"><span class="label">Medium</span></a></li>
+<li><a class="icon solid fa-envelope" href="mailto:russellsaerang@gmail.com"><span class="label">Email</span></a></li>
+</ul>
+</footer>
+</section>
+<div id="wrapper">
+<div id="main">
+<section id="post">
+<div class="image main" data-position="center">
+<img alt="" src="../media/banner.jpg"/>
+</div>
+<div class="container"><div class="post-container"><h2 id="interesting-high-school-inequality">Interesting High School Inequality</h2>
+<div class="date"><p>30 September 2026</p></div>
+<p>I was at a house party spectating my friends solving math problems for fun when we stumbled across this high school olympiad question:</p>
+<blockquote>
+<p>Given $n$ numbers $a_1 \ge 1$ and $a_{i+1} \ge a_i+1$ for $1 \le i \le n-1$. Prove that $a_1^3 + a_2^3 + \cdots + a_n^3 \ge (a_1 + a_2 + \cdots + a_n)^2$.</p>
+</blockquote>
+<p>Then, the second part:</p>
+<blockquote>
+<p>Furthermore, prove that $a_1^5 + a_2^5 + \cdots + a_n^5 \ge (a_1 + a_2 + \cdots + a_n)^3$.</p>
+</blockquote>
+<p>Surprisingly, we came up with different solutions, and I thought I'd share what came across our minds that day.</p>
+<p>Before we begin, credits to Devandhira Wijaya and Nicholas Minardi for bringing this topic again, days after the house party, so I finally have something nice to share for the month.</p>
+<blockquote>
+<p>I might not use any sigma notation anywhere in this article just because.</p>
+</blockquote>
+<h3 id="prologue">Prologue</h3>
+<p>To start, we think of this problem as an induction problem. Clearly, the inequality is satisfied for $n=1$ because $a_1 \ge 1$ and therefore $a_1^3 \ge a_1^2$.</p>
+<p>Next, assume that the inequality is satisfied for $n=k-1$. We have</p>
+<p>$$a_1^3 + a_2^3 + \cdots + a_{k-1}^3 \ge (a_1 + a_2 + \cdots + a_{k-1})^2$$</p>
+<p>Then it suffices to show that the inequality is also satisfied for $n=k$. Equivalently, we want this to be satisfied:</p>
+<p>$$a_1^3 + a_2^3 + \cdots + a_{k-1}^3 + a_k^3 \ge (a_1 + a_2 + \cdots + a_{k-1} + a_k)^2$$</p>
+<p>Let's start working on the left hand side. Since it works for $n = k-1$, we have</p>
+<p>$$
+\begin{align*}
+(a_1^3 + a_2^3 + \cdots + a_{k-1}^3) + a_k^3 &amp;\ge (a_1 + a_2 + \cdots + a_{k-1})^2 + a_k^3 \\
+&amp;= ([a_1 + a_2 + \cdots + a_{k-1} + a_k] - a_k)^2 + a_k^3 \\
+&amp;= [(a_1 + a_2 + \cdots + a_{k-1} + a_k)^2 - 2a_k(a_1 + a_2 + \cdots + a_{k-1} + a_k) + a_k^2] + a_k^3 \\
+&amp;= (a_1 + a_2 + \cdots + a_{k-1} + a_k)^2 + [a_k^3 - 2a_k(a_1 + a_2 + \cdots + a_{k-1}) - a_k^2]
+\end{align*}
+$$</p>
+<p>This means, if we can prove that $a_k^3 - 2a_k(a_1 + a_2 + \cdots + a_{k-1}) - a_k^2 \ge 0$, the problem is solved! Equivalently, this is what we want to prove.</p>
+<p>$$
+\begin{align*}
+a_k^3 - 2a_k(a_1 + a_2 + \cdots + a_{k-1}) - a_k^2 &amp;\ge 0 \\
+a_k^2 - 2(a_1 + a_2 + \cdots + a_{k-1}) - a_k &amp;\ge 0 \\
+a_k^2 - a_k &amp;\ge 2(a_1 + a_2 + \cdots + a_{k-1}) \\
+\frac{a_k(a_k-1)}{2} &amp;\ge a_1 + a_2 + \cdots + a_{k-1}
+\end{align*}
+$$</p>
+<h3 id="integer-version">Integer version</h3>
+<p>The initial question only stated "numbers", so it wasn't that clear whether they are integers or real numbers. For now, let's assume they are the former, since I wanted to use a particular trick.</p>
+<p>Notice that the form $\frac{a_k(a_k-1)}{2}$ is equal to $1+2+\cdots+(a_k-1)$. Therefore, we want to prove that</p>
+<p>$$1+2+\cdots+(a_k-1) \ge a_1+a_2+\cdots+a_{k-1}$$</p>
+<p>However, notice that $1 \le a_1 &lt; a_2 &lt; \cdots &lt; a_{k-1} \le a_k-1$, and since all the terms above are integers, this means that the $k-1$ terms on the right hand side is actually a subset of the terms on the left hand side, thus completing our proof.</p>
+<h3 id="generalization-to-real-numbers">Generalization to real numbers</h3>
+<p>Clearly it would be more challenging if the question assumes real numbrs instead, but this is actually also doable!</p>
+<p>Notice that</p>
+<p>$$a_k \ge a_{k-1}+1 \ge a_{k-2}+2 \ge \cdots \ge a_1 + (k-1) \ge k$$</p>
+<p>This means for any $1 \le i \le k-1$, we have the property $a_k - a_i \ge k-i$. Repeatedly substituting the $k-1$ values and adding all of them, we have</p>
+<p>$$
+\begin{align*}
+(k-1)a_k - (a_1 + a_2 + \cdots + a_{k-1}) &amp;\ge (k-1) + (k-2) + \cdots + 1 \\
+&amp;= \frac{k(k-1)}{2} \\
+a_1 + a_2 + \cdots + a_{k-1} &amp;\le (k-1)a_k - \frac{k(k-1)}{2}
+\end{align*}
+$$</p>
+<p>Recall the original inequality that we want to prove at the last induction step:</p>
+<p>$$\frac{a_k(a_k-1)}{2} \ge a_1 + a_2 + \cdots + a_{k-1}$$</p>
+<p>Therefore, it suffices to show that</p>
+<p>$$
+\begin{align*}
+(k-1)a_k - \frac{k(k-1)}{2} &amp;\le \frac{a_k(a_k-1)}{2} \\
+(k-1)(2a_k-k) &amp;\le a_k(a_k-1) \\
+2ka_k - k^2 - 2a_k + k &amp;\le a_k^2 - a_k \\
+a_k^2 - 2ka_k + k^2 + a_k - k &amp;\ge 0 \\
+(a_k - k)^2 + (a_k - k) &amp;\ge 0 \\
+(a_k - k)(a_k - k + 1) &amp;\ge 0
+\end{align*}
+$$</p>
+<p>which is true because from the aforementioned chain inequality we obtained $a_k \ge k$.</p>
+<h3 id="alternate-proof">Alternate proof</h3>
+<p>Special credits to Nicholas Minardi again for the alternate proof that was posted on his Instagram account <a href="https://instagram.com/menahmathics_16">@menahmathics_16</a>. His proof uses bounding on $a_i^3$ instead as such.</p>
+<p>Since $a_i \ge a_{i-1}+1$, we have (assume $a_0 = 0$)</p>
+<p>$$
+\begin{align*}
+a_1^3 + a_2^3 + \cdots + a_n^3 &amp;\ge a_1^2(a_0+1) + a_2^2(a_1+1) + \cdots + a_n^2(a_{n-1}+1) \\
+&amp;= (a_1^2 + a_2^2 + \cdots + a_n^2) + (a_1^2a_0 + a_2^2a_1 + \cdots + a_n^2a_{n-1})
+\end{align*}
+$$</p>
+<p>It suffices to show that $a_1^2a_0 + a_2^2a_1 + \cdots + a_n^2a_{n-1} \ge 2(a_1a_2 + a_1a_3 + \cdots + a_1a_n + a_2a_3 + \cdots + a_{n-1}a_n)$.</p>
+<p>After some pattern finding from the first few terms, we have</p>
+<p>$$
+\begin{align*}
+a_2^2a_1 = a_2(a_1a_2) &amp;\ge 2a_1a_2 \\
+\\
+a_3^2a_2 = a_3(a_2a_3) &amp;\ge (a_1+2)a_2a_3 \\
+&amp;\ge 2a_2a_3 + a_1a_2a_3 \\
+&amp;\ge 2a_2a_3 + 2a_1a_3
+\end{align*}
+$$</p>
+<p>Based on the above, we also want to claim that $a_i^2a_{i-1} \ge 2a_i(a_1+a_2+\cdots+a_{i-1})$ or equivalently $a_ia_{i-1} \ge 2(a_1+a_2+\cdots+a_{i-1})$.</p>
+<blockquote>
+<p>Not to be confused with $a_i(a_i-1)$... this one's a tighter bound.</p>
+</blockquote>
+<p>Only at this point then the induction was applied. The base cases $i = 2$ and $i = 3$ can be seen above. Now suppose it's true for $i = k-1$, then for $i = k$, we have</p>
+<p>$$
+\begin{align*}
+a_ka_{k-1} &amp;= 2a_{k-1} + a_{k-1}(a_k-2) \\
+&amp;\ge 2a_{k-1} + a_{k-1}a_{k-2} \\
+&amp;\ge 2a_{k-1} + 2(a_1+a_2+\cdots+a_{k-2}) \\
+&amp;= 2(a_1+a_2+\cdots+a_{k-1})
+\end{align*}
+$$</p>
+<p>Now that the claim is proven, we can simply backtrack by summing all the inequalities for $i = 2, 3, \cdots, n$.</p>
+<h3 id="the-one-shot">The one-shot</h3>
+<p>Now that we've cleared the first part, which was the main chunk of this question, the second part can be done easily using Cauchy-Schwarz inequality:</p>
+<p>$$(x_1^2 + x_2^2 + \cdots + x_n^2)(y_1^2 + y_2^2 + \cdots + y_n^2) \ge (x_1y_1 + x_2y_2 + \cdots + x_ny_n)^2$$</p>
+<p>Setting $x_i = a_i^2\sqrt{a_i}$ and $y_i = \sqrt{a_i}$, we have</p>
+<p>$$(a_1^5 + a_2^5 + \cdots + a_n^5)(a_1 + a_2 + \cdots + a_n) \ge (a_1^3 + a_2^3 + \cdots + a_n^3)^2 \ge (a_1 + a_2 + \cdots + a_n)^4$$</p>
+<p>The second and third expression are directly obtained from the first part.</p>
+<p>To finish it, we divide both the first and third expression by $(a_1 + a_2 + \cdots + a_n)$ to obtain the desired inequality.</p>
+<blockquote>
+<p>There are plenty other ways to solve both the first and second part, but since it's a high school math problem, we avoid using as many weird techniques as possible :)</p>
+</blockquote></div></div>
+</section>
+<section id="footer">
+<div class="container">
+<ul class="copyright">
+<li>© Russell Saerang 2026. All rights reserved.</li>
+<li>Design: <a href="http://html5up.net" rel="noopener noreferrer" target="_blank">HTML5 UP</a></li>
+<li>Illustration: <a href="http://linkedin.com" rel="noopener noreferrer" target="_blank">LinkedIn</a> and <a href="http://unsplash.com" rel="noopener noreferrer" target="_blank">Unsplash</a></li>
+</ul>
+</div>
+</section>
+</div>
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/jquery.scrollex.min.js"></script>
+<script src="../assets/js/jquery.scrolly.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
+<link href="../assets/css/highlight.min.css" rel="stylesheet"/>
+<script src="../assets/js/highlight.min.js"></script>
+<script>hljs.highlightAll(); hljs.addPlugin(
+        new CopyButtonPlugin({
+            autohide: false,
+            callback: (text, el) => console.log("Copied to clipboard", text),
+    }));
+</script>
+</div></body>
+</html>
