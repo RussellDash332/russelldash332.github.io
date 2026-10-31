@@ -14,7 +14,7 @@ Supercell has always had apparent problems when it comes to balancing the intera
 ### Hypercharges and buffies
 
 <figure style="text-align: center;">
-    <img src="../posts/media/bs-hc.png" object-fit="contain" width="50%"/>
+    <img src="../posts/media/bs-hc.png" object-fit="contain" width="80%"/>
 </figure>
 
 This is probably the least of my concern, but I'm saying this in the view of someone who had all their brawlers maxed out, including having all existing hypercharges and buffies. That being said, the existence of hypercharges and buffies just shows how most brawlers mechanics that were great and innovative back in the days are utterly useless due to the buffies nullifying it.
@@ -40,13 +40,13 @@ You may think Mortis going through walls is a once-in-a-blue-moon bug, but now w
 Certainly, whenever I lag, it's no longer always due to the telco. It's definitely the issues coming from the game server itself: something I could control less.
 
 <figure style="text-align: center;">
-    <img src="../posts/media/bs-lag.jpg" object-fit="contain" width="50%"/>
+    <img src="../posts/media/bs-lag.jpg" object-fit="contain" width="80%"/>
 </figure>
 
 Or maybe the well-known bug where you're stuck in the loading screen? This also boggles me on why can't they fix it as this is the first thing players will see upon entering the game? Do you only test on specific subset on devices? Do you only test when they are three players entering the server? Did you not stress test them? My QA soul screamed as I saw this happened on my own phone.
 
 <figure style="text-align: center;">
-    <img src="../posts/media/bs-loading.jpg" object-fit="contain" width="50%"/>
+    <img src="../posts/media/bs-loading.jpg" object-fit="contain" width="80%"/>
 </figure>
 
 And this is just the two most common bugs. There is a plethora of them in [this subreddit](https://www.reddit.com/r/10dollarproblem), showing how poor their QA unfortunately is.
@@ -60,7 +60,7 @@ It's clear that the game cares new players coming and trying out the game rather
 If you played Brawl Stars around the end of 2022, you might have been part of this big change of the game: **the rework of the damned trophy road**.
 
 <figure style="text-align: center;">
-    <img src="../posts/media/bs-trophy.jpg" object-fit="contain" width="50%"/>
+    <img src="../posts/media/bs-trophy.jpg" object-fit="contain" width="80%"/>
 </figure>
 
 In summary, whenever you cross a certain amount of trophies, you will obtain some rewards. Due to that rework, some of these rewards were replaced with higher-valued rewards, such as the conversion of 80 credits to a legendary Starr drop, which can be potentially an even higher value margin. However, every players who claimed the old rewards in the past will not be able to claim those new rewards.
@@ -72,7 +72,7 @@ For me, this is the first time I felt cheated on as a loyal player of the game. 
 ### Records 
 
 <figure style="text-align: center;">
-    <img src="../posts/media/bs-records.jpg" object-fit="contain" width="50%"/>
+    <img src="../posts/media/bs-records.jpg" object-fit="contain" width="80%"/>
 </figure>
 
 Records is probably a good way to organize and keep track of your game activites and achievements, but the way this transition works is so controversial. I'll let Google AI search do this part for me, as I was in loss of words going through this part.
@@ -93,10 +93,10 @@ The purpose is to serve the competitive side of the playerbase, but has become s
 ### Kids and the dark system
 
 <figure style="text-align: center;">
-    <img src="../posts/media/bs-ranked1.jpg" object-fit="contain" width="40%"/>
-    <img src="../posts/media/bs-ranked2.jpg" object-fit="contain" width="40%"/>
-    <img src="../posts/media/bs-ranked3.jpg" object-fit="contain" width="40%"/>
-    <img src="../posts/media/bs-ranked4.jpg" object-fit="contain" width="40%"/>
+    <img src="../posts/media/bs-ranked1.jpg" object-fit="contain" width="47%"/>
+    <img src="../posts/media/bs-ranked2.jpg" object-fit="contain" width="47%"/>
+    <img src="../posts/media/bs-ranked3.jpg" object-fit="contain" width="47%"/>
+    <img src="../posts/media/bs-ranked4.jpg" object-fit="contain" width="47%"/>
 </figure>
 
 The dark system is one thing, and I'm okay with this part as most MOBA games also have these too. But the fact that even on the big leagues, you still get kids that in WHATEVER objective of the game mode is (be it Bounty to kill more, or Brawl Ball to score more), you either sold the game or you die more than you kill. The lack of skill these teammates I get matched with consistently have shows that the mode wants me to lose trophies and time, like a lot of them.
@@ -112,7 +112,7 @@ One upside of this soulsucking game mode is that I get to play brawlers not as t
 Now that I've been watching SZGusta's videos (since he plays a lot of ranked), I am even more convinced grinding ranked was just THAT unhealthy. We have wintraders to make the game even more pathetic, and the devs aren't really doing anything about this: they either completely ignore this issue, or has taken too much time on resolving the problem.
 
 <figure style="text-align: center;">
-    <img src="../posts/media/bs-gusta.jpg" object-fit="contain" width="50%"/>
+    <img src="../posts/media/bs-gusta.jpg" object-fit="contain" width="80%"/>
     <figcaption><i>Source: SZGUSTA TWO on Youtube</i></figcaption>
 </figure>
 
@@ -123,8 +123,8 @@ How low can a human go to cheat and hack on a kids (or is it kids? they have bee
 ### MMR is failing
 
 <figure style="text-align: center;">
-    <img src="../posts/media/bs-mm1.jpg" object-fit="contain" width="40%"/>
-    <img src="../posts/media/bs-mm2.jpg" object-fit="contain" width="40%"/>
+    <img src="../posts/media/bs-mm1.jpg" object-fit="contain" width="47%"/>
+    <img src="../posts/media/bs-mm2.jpg" object-fit="contain" width="47%"/>
 </figure>
 
 The screenshots I presented were particularly for challenges, but the main question is: How accurate the matchmaking rating (MMR) is on determining the actual matchmaking?
@@ -140,7 +140,7 @@ To add on, the pity system and the underdog system didn't do much either. Overal
 ### The prestige system
 
 <figure style="text-align: center;">
-    <img src="../posts/media/bs-prestige.jpg" object-fit="contain" width="50%"/>
+    <img src="../posts/media/bs-prestige.jpg" object-fit="contain" width="80%"/>
 </figure>
 
 I used to spend most of my time grinding ladder because it's easier to gain trophies than ranked Elo ratings, but with the prestige rework, this is both good and bad news for me.
@@ -156,8 +156,8 @@ It's not the end of the world! If you really need me to say something good about
 Their latest collaboration with several brands are actually signs that the game still have some hope to continue living, and that, I'm happy about it!
 
 <figure style="text-align: center;">
-    <img src="../posts/media/bs-subwaysurfers.jpg" object-fit="contain" width="40%"/>
-    <img src="../posts/media/bs-duolingo.jpg" object-fit="contain" width="40%"/>
+    <img src="../posts/media/bs-subwaysurfers.jpg" object-fit="contain" width="47%"/>
+    <img src="../posts/media/bs-duolingo.jpg" object-fit="contain" width="47%"/>
     <figcaption><i>Latest collabs I could think of: Subway Surfers and Duolingo</i></figcaption>
 </figure>
 
@@ -168,7 +168,7 @@ But then again, this write-up is more about what the game should be focusing on 
 ## Epilogue
 
 <figure style="text-align: center;">
-    <img src="../posts/media/bs-daily.jpg" object-fit="contain" width="50%"/>
+    <img src="../posts/media/bs-daily.jpg" object-fit="contain" width="80%"/>
     <figcaption><i>probably the last relic I have of the game before I go</i></figcaption>
 </figure>
 
