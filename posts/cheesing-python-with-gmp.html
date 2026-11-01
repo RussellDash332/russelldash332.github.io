@@ -1,0 +1,542 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<title>Cheesing Python with GMP</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+<link href="../assets/css/main.css" rel="stylesheet"/>
+<link href="../media/russell.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+            ],
+            throwOnError: false,
+            strict: false,
+        });
+    });
+    </script>
+</head>
+<body class="is-preload">
+<section id="header">
+<header>
+<a class="active" href="https://russelldash332.github.io/">
+<span class="image avatar"><img alt="" src="../media/profile.jpg"/></span>
+<h1 id="logo">Russell Saerang</h1>
+</a>
+<p>NUS Data Science and Analytics 2024, Systems Analyst at PSA Singapore</p>
+</header>
+<nav id="nav"><ul><li><a class="active" href="index.html">Back to all write-ups</a></li><br/><li><a href="#cheesing-python-with-gmp">Cheesing Python with GMP</a></li><li><a href="#what-is-gmp" style="font-size: 0.95em; font-weight: 500;">What is GMP?</a></li><li><a href="#how-to-use-gmp" style="font-size: 0.95em; font-weight: 500;">How to use GMP?</a></li><li><a href="#the-cheese" style="font-size: 0.95em; font-weight: 500;">The cheese</a></li><li><a href="#the-basics" style="font-size: 0.85em; font-weight: 400;">The basics</a></li><li><a href="#the-mpz-structure" style="font-size: 0.85em; font-weight: 400;">The mpz structure</a></li><li><a href="#full-example" style="font-size: 0.85em; font-weight: 400;">Full example</a></li><li><a href="#alien-codebreaking" style="font-size: 0.95em; font-weight: 500;">Alien Codebreaking</a></li><li><a href="#problem-statement" style="font-size: 0.85em; font-weight: 400;">Problem statement</a></li><li><a href="#solution" style="font-size: 0.85em; font-weight: 400;">Solution</a></li><li><a href="#combining-all-parts" style="font-size: 0.85em; font-weight: 400;">Combining all parts</a></li><li><a href="#the-gmp-in-action" style="font-size: 0.85em; font-weight: 400;">The GMP in action</a></li></ul></nav>
+<footer>
+<ul class="icons">
+<li><a class="icon brands fa-linkedin-in" href="https://www.linkedin.com/in/nicholasrussellsaerang/" rel="noopener noreferrer" target="_blank"><span class="label">LinkedIn</span></a></li>
+<li><a class="icon brands fa-instagram" href="https://www.instagram.com/russellsaerang2702/" rel="noopener noreferrer" target="_blank"><span class="label">Instagram</span></a></li>
+<li><a class="icon brands fa-github" href="https://github.com/RussellDash332/" rel="noopener noreferrer" target="_blank"><span class="label">Github</span></a></li>
+<li><a class="icon brands fa-medium-m" href="https://medium.com/@russellsaerang" rel="noopener noreferrer" target="_blank"><span class="label">Medium</span></a></li>
+<li><a class="icon solid fa-envelope" href="mailto:russellsaerang@gmail.com"><span class="label">Email</span></a></li>
+</ul>
+</footer>
+</section>
+<div id="wrapper">
+<div id="main">
+<section id="post">
+<div class="image main" data-position="center">
+<img alt="" src="../media/banner.jpg"/>
+</div>
+<div class="container"><div class="post-container"><h2 id="cheesing-python-with-gmp">Cheesing Python with GMP</h2>
+<div class="date"><p>1 November 2026</p></div>
+
+<p>It is to my surprise that Python online judges supports GMP. Well, that is if it's Pypy to be exact.</p>
+<h3 id="what-is-gmp">What is GMP?</h3>
+<p>GMP stands for GNU Multiple Precision Aritmetic Library and is a library widely used to handle arbitrary-precision arithmetic on signed integers. This library is used in C++ solutions most of the time because of how it handles big numbers very well (we're talking about numbers beyond 32 and 64 bits like <code>int</code> and <code>long</code>).</p>
+<h3 id="how-to-use-gmp">How to use GMP?</h3>
+<p>In C++, you simply include the native wrapper <code>&lt;gmpxx.h&gt;</code>, and then use the <code>mpz_class</code> to define the big number.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;gmpxx.h&gt;
+int main() {
+    mpz_class a = "123456789012345678901234567890"; 
+    mpz_class b("987654321098765432109876543210");
+    mpz_class sum = a+b;
+    mpz_class product = a*b;
+    mpz_class result = (a+5)*67; 
+    std::cout &lt;&lt; sum &lt;&lt; " " &lt;&lt; product &lt;&lt; " " &lt;&lt; result &lt;&lt; "\n";
+    return 0;
+}
+</code></pre>
+<p>In Python, the numbers used the example above can be computed easily without using GMP, but what if we handle an even larger number, say something that has at least $10^5$ digits? This is where it gets cheesy.</p>
+<p>Normally, you would import the <code>gmp</code> package, and the rest of the code is very similar to the above C++ code.</p>
+<pre><code class="language-python">import gmp
+z = gmp.mpz(29925959575501)
+for _ in range(67): z *= z
+</code></pre>
+<p>However, this is not a built-in library in Pypy and therefore you have to <code>pip-install python-gmp</code> first before you use it, which is not applicable in competitive programming. The same thing can be said to the <code>gmpy2</code> library.</p>
+<p>In summary, we have to find another way to use it in online judges if we're using Pypy.</p>
+<h3 id="the-cheese">The cheese</h3>
+<h4 id="the-basics">The basics</h4>
+<p>Pypy actually has a shared object library (SO) that handles GMP and we can actually make use of that safely! To begin, we use the <code>ctypes</code> package to read the SO file as a <code>CDLL</code> object.</p>
+<pre><code class="language-python">from ctypes import *
+
+g = CDLL('libgmp.so.10')
+init = g.__gmpz_init
+init.argtypes = [c_void_p]
+init.restype = None
+</code></pre>
+<p>The code above loads the SO named <code>libgmp.so.10</code>. And then we use the <code>__gmpz_init</code> from the shared library as the initializer function. This mirrors the <code>mpz_init</code> function in the original GNU GMP library.</p>
+<p>When calling C functions through <code>ctypes</code>, we need to tell Python how the function expects its arguments (<code>argtypes</code>) and what it returns (<code>restype</code>).</p>
+<p>Since by default <code>ctypes</code> assumes that the function arguments in C are <code>c_int</code> values, we need to specify the argument types, and possibly the return types too since the default return types are also <code>c_int</code>. Here, the initializer has <code>argtype</code> equal to <code>[c_void_p]</code>, which is a list of one element: a representation of a generic pointer (not to be confused with <code>void</code> that resembles <code>NoneType</code> in most function return values). If the function needs more arguments, then just populate the list accordingly:</p>
+<ul>
+<li><code>c_int</code> for integers <code>int</code></li>
+<li><code>c_uint</code> for unsigned integers <code>unsigned int</code></li>
+<li><code>c_long</code> for integers <code>long</code></li>
+<li><code>c_ulong</code> for unsigned integers <code>unsigned long</code></li>
+<li><code>c_double</code> for doubles <code>double</code></li>
+<li><code>c_char_p</code> for strings <code>char *</code></li>
+<li><code>c_void_p</code> for generic pointers <code>void *</code></li>
+<li><code>None</code> for <code>void</code> returns</li>
+</ul>
+<p>The return type <code>restype</code>, just like <code>argtypes</code>, is by default <code>c_int</code>. So, functions with non-integer return values needs the <code>restype</code> value to be specifically declared, or otherwise treated as <code>c_int</code>. In the initializer function <code>init</code> above, I set it to <code>None</code> because the function initializes something and doesn't return anything.</p>
+<p>Next up, we can create two other functions from the GNU GMP shared library like such. This should give a clear idea on how to specify other GMP functions in Pypy such as <code>mpz_set_d</code>, <code>mpz_add_ui</code>, <code>mpz_div</code>, and more.</p>
+<pre><code class="language-python">set_str = g.__gmpz_set_str
+set_str.argtypes = [c_void_p, c_char_p, c_int]
+get_str.restype = None
+
+get_str = g.__gmpz_get_str
+get_str.argtypes = [c_char_p, c_int, c_void_p]
+get_str.restype = c_char_p
+</code></pre>
+<p>As opposed to their C counterpart's prototype...</p>
+<pre><code class="language-c">int mpz_set_str (mpz_t rop, const char *str, int base);
+char* mpz_get_str (char *str, int base, const mpz_t op);
+</code></pre>
+<h4 id="the-mpz-structure">The <code>mpz</code> structure</h4>
+<p>GMP represents arbitrary-precision integers using the <code>__mpz_struct</code> structure. We need to reproduce its layout in Python so that GMP can operate on the memory allocated by ctypes.</p>
+<pre><code class="language-python">class mpz(Structure):
+    _fields_ = [
+        ('alloc', c_int),
+        ('size', c_int),
+        ('d', c_void_p)
+    ]
+</code></pre>
+<p>As shown above, there are three fields to be specified:</p>
+<ul>
+<li><code>alloc</code>, the number of allocated limbs</li>
+<li><code>size</code>, the number of limbs currently used</li>
+<li><code>d</code>, a pointer to the array of limbs storing the integer's actual value</li>
+</ul>
+<p>Here, a <em>limb</em> is like a GMP unit to represent large integers. That's all you need to know about the <code>mpz</code> structure in this write-up :)</p>
+<p>Now, to use this <code>mpz</code> structure, we simply initialize by invoking <code>mpz()</code>. If we're following the clean practice, we're supposed to clear the structure using <code>__gmpz_clear</code>, but most of the time we don't need to do this since the code is going to be run once against a test case.</p>
+<p>For the sake of this write-up, I also need to introduce to <code>ctypes.byref</code>, which gives <code>ctypes</code> a reference to the memory address of something rather than passing its value. It's really like coding C++ in Python at this point!</p>
+<p>So, if let's say we have a <code>c_int</code> with value $42$, we can see the difference between passing by value and passing by address.</p>
+<pre><code class="language-python">a = c_int(42)
+print(a.value)  # 42
+print(byref(a)) # &lt;the address of a&gt;
+</code></pre>
+<p>Or maybe another example when using an <code>mpz</code> structure? How about using the <code>set_str</code> functions defined above? This is the one pattern we're going to do quite often.</p>
+<pre><code class="language-python">a = mpz()
+init(byref(a)) # the initializer init from above
+set_str(byref(a), b'12345678901234567890', 10) # yes, need to use `bytes` object instead, not `str`
+</code></pre>
+<h4 id="full-example">Full example</h4>
+<p>A full working example would be something like this.</p>
+<pre><code class="language-python">from ctypes import *
+
+class mpz(Structure):
+    _fields_ = [('alloc', c_int), ('size', c_int), ('d', c_void_p)]
+
+g = CDLL('libgmp.so.10')
+
+init = g.__gmpz_init
+init.argtypes = [c_void_p]
+init.restype = None
+
+set_str = g.__gmpz_set_str
+set_str.argtypes = [c_void_p, c_char_p, c_int]
+set_str.restype = c_int
+
+get_str = g.__gmpz_get_str
+get_str.argtypes = [c_char_p, c_int, c_void_p]
+get_str.restype = c_char_p
+
+add = g.__gmpz_add
+add.argtypes = [c_void_p, c_void_p, c_void_p]
+add.restype = None
+
+a, b, c = mpz(), mpz(), mpz()
+
+for x in (a, b, c):
+    init(byref(x))
+
+set_str(byref(a), b'12345678901234567890', 10)
+set_str(byref(b), b'98765432109876543210', 10)
+
+add(byref(c), byref(a), byref(b)) # c = a+b
+
+for base in (2, 8, 10, 16, 27): # output c in multiple bases
+    z = get_str(None, base, byref(c))
+    print(f'Base {base}: {z.decode()}')
+</code></pre>
+<blockquote>
+<p>GMP supports bases from 2 to 62, just like Python's <code>int</code> conversion from strings. For bases up to 36, letters are case-insensitive, but for bases above it, both lowercase and uppercase represent different digit values.</p>
+</blockquote>
+<h3 id="alien-codebreaking">Alien Codebreaking</h3>
+<p>One good example from Kattis that my friend <a href="https://open.kattis.com/users/jeremy-lim">Jeremy Lim</a> recommended to experiment GMP on is his own favorite problem: <a href="https://open.kattis.com/problems/aliencodebreaking">Alien Codebreaking</a>.</p>
+<figure style="text-align: center;">
+<img object-fit="contain" src="media/aliencodebreaking.png" width="80%"/>
+<figcaption><i>Source: Kattis, 2017 Virginia Tech High School Programming Contest</i></figcaption>
+</figure>
+<h4 id="problem-statement">Problem statement</h4>
+<p>You are given $1 \le N \le 10^6$, $1 \le X \le 250000$, and a string $S$ of length $N$ containing only uppercase letters and spaces. There are a few steps to follow in order to decrypt the string $S$.</p>
+<ul>
+<li><strong>Step 1</strong>: Define a function $f^1(x) = (33x+1) \pmod{2^{20}}, f^n(x) = f(f^{n-1}(x)) \forall n = 2, 3, \cdots$ and so on.</li>
+<li><strong>Step 2</strong>: We want to populate a $X$ by $X$ grid by filling the values from left-to-right then top-to-bottom with the values $f^1(0), f^2(0), \cdots, f^{X^2}(0)$ in this specific order.</li>
+<li><strong>Step 3</strong>: Obtain the column sums (sum of values in every column) modulo $2^{20}$.</li>
+<li><strong>Step 4</strong>: Concatenate the base-$10$ representations of the column sums to get a very long base-$10$ number, e.g. <code>123450</code> and <code>12367</code> becomes <code>12345012367</code>. Denote this super long number as $A$.</li>
+<li><strong>Step 5</strong>: Convert $A$ to base $27$, denote the result as $W$.</li>
+<li><strong>Step 6</strong>: Start iterating through $S$, and for each letter $s_i$ where $i = 1, 2, \cdots, N$, shift the letter by the $i$-th digit of $W$, and then output the alphabetical version of the shifted value modulo $27$. Here, we assign $A-Z$ to $0-25$ and the SPACE to $26$.</li>
+</ul>
+<p>So, using the above picture, we can trace the example as follows:</p>
+<ul>
+<li>With $X = 4$, our concatenated number $A$ is equal to <code>851868_848672_743204_408488</code> (underscores added for readability).</li>
+<li>Converting this to base $27$ gives us the base-$27$ number $W$, which is equal to <code>KSJKJZOCWUUAWDBXG</code>, or if we represent it as array of integers, <code>[10, 18, 9, 10, 9, 25, 14, 2, 22, 20, 20, 0, 22, 3, 1, 23, 6]</code>.</li>
+<li>Read per letter of $S$, <code>JQ IRKEYFG EXQ</code>, and shift accordingly:<ul>
+<li><code>J</code> shifted by 10 becomes $9 + 10 = 19$, which is assigned to <code>T</code>.</li>
+<li><code>Q</code> shifted by 10 becomes $16 + 18 = 34 = 7 \pmod{27}$, which is assigned to <code>H</code>.</li>
+<li>SPACE shifted by 10 becomes $26 + 9 = 35 = 8 \pmod{27}$, which is assigned to <code>I</code>.</li>
+<li><code>I</code> shifted by 10 becomes $8 + 10 = 18$, which is assigned to <code>S</code>.</li>
+<li><code>R</code> shifted by 10 becomes $17 + 9 = 26$, which is assigned to SPACE.</li>
+<li><code>K</code> shifted by 10 becomes $10 + 25 = 35 = 8 \pmod{27}$, which is assigned to <code>I</code>.</li>
+<li><code>E</code> shifted by 10 becomes $4 + 14 = 18$, which is assigned to <code>S</code>.</li>
+<li><code>Y</code> shifted by 10 becomes $24 + 2 = 26$, which is assigned to SPACE.</li>
+<li><code>F</code> shifted by 10 becomes $5 + 22 = 27 = 0 \pmod{27}$, which is assigned to <code>A</code>.</li>
+<li><code>G</code> shifted by 10 becomes $6 + 20 = 26$, which is assigned to SPACE.</li>
+<li>SPACE shifted by 10 becomes $26 + 20 = 46 = 19 \pmod{27}$, which is assigned to <code>T</code>.</li>
+<li><code>E</code> shifted by 10 becomes $4 + 0 = 4$, which is assigned to <code>E</code>.</li>
+<li><code>X</code> shifted by 10 becomes $23 + 22 = 45 = 18 \pmod{27}$, which is assigned to <code>S</code>.</li>
+<li><code>Q</code> shifted by 10 becomes $16 + 3 = 19$, which is assigned to <code>T</code>.</li>
+</ul>
+</li>
+<li>In the end, output <code>THIS IS A TEST</code>.</li>
+</ul>
+<h4 id="solution">Solution</h4>
+<p>That's indeed a problem statement, so we're going to do things step-by-step.</p>
+<ul>
+<li>Setting up the $X$-by-$X$ square grid</li>
+<li>Obtain the concatenated column sum $A$</li>
+<li>Converting $A$ to the base-$27$ version $W$</li>
+<li>Using $W$ to run down on $S$</li>
+</ul>
+<h5>Reading the input</h5>
+<p>Simple <code>input</code> will do for now. I'll leave the black magic I/O and <code>array</code> optimizations for later.</p>
+<pre><code class="language-python">N, X = map(int, input().split())
+S = input()
+</code></pre>
+<h5>The square grid</h5>
+<p>Assuming we start small and ignore the modulo $2^{20}$, we realize that there is a pattern on $f^n(0)$.</p>
+<p>$$
+\begin{align*}
+f^1(0) &amp;= 33 \cdot 0 + 1 = 1 \\
+f^2(0) &amp;= 33 \cdot 1 + 1 = 33 + 1 \\
+f^3(0) &amp;= 33 \cdot (33 + 1) + 1 = 33^2 + 33 + 1 \\
+&amp;\cdots \\
+f^n(0) &amp;= \sum_{i=0}^{n-1} 33^i = \frac{33^n-1}{32}
+\end{align*}
+$$</p>
+<p>This means obtaining the column sum of the $i$-th column is equivalent to finding</p>
+<p>$$
+\begin{align*}
+f^{i}(0) + f^{i+X}(0) + \cdots + f^{i+(X-1)X}(0) &amp;= \sum_{j=0}^{X-1} \frac{33^{i+X \cdot j}-1}{32} \\
+&amp;= \frac{-X + 33^i \sum_{j=0}^{X-1} (33^X)^j}{32} \\
+&amp;= \frac{-X + 33^i \cdot \frac{(33^X)^X-1}{33^X-1}}{32}
+\end{align*}
+$$</p>
+<p>Assuming $C$ stores the column sums. Then by setting $L = \frac{(33^X)^X-1}{33^X-1}$, ideally we should be able to find the value of $C_i = \frac{33^i \cdot L - X}{32} \pmod{2^{20}}$. However, the problem here is that $2^{20}$ is not a prime number, so some numbers are actually not invertible. How do we get over this?</p>
+<p>A workaround is to compute $f^1(0), f^2(0), \cdots, f^{2^{20}}(x)$ in one pass and store them in an array $V$, as we can reuse the value of $f^{k-1}(x)$ to compute $f^k(x)$.</p>
+<p>To compute $C_1$, we compute $\left( \sum_{j=0}^{X-1} V[j \cdot X \pmod{2^{20}}] \right) \pmod{2^{20}}$, since we have obtained the values of $V[i] = f^{i+1}(x)$.</p>
+<p>Next, notice when computing $C_i$ where $i &gt; 1$, notice that the transition from $C_{i-1}$ is as follows.</p>
+<p>$$
+\begin{align*}
+C_i &amp;= f^{i}(0) + f^{i+X}(0) + \cdots + f^{i+(X-1)X}(0) \\
+&amp;= (33f^{i-1}(0)+1) + (33f^{i-1+X}(0)+1) + \cdots + (33f^{i-1+(X-1)X}(0)+1) \\
+&amp;= 33 \left( f^{i-1}(0) + f^{i-1+X}(0) + \cdots + f^{i-1+(X-1)X}(0) \right) + X \\
+&amp;= 33C_{i-1}+X
+\end{align*}
+$$</p>
+<p>This way, we are able to get all the columns modulo $2^{20}$ without having to perform any inverse modulo!</p>
+<pre><code class="language-python">M = 1&lt;&lt;20
+
+# set up f^1(0), f^2(0), ...
+V = [1]
+for _ in range(1&lt;&lt;20): V.append((V[-1]*33+1)%M)
+
+# set up C_1
+C = [0]
+for i in range(X): C[0] = (C[0]+V[X*i%M])%M
+
+# populate C_2, ..., C_X
+for i in range(X-1): C.append((C[-1]*33+X)%M)
+</code></pre>
+<p>The entire process should run in $O(2^{20})$ time, which is fast enough. A normal brute-force will take $O(X^2)$ time which is too slow since $X^2 &lt; 6.25 \times 10^{10}$&gt;, so the DP transition approach was necessary, <strong>or is it</strong>?</p>
+<details>
+<summary><u><b>Click to show further optimization</b></u></summary>
+<div class="boxed">
+
+Back to our initial computation of our first-column sum $C_1$, now no longer ignoring the modulos, we have
+
+$$
+C_1 = \sum_{j=0}^{X-1} \frac{33^{1+X \cdot j}-1}{32} \pmod{2^{20}}
+= \frac{33 ( \sum_{j=0}^{X-1} 33^{X \cdot j} ) - X}{32} \pmod{2^{20}}
+$$
+
+Suppose $T = \sum_{j=0}^{X-1} 33^{X \cdot j}$ without any modulo (so the value of $T$ can be very big). The value of $C_1$ is therefore simplified to $T + \frac{T-X}{32} \pmod{2^{20}}$.
+<br/><br/>
+Denote $t = T \pmod{2^{25}}$ (here, $t$ is bounded by $2^{25}-1$), then we have $T = t + q \cdot 2^{25}$ for some integer $q$. Thus,
+
+$$
+C_1 = T + \frac{T-X}{32} \pmod{2^{20}}
+= t + q \cdot 2^{25} + \frac{t + q \cdot 2^{25}-X}{2^5} \pmod{2^{20}}
+= t + \frac{t -X}{32} \pmod{2^{20}}
+$$
+
+It suffices to show $32$ divides $t-X$, and I can confidently divide them without using any inverse modulo. But this follows from the fact that $T = \sum_{j=0}^{X-1} 33^{X \cdot j} \equiv \sum_{j=0}^{X-1} 1^{X \cdot j} = X \pmod{32}$ and $T = t + q \cdot 2^{20} \cdot 32 \Rightarrow T \equiv t \pmod{32}$.
+<br/><br/>
+With the simplification above, we have removed the array $V$ to store all $2^{20}$ modulos upfront! So now, the next part is to compute $t$ itself. Previously, we did this in $O(X)$ time, let's try to make it run in $O(\log X)$. (but note that the joining of the digits in $C$ to $A$ will still take $O(X)$ time anyways)
+<br/><br/>
+Suppose $K = 2^{25}$, we can use the following recursive implementation to compute $t$, which is a geometric series sum.
+
+
+<pre><code>def f(r, n):
+    if n == 0: return 0, 1
+    if n&amp;1: s, p = f(r, n-1); return (s+p)%K, p*r%K
+    s, p = f(r, n&gt;&gt;1); return s*(1+p)%K, p*p%K
+t, _ = f(pow(33, X, K), X)
+</code></pre>
+
+
+This is very similar to the fast exponentiaton algorithm which takes $O(\log n)$ time where $n$ is the exponent, and therefore so will be this function's time complexity: $O(\log X)$.
+<br/><br/>
+And there we have it! Some (unnecessary) optimizations for the construction of the column sums, which I won't include in the final code because it's not the main topic of the solution: GMP!
+</div>
+</details>
+<h5>The concatenation</h5>
+<p>Let's assume GMP is not used first, then concatenating the $X$ modulos can be done as such.</p>
+<pre><code class="language-python">A = int(''.join(map(str, C)))
+</code></pre>
+<p>Since each modulo is at most $1048575$, then $A$ has at most $7X$ digits, which is at most $1.75 \times 10^6$, almost 2 million! To safeguard the execution we need to add this statement at the very beginning.</p>
+<pre><code class="language-python">import sys
+sys.set_int_max_str_digits(2*10**6) # at most 1.75M digits in A
+</code></pre>
+<blockquote>
+<p>This is not necessary for lower Python versions, but since the judges are using at least Python 3.11, we have to add this safeguard.</p>
+</blockquote>
+<h5>The base conversion</h5>
+<p>An intuitive method would be to repeatedly divide by $27$, and then display the values in reverse.</p>
+<pre><code class="language-python">W = [] # W[0] is the last digit, W[-1] is the leading digit
+while A:
+    W.append(A%27)
+    A //= 27
+</code></pre>
+<p>However, this process is too slow for two reasons:</p>
+<ul>
+<li>As $W$ will contain at most about $\log_{27}{10^{1.75 \times 10^6}} = 1.75 \times 10^6 \times \log_{27}{10} \approx 1.23 \times 10^6$, which is quite much larger than $N &lt; 10^6$.</li>
+<li>Repeatedly dividing large numbers by a small divisor such as $27$ will let Python use a long division on the CPython limbs that represent $A$, so the cost of the division is actually linear to the number of limbs, which when accumulated into the entire conversion process, becomes quadratic, which is bad.</li>
+</ul>
+<p>A quicker way is using divide-and-conquer approach, as we will eventually divide the number by a large divisor $27^x$, causing the total number of limbs being processed to be much less: the same for every level, but there are logarithmically many levels. This will teach you two things:</p>
+<ul>
+<li>This question is a good demonstration on how multiplication isn't exactly $O(1)$ time for larger integers.</li>
+<li>$O(n^2)$ vs $O(n \log n)$ approach to the same problem.</li>
+</ul>
+<p>As for the divide-and-conquer approach, we can pre-specify the length of $W$ to be the next power of $2$ from however many digits $W$ will actually have.</p>
+<pre><code class="language-python"># D = next power of 2
+D = 1
+while 27**D &lt; A: D *= 2
+
+# WARNING: precomputing 27**k unfortunately triggers MLE since 27**k can be very big
+
+W = [0]*D # W[0] is the last digit, W[-1] is the leading digit
+Q = [(A, 0, D-1)] # process indices [0, D-1]
+Z = []
+while Q:
+    x, l, r = Q.pop() # process indices [l, r]
+    if x &lt; 27:
+        W[l] = x
+    else:
+        k = r-(l+r)//2
+        p, q = divmod(x, 27**k)
+        Q.append((q, l, l+k-1)) # process the last k digits at indices [l, l+k-1] using the modulo
+        Q.append((p, l+k, r)) # process the remaining digits at indices [l+k, r] using the quotient
+while W[-1] == 0: # clean up leading digits being 0
+    W.pop()
+</code></pre>
+<p>The runtime in this algorithm depends on the time complexity of the integer divisions, but clearly it has a "recursion" depth of $O(\log n)$, where $n$ is the number of digits of $W$ (or so approximated to $D$).</p>
+<h5>The input string rundown</h5>
+<p>Now that we already have $W$ in reverse order, running through $S$ is a rather simple linear iteration.</p>
+<pre><code class="language-python">for i in S:
+    t = ord(i)-65
+    if t &lt; 0: t = 26 # SPACE has ASCII value 32 &lt; 65
+    t += W.pop(); t %= 27
+    if t == 26: Z.append(' ')
+    else: Z.append(chr(t+65))
+sys.stdout.write(''.join(Z))
+</code></pre>
+<h4 id="combining-all-parts">Combining all parts</h4>
+<p>After all of that long explanation, plus some <code>array</code> optimization, we end up with this Python code.</p>
+<pre><code class="language-python">from array import *
+
+N, X = map(int, input().split()); S = input()
+
+V = array('I', [1]); M = 1&lt;&lt;20
+for _ in range(M): V.append((V[-1]*33+1)%M)
+C = array('I', [0])
+for i in range(X): C[0] += V[X*i%M]; C[0] %= M
+for _ in range(X-1): C.append((33*C[-1]+X)%M)
+
+import sys; sys.set_int_max_str_digits(2*10**6)
+A = int(''.join(map(str, C)))
+
+D = 1
+while 27**D &lt; A: D *= 2
+W = array('b', [0]*D); Q = [(A, 0, D-1)]; Z = []
+while Q:
+    x, l, r = Q.pop()
+    if x &lt; 27: W[l] = x
+    else: k = r-(l+r)//2; p, q = divmod(x, 27**k); Q.append((q, l, l+k-1)); Q.append((p, l+k, r))
+while W[-1] == 0: W.pop()
+
+for i in S:
+    t = ord(i)-65
+    if t &lt; 0: t = 26
+    t += W.pop(); t %= 27
+    if t == 26: Z.append(' ')
+    else: Z.append(chr(t+65))
+
+sys.stdout.write(''.join(Z))
+</code></pre>
+<p><strong>SUBMIT THIS SAME CODE AT YOUR OWN RISK OF PLAGIARISM</strong>, but this gives you about 3.23s runtime, which is very fast for Python submissions considering the generous 13s time limit. However, we can do much better using GMP!</p>
+<h4 id="the-gmp-in-action">The GMP in action</h4>
+<p>So, where does GMP come in handy? The conversion of $A$ to $W$!</p>
+<p>Using the GMP tricks we saw above, we can initialize the necessary functions first.</p>
+<pre><code class="language-python">from ctypes import *
+
+class mpz(Structure):
+    _fields_ = [('alloc', c_int), ('size', c_int), ('d', c_void_p)]
+
+g = CDLL('libgmp.so.10')
+
+init = g.__gmpz_init
+init.argtypes = [c_void_p]
+init.restype = None
+
+set_str = g.__gmpz_set_str
+set_str.argtypes = [c_void_p, c_char_p, c_int]
+set_str.restype = c_int
+
+get_str = g.__gmpz_get_str
+get_str.argtypes = [c_char_p, c_int, c_void_p]
+get_str.restype = c_char_p
+</code></pre>
+<p>Then, using the same column sum array $C$, we initialize $A$ as an <code>mpz</code> structure.</p>
+<pre><code class="language-python"># suppose you have already computed C
+
+A = mpz()
+init(byref(A))
+set_str(byref(A), ''.join(map(str, C)).encode(), 10)
+</code></pre>
+<p>We still have to convert $C$ from a list of integers, to a long string, but now $A$ is an <code>mpz</code> structure instead of a very long integer.</p>
+<p>Converting $A$ to $W$ is simple...</p>
+<pre><code class="language-python">W = get_str(None, 27, byref(A))
+</code></pre>
+<p>... but we still have to handle the final translation nicely! Now, $W$ is represented as an encoded byte-string of length possibly much larger than $N$, so we have to slice only the first $N$ characters, and then translate into numbers to simulate the shifts accordingly.</p>
+<pre><code class="language-python">S = int.from_bytes(S.translate(bytes([c-65 if 65&lt;=c&lt;91 else 26 for c in range(256)])), 'big')
+W = int.from_bytes(W[:N].translate(bytes([c-48 if 48&lt;=c&lt;58 else c-87 if 97&lt;=c&lt;114 else 0 for c in range(256)])), 'big')
+print((S+W).to_bytes(N, 'big').translate(bytes([32 if v%27==26 else 65+v%27 for v in range(256)])).decode())
+</code></pre>
+<p>For $S$, we can translate the usual $A-Z$ from $0-25$, then $26$ from SPACE. For $W$, it is slightly different because the digits used to represent $0-26$ are different: you start from $0-9$ then $A-Q$. Finally, we can add both $S$ and $W$ and then translate it back to the alphabets $0-25$ to $A-Z$ and $26$ to SPACE. Since the final result is still a byte-string, we have to finish it off with <code>.decode()</code>.</p>
+<p>Alternatively, we can just stick to the old implementation of going letter per letter, but this is slightly slower from what I've tried.</p>
+<pre><code class="language-python">Z = []
+for i, w in zip(S, W):
+    # translate w accordingly
+    if w &lt; 58: w -= 48
+    else: w -= 87
+
+    t = ord(i)-65
+    if t &lt; 0: t = 26
+    t += w; t %= 27
+    if t == 26: Z.append(' ')
+    else: Z.append(chr(t+65))
+
+sys.stdout.write(''.join(Z))
+</code></pre>
+<p>Overall, the combined code should look like this. Again, <strong>PLAGIARIZE AT YOUR OWN RISK</strong>.</p>
+<pre><code class="language-python">from ctypes import *
+
+class mpz(Structure):
+    _fields_ = [('alloc', c_int), ('size', c_int), ('d', c_void_p)]
+
+g = CDLL('libgmp.so.10')
+
+init = g.__gmpz_init
+init.argtypes = [c_void_p]
+init.restype = None
+
+set_str = g.__gmpz_set_str
+set_str.argtypes = [c_void_p, c_char_p, c_int]
+set_str.restype = c_int
+
+get_str = g.__gmpz_get_str
+get_str.argtypes = [c_char_p, c_int, c_void_p]
+get_str.restype = c_char_p
+
+N, X = map(int, input().split()); S = input().encode()
+
+from array import *
+V = array('I', [1]); M = 1&lt;&lt;20
+for _ in range(M): V.append((V[-1]*33+1)%M)
+C = array('I', [0])
+for i in range(X): C[0] += V[X*i%M]; C[0] %= M
+for _ in range(X-1): C.append((33*C[-1]+X)%M)
+
+A = mpz()
+init(byref(A))
+set_str(byref(A), ''.join(map(str, C)).encode(), 10)
+
+S = int.from_bytes(S.translate(bytes([c-65 if 65&lt;=c&lt;91 else 26 for c in range(256)])), 'big')
+W = int.from_bytes(get_str(None, 27, byref(A))[:N].translate(bytes([c-48 if 48&lt;=c&lt;58 else c-87 if 97&lt;=c&lt;114 else 0 for c in range(256)])), 'big')
+print((S+W).to_bytes(N, 'big').translate(bytes([32 if v%27==26 else 65+v%27 for v in range(256)])).decode())
+</code></pre>
+<p>A blazing runtime of 0.5s!</p>
+<p>Now, what other questions do you think can be heavily optimized with GMP?</p></div></div>
+</section>
+<section id="footer">
+<div class="container">
+<ul class="copyright">
+<li>© Russell Saerang 2026. All rights reserved.</li>
+<li>Design: <a href="http://html5up.net" rel="noopener noreferrer" target="_blank">HTML5 UP</a></li>
+<li>Illustration: <a href="http://linkedin.com" rel="noopener noreferrer" target="_blank">LinkedIn</a> and <a href="http://unsplash.com" rel="noopener noreferrer" target="_blank">Unsplash</a></li>
+</ul>
+</div>
+</section>
+</div>
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/jquery.scrollex.min.js"></script>
+<script src="../assets/js/jquery.scrolly.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
+<link href="../assets/css/highlight.min.css" rel="stylesheet"/>
+<script src="../assets/js/highlight.min.js"></script>
+<script>hljs.highlightAll(); hljs.addPlugin(
+        new CopyButtonPlugin({
+            autohide: false,
+            callback: (text, el) => console.log("Copied to clipboard", text),
+    }));
+</script>
+</div></body>
+</html>
